@@ -1,0 +1,37 @@
+body {
+  margin: 0;
+}
+a {
+  text-decoration: none;
+  color: black;
+}
+.title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 20px;
+  padding: 10px 30px;
+  position: relative
+}
+.menu_button {
+  background-color: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 0px;
+}
+.navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  list-style: none;
+  color: white;
+  background-color: rgba(255, 122, 89, .5);
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  width: 100%;
+}
+.navigation li {
+  padding: 10px 30px;
+}
