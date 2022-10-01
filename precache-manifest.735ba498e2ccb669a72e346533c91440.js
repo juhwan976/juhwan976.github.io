@@ -1,11 +1,11 @@
 self.__precacheManifest = [
   {
-    "revision": "633f5dca3017fa88794f",
+    "revision": "ee76a180db4829b280f6",
     "url": "/static/css/main.b47832ff.chunk.css"
   },
   {
-    "revision": "633f5dca3017fa88794f",
-    "url": "/static/js/main.007c07a4.chunk.js"
+    "revision": "ee76a180db4829b280f6",
+    "url": "/static/js/main.fa0c36a5.chunk.js"
   },
   {
     "revision": "32b369d30a5f68a92360",
@@ -24,7 +24,7 @@ self.__precacheManifest = [
     "url": "/static/media/LeferiPointWhite.35f42dd0.ttf"
   },
   {
-    "revision": "23fc4cd7dabb95ade4c378922727f1e3",
+    "revision": "07dd866f285e93e39565bca28a1e89a9",
     "url": "/index.html"
   }
 ];
