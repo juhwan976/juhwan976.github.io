@@ -1,0 +1,8 @@
+@font-face {
+  font-family: "leferi";
+  src: url("./fonts/LeferiPointWhite.ttf");
+}
+
+.app{
+  font-family: "leferi";
+}

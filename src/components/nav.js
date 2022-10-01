@@ -1,7 +1,8 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import styles from "./nav.module.css";
+import { Menu } from "@mui/icons-material";
 
 function Nav({ props }) {
   const [isShowNav, setIsShowNav] = useState(false);
@@ -26,7 +27,7 @@ function Nav({ props }) {
   }
 
   return (
-    <div>
+    <header>
       <div className={styles.title}>
         <Link
           to="/"
@@ -34,14 +35,12 @@ function Nav({ props }) {
         >
           Welcome to juhwan976.github.io
         </Link>
-        <motion.button
-          whileHover={{ rotate: 180 }}
-          transition={{ duration: 0.2 }}
+        <button
           className={styles.menu_button}
           onClick={(e) => { setIsShowNav(current => !current); }}
         >
-          Menu
-        </motion.button>
+          <Menu fontSize="large" />
+        </button>
       </div>
       <AnimatePresence>
         {isShowNav &&
@@ -70,7 +69,7 @@ function Nav({ props }) {
             }
           </motion.ul>}
       </AnimatePresence>
-    </div>
+    </header>
   );
 }
 

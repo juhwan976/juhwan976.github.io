@@ -1,0 +1,12 @@
+.board_red{
+  height: 600px;
+  background-color: rgba(255,0,0,.5);
+}
+.board_yellow{
+  height: 600px;
+  background-color:lightgoldenrodyellow;
+}
+.board_green {
+  height: 600px;
+  background-color: lightgreen;
+}
