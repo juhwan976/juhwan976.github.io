@@ -11,6 +11,7 @@ function Content(props) {
         <li>React-Native</li>
         <ul>
           <li>JuhwanWeather</li>
+          <li>Todo List</li>
         </ul>
         <li>nRF</li>
         <ul>
