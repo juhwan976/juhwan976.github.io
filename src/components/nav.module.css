@@ -1,6 +1,26 @@
+@media (max-width: 575px) {
+  .title {
+    font-size: 16px;
+  }
+}
+@media (min-width: 576px) and (max-width: 767px) {
+  .title {
+    font-size: 20px;
+  }
+}
+@media (min-width: 768px) and (max-width: 1023px) {
+  .title {
+    font-size: 20px;
+  }
+}
+@media (min-width: 1024px) {
+  .title {
+    font-size: 20px;
+  }
+}
 body {
-  margin: 0;
   padding-top: 58px;
+  margin: 0;
 }
 a {
   text-decoration: none;
@@ -15,7 +35,6 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 20px;
   background-color: white;
   padding: 10px 20px;
 }

@@ -2,7 +2,26 @@
   font-family: "leferi";
   src: url("./fonts/LeferiPointWhite.ttf");
 }
-
+@media (max-width: 575px) {
+  .pages {
+    padding: 10px 20px;
+  }
+}
+@media (min-width: 576px) and (max-width: 767px) {
+  .pages {
+    padding: 10px 30px;
+  }
+}
+@media (min-width: 768px) and (max-width: 1023px) {
+  .pages {
+    padding: 10px 30px;
+  }
+}
+@media (min-width: 1024px) {
+  .pages {
+    padding: 10px 100px;
+  }
+}
 .app{
   font-family: "leferi";
 }

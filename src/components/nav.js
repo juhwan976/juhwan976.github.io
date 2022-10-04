@@ -13,12 +13,12 @@ function Nav({ props }) {
       route: '/who_am_i'
     },
     {
-      title: 'Portfolio',
-      route: '/portfolio'
-    },
-    {
       title: 'Blog',
       route: '/blog'
+    },
+    {
+      title: 'Logs',
+      route: '/logs'
     },
   ];
 
@@ -39,7 +39,7 @@ function Nav({ props }) {
           className={styles.menu_button}
           onClick={(e) => { setIsShowNav(current => !current); }}
         >
-          <Menu fontSize="large" />
+          <Menu fontSize="large" style={{ color: "black" }} />
         </button>
       </div>
       <AnimatePresence>
