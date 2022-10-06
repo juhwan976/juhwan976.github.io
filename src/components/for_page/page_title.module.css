@@ -1,5 +1,17 @@
+.title_form {
+  display: flex;
+  justify-content: space-between;
+  list-style: none;
+  padding: 0px;
+  margin: 0px;
+}
 .title {
   font-size: 30px;
+}
+.timeStamp {
+  font-size: 15px;
+  margin-bottom: 0px;
+  margin-top:40px;
 }
 .divider {
   height: 1px;

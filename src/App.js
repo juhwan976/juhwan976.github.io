@@ -14,6 +14,7 @@ import LogDetailPage from "./page/log_detail_page";
 
 import styles from "./App.module.css";
 import FloatingButton from "./components/floating_button.js";
+import BlogDetailPage from "./page/blog_detail_page.js";
 
 function App() {
   return (
@@ -26,7 +27,7 @@ function App() {
             <Route path="/" element={<MainPage />} />
             <Route path="/who_am_i" element={<WhoAmIPage />} />
             <Route path="/blog" element={<BlogPage />} />
-
+            <Route path="/blog/:timeStamp" element={<BlogDetailPage />} />
             <Route path="/logs" element={<LogPage />} />
             <Route path="/logs/:date" element={<LogDetailPage />} />
             <Route path="/game" element={<GamePage />} />

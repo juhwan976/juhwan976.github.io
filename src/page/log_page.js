@@ -2,22 +2,20 @@ import React, { useEffect, useState } from "react";
 import PageTitle from "../components/for_page/page_title";
 import styles from "./log_page.module.css";
 import { Link } from "react-router-dom";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import { db } from "../firebase";
 
 function LogPage({ props }) {
   const [logList, setLogList] = useState([]);
 
   const getData = async () => {
-    try {
-      await getDocs(collection(db, "logs")).then((docs) => {
-        docs.forEach((doc) => {
-          setLogList((current) => [...current, doc.id]);
-        });
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    const collectionRef = collection(db, "logs");
+    const collectionSnap = await getDocs(query(collectionRef, orderBy("title", "desc")));
+    const docs = collectionSnap.docs;
+
+    docs.forEach((log) => {
+      setLogList((current) => [...current, log.id]);
+    });
   }
 
   useEffect(() => {
