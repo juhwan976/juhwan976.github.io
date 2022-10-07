@@ -1,21 +1,21 @@
 @media (max-width: 575px) {
-  .title {
-    font-size: 16px;
+  :root {
+    --nav_title_font_size: 16px;
   }
 }
 @media (min-width: 576px) and (max-width: 767px) {
-  .title {
-    font-size: 20px;
+  :root {
+    --nav_title_font_size: 20px;
   }
 }
 @media (min-width: 768px) and (max-width: 1023px) {
-  .title {
-    font-size: 20px;
+  :root {
+    --nav_title_font_size: 20px;
   }
 }
 @media (min-width: 1024px) {
-  .title {
-    font-size: 20px;
+  :root {
+    --nav_title_font_size: 20px;
   }
 }
 body {
@@ -36,6 +36,7 @@ header {
   justify-content: space-between;
   align-items: center;
   background-color: white;
+  font-size: var(--nav_title_font_size);
   padding: 10px 20px;
 }
 .menu_button {

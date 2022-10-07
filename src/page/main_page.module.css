@@ -9,8 +9,8 @@
   background-color: lavender;
   display: flex;
 
-  transform: rotate(0 deg);
-  left: 0%;
+  transform: rotate(0deg);
+  left: 0px;
   top: 50%;
 }
 .board_red{

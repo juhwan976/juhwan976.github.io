@@ -6,9 +6,11 @@ function MainPage({ props }) {
   const circle = useRef(null);
 
   const moveCircle = () => {
-    const scrollPercent = window.scrollY / (document.documentElement.scrollHeight - document.documentElement.clientHeight);
+    const maxScrollHeight = (document.documentElement.scrollHeight - document.documentElement.clientHeight);
+    const scrollPercent = window.scrollY / maxScrollHeight;
 
     circle.current.style.left = `${Math.floor((scrollPercent) * window.innerWidth)}px`;
+    circle.current.style.top = `${- window.innerHeight * 0.2 * Math.sin(scrollPercent * 2 * Math.PI) + (window.innerHeight * 0.5)}px`;
     circle.current.style.transform = `rotate(${Math.floor((scrollPercent) * 1080)}deg)`;
   }
 

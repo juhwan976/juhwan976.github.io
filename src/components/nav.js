@@ -27,13 +27,13 @@ function Nav({ props }) {
   }
 
   return (
-    <header onMouseLeave={(e) => { setIsShowNav(false); }}>
+    <header>
       <div className={styles.title}>
         <Link
           to="/"
           onClick={onClick}
         >
-          Welcome to juhwan976.github.io
+          juhwan976.github.io
         </Link>
         <button
           className={styles.menu_button}

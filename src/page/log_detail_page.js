@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import PageTitle from "../components/for_page/page_title";
 import { db } from "../firebase";
-import styles from "./log_detail_page.module.css";
 
 
 function LogDetailPage() {
@@ -29,9 +28,7 @@ function LogDetailPage() {
   return (
     <div>
       <PageTitle props={{ title: `${date}` }} />
-      <div
-        className={styles.content}
-        dangerouslySetInnerHTML={{ __html: data }}></div>
+      <div dangerouslySetInnerHTML={{ __html: data }}></div>
     </div>
   );
 }

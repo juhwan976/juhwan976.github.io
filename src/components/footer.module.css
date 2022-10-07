@@ -1,13 +1,22 @@
 @media (max-width: 575px) {
-  .copyright {
-    font-size: 13px;
+  :root {
+    --copyright_font_size: 13px;
   }
 }
 @media (min-width: 576px) and (max-width: 767px) {
+  :root {
+    --copyright_font_size: default;
+  }
 }
 @media (min-width: 768px) and (max-width: 1023px) {
+  :root {
+    --copyright_font_size: default;
+  }
 }
 @media (min-width: 1024px) {
+  :root {
+    --copyright_font_size: default;
+  }
 }
 .footer {
   background-color:dimgrey;
@@ -20,6 +29,7 @@
   margin-bottom: 10px;
   justify-content: center;
   align-items: center;
+  font-size: var(--copyright_font_size);
 }
 :root{
   --footer_height : 44px;

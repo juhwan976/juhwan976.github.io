@@ -2,7 +2,6 @@ import { doc, getDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import PageTitle from "../components/for_page/page_title";
 import { db } from "../firebase";
-import styles from "./who_am_i_page.module.css";
 
 function WhoAmIPage({ props }) {
   const [content, setContent] = useState('');

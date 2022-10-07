@@ -1,9 +1,11 @@
 import React from "react";
+import PageTitle from "../components/for_page/page_title";
 
 function GamePage({ props }) {
+
   return (
     <div>
-      <h1>Game page</h1>
+      <PageTitle props={{ title: "Game page" }} />
     </div>
   );
 }
