@@ -9,7 +9,7 @@ function BlogDetailPage({ props }) {
   const [data, setData] = useState("");
   const [title, setTitle] = useState("");
 
-  const getContent = async () => {
+  const getData = async () => {
     const docRef = doc(db, "blog", timeStamp);
     const docSnap = await getDoc(docRef);
 
@@ -20,7 +20,7 @@ function BlogDetailPage({ props }) {
   }
 
   useEffect(() => {
-    getContent();
+    getData();
   }, []);
 
   return (

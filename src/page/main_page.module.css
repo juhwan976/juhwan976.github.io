@@ -1,16 +1,31 @@
+.circle {
+  position: fixed;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+  width: 50px;
+  border: 1px solid black;
+  border-radius: 50%;
+  background-color: lavender;
+  display: flex;
+
+  transform: rotate(0 deg);
+  left: 0%;
+  top: 50%;
+}
 .board_red{
-  height: 600px;
   background-color: rgba(255,0,0,.5);
+  padding-bottom: 100%;
 }
 .board_yellow{
-  height: 600px;
   background-color:lightgoldenrodyellow;
+  padding-bottom: 100%;
 }
 .board_green {
-  height: 600px;
   background-color: lightgreen;
+  padding-bottom: 100%;
 }
 .board_blue {
-  height: 600px;
   background-color: cornflowerblue;
+  padding-bottom: 100%;
 }

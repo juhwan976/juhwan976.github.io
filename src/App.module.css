@@ -3,25 +3,28 @@
   src: url("./fonts/LeferiPointWhite.ttf");
 }
 @media (max-width: 575px) {
-  .pages {
-    padding: 10px 20px;
+  :root{
+    --side_padding: 3%;
   }
 }
 @media (min-width: 576px) and (max-width: 767px) {
-  .pages {
-    padding: 10px 30px;
+  :root{
+    --side_padding: 5%;
   }
 }
 @media (min-width: 768px) and (max-width: 1023px) {
-  .pages {
-    padding: 10px 30px;
+  :root{
+    --side_padding: 7%;
   }
 }
 @media (min-width: 1024px) {
-  .pages {
-    padding: 10px 100px;
+  :root{
+    --side_padding: 10%;
   }
 }
 .app{
   font-family: "leferi";
+}
+.pages {
+  padding: 10px var(--side_padding);
 }

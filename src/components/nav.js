@@ -27,7 +27,7 @@ function Nav({ props }) {
   }
 
   return (
-    <header>
+    <header onMouseLeave={(e) => { setIsShowNav(false); }}>
       <div className={styles.title}>
         <Link
           to="/"

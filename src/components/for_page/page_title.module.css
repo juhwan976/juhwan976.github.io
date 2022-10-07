@@ -17,5 +17,8 @@
   height: 1px;
   background-color: black;
   width: 100%;
-  margin-bottom: 30px;
+  margin-bottom: var(--page_title_bottom_margin);
+}
+:root {
+  --page_title_bottom_margin: 30px;
 }

@@ -11,7 +11,7 @@
 }
 .footer {
   background-color:dimgrey;
-  height: 44px;
+  height: var(--footer_height);
   padding: 10px 20px;
 }
 .copyright {
@@ -20,4 +20,7 @@
   margin-bottom: 10px;
   justify-content: center;
   align-items: center;
+}
+:root{
+  --footer_height : 44px;
 }

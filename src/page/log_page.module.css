@@ -1,9 +1,14 @@
-.logs {
-  font-size: 20px;
+.template {
   color: black;
   list-style: none;
   padding: 0px;
+  padding-left: 20px;
+  padding-right: 20px;
 }
-.li {
-  font-size: 25px;
+.form {
+  margin-bottom: var(--page_title_bottom_margin);
+}
+.date {
+  font-size: 20px;
+  padding-bottom: var(--page_title_bottom_margin);
 }
