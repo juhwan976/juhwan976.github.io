@@ -19,7 +19,7 @@
 }
 @media (min-width: 1024px) {
   :root{
-    --side_padding: 10%;
+    --side_padding: 15%;
   }
 }
 .app{

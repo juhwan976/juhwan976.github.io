@@ -23,7 +23,6 @@ function BlogPage({ props }) {
     const docs = collectionSnap.docs;
 
     docs.forEach((post) => {
-      console.log(post.data());
       setPostList((current) => [...current, { title: post.data()["title"], timeStamp: post.data()["timeStamp"] }])
     });
   }
