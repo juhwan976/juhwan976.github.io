@@ -1,5 +1,6 @@
 import { doc, getDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
+import PageContent from "../components/for_page/page_content";
 import PageTitle from "../components/for_page/page_title";
 import { db } from "../firebase";
 
@@ -22,7 +23,9 @@ function WhoAmIPage({ props }) {
   return (
     <div>
       <PageTitle props={{ title: "Who am I" }} />
-      <div dangerouslySetInnerHTML={{ __html: content }}></div>
+      <PageContent>
+        <div dangerouslySetInnerHTML={{ __html: content }}></div>
+      </PageContent>
     </div>
   );
 }

@@ -3,7 +3,7 @@ import styles from "./page_title.module.css";
 
 function PageTitle({ props }) {
   return (
-    <div>
+    <div className={styles.page_title}>
       <ul className={styles.title_form}>
         <li>
           <h1 className={styles.title}>

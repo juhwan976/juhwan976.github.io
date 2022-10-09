@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import PageTitle from "../components/for_page/page_title";
 import styles from "./blog_page.module.css";
 import { Link } from "react-router-dom";
+import PageContent from "../components/for_page/page_content";
 
 function BlogPage({ props }) {
   const [postList, setPostList] = useState([]);
@@ -34,32 +35,34 @@ function BlogPage({ props }) {
   return (
     <div>
       <PageTitle props={{ title: "Blog" }} />
-      <ul className={styles.ul}>
-        {postList.length !== 0 ?
-          postList.map((content, index) => {
-            return (
-              <li key={index}>
-                <Link to={`/blog/${content.timeStamp}`}>
-                  <ul className={styles.template}>
-                    <li className={styles.title}>
-                      {content.title}
-                    </li>
-                    <li className={styles.date}>
-                      {Intl.DateTimeFormat('ko-KR', {
-                        year: 'numeric',
-                        month: '2-digit',
-                        day: '2-digit',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                      }).format(content.timeStamp)}
-                    </li>
-                  </ul>
-                </Link>
-              </li>
-            );
-          }) : null
-        }
-      </ul>
+      <PageContent>
+        <ul className={styles.ul}>
+          {postList.length !== 0 ?
+            postList.map((content, index) => {
+              return (
+                <li key={index}>
+                  <Link to={`/blog/${content.timeStamp}`}>
+                    <ul className={styles.template}>
+                      <li className={styles.title}>
+                        {content.title}
+                      </li>
+                      <li className={styles.date}>
+                        {Intl.DateTimeFormat('ko-KR', {
+                          year: 'numeric',
+                          month: '2-digit',
+                          day: '2-digit',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        }).format(content.timeStamp)}
+                      </li>
+                    </ul>
+                  </Link>
+                </li>
+              );
+            }) : null
+          }
+        </ul>
+      </PageContent>
     </div>
   );
 }

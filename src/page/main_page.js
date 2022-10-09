@@ -22,7 +22,7 @@ function MainPage({ props }) {
   }, []);
 
   return (
-    < div >
+    < div className={styles.main_page}>
       <div className={styles.circle} ref={circle}>
         <Favorite style={{ color: "pink" }} />
       </div>

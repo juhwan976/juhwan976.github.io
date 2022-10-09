@@ -1,6 +1,7 @@
 import { doc, getDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import PageContent from "../components/for_page/page_content";
 import PageTitle from "../components/for_page/page_title";
 import { db } from "../firebase";
 
@@ -26,7 +27,9 @@ function BlogDetailPage({ props }) {
   return (
     <div>
       <PageTitle props={{ title: title, timeStamp: timeStamp }} />
-      <div dangerouslySetInnerHTML={{ __html: data }}></div>
+      <PageContent>
+        <div dangerouslySetInnerHTML={{ __html: data }}></div>
+      </PageContent>
     </div>
   );
 }
