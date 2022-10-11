@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import PageTitle from "../components/for_page/page_title";
 
 function GamePage({ props }) {

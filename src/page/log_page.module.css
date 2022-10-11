@@ -5,10 +5,7 @@
   padding-left: 20px;
   padding-right: 20px;
 }
-.form {
-  margin-bottom: var(--page_title_bottom_margin);
-}
 .date {
   font-size: 20px;
-  padding-bottom: var(--page_title_bottom_margin);
+  margin-bottom: 20px;
 }

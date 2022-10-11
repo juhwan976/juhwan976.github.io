@@ -4,7 +4,6 @@ import styles from "./log_page.module.css";
 import { Link } from "react-router-dom";
 import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import { db } from "../firebase";
-import Divider from "../components/for_page/divider";
 import PageContent from "../components/for_page/page_content";
 
 function LogPage({ props }) {
@@ -32,12 +31,9 @@ function LogPage({ props }) {
           {logList.length !== 0 ?
             logList.map((value, index) => {
               return (
-                <div className={(index === logList.length - 1) ? null : styles.form} key={index}>
-                  <li className={styles.date}>
-                    <Link to={`/logs/${value}`}>{value}</Link>
-                  </li>
-                  {(index !== logList.length - 1) && <Divider />}
-                </div>
+                <li className={styles.date} key={index}>
+                  <Link to={`/logs/${value}`}>{value}</Link>
+                </li>
               );
             }) :
             <li>Loading...</li>}
