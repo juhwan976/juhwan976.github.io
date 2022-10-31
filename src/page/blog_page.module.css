@@ -17,3 +17,25 @@
   padding-top: 5px;
   font-size: 15px;
 }
+
+.paginate{
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  padding: 0px;
+  margin-bottom: 2rem;
+}
+
+.pages {
+  margin: 0px 13px;
+  cursor: pointer;
+}
+
+.active_page {
+  text-decoration: underline;
+}
+
+.next,
+.previous {
+  cursor: pointer;
+}
