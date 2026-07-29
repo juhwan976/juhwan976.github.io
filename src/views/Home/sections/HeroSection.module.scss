@@ -1,0 +1,92 @@
+@use '@/styles/mixins' as mixins;
+
+.hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
+  overflow: hidden;
+}
+
+// 3D/정적 그래픽 — 화면 전체를 덮는 하나의 장면
+.visual {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.staticWireframe {
+  position: absolute;
+  right: -8%;
+  bottom: 4%;
+  width: min(72vw, 720px);
+  height: auto;
+  opacity: 0.8;
+}
+
+.stage {
+  @include mixins.scene-edge;
+
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  padding-top: 64px;
+}
+
+.headline {
+  font-size: var(--text-hero);
+  font-weight: var(--weight-display);
+  letter-spacing: var(--tracking-display);
+  line-height: var(--leading-display);
+  white-space: pre-line;
+  max-width: 14em;
+}
+
+.edgeBottom {
+  @include mixins.scene-edge;
+
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-6);
+  padding-bottom: clamp(28px, 4vh, 56px);
+}
+
+.roles {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.roleLine {
+  @include mixins.mono-label;
+
+  color: var(--color-text);
+}
+
+.techLine {
+  @include mixins.mono-label;
+
+  margin-top: var(--space-2);
+}
+
+.cta {
+  @include mixins.mono-label;
+
+  color: var(--color-text);
+  white-space: nowrap;
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--color-border-strong);
+  transition:
+    color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out);
+
+  &:hover {
+    color: var(--color-accent-light);
+    border-color: var(--color-accent);
+  }
+}

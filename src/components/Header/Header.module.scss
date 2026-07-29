@@ -1,0 +1,177 @@
+@use '@/styles/mixins' as mixins;
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-header);
+  pointer-events: none;
+}
+
+.inner {
+  @include mixins.scene-edge;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding-block: var(--space-3);
+
+  > * {
+    pointer-events: auto;
+  }
+}
+
+// ---- Liquid Glass 캡슐 ----
+// 뒤 콘텐츠를 굴절시키는 반투명 유리: blur + 채도 부스트,
+// 상단 스펙큘러 하이라이트, 아래쪽으로 갈수록 어두워지는 유리 두께 표현.
+@mixin liquid-glass {
+  position: relative;
+  border-radius: 999px;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.09),
+    rgba(255, 255, 255, 0.035)
+  );
+  -webkit-backdrop-filter: blur(20px) saturate(170%);
+  backdrop-filter: blur(20px) saturate(170%);
+  box-shadow:
+    // 상단 스펙큘러(빛이 닿는 유리 모서리)
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    // 좌우 가장자리의 얇은 굴절광
+    inset 1px 0 0 rgba(255, 255, 255, 0.07),
+    inset -1px 0 0 rgba(255, 255, 255, 0.07),
+    // 하단의 어두운 유리 두께
+    inset 0 -1px 0 rgba(0, 0, 0, 0.25),
+    // 떠 있는 느낌의 드롭 섀도
+    0 8px 28px rgba(0, 0, 0, 0.35);
+
+  // 유리 표면을 스치는 사선 광택
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(
+      115deg,
+      transparent 32%,
+      rgba(255, 255, 255, 0.06) 46%,
+      rgba(255, 255, 255, 0.1) 50%,
+      rgba(255, 255, 255, 0.06) 54%,
+      transparent 68%
+    );
+    pointer-events: none;
+  }
+
+  // backdrop-filter 미지원 환경 폴백
+  @supports not (backdrop-filter: blur(1px)) {
+    background: rgba(18, 18, 22, 0.88);
+  }
+}
+
+.identity {
+  @include liquid-glass;
+
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  padding: var(--space-2) var(--space-5);
+}
+
+.name {
+  font-size: var(--text-small);
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.role {
+  @include mixins.mono-label;
+
+  font-size: 0.625rem;
+
+  @include mixins.mobile-only {
+    display: none;
+  }
+}
+
+.nav {
+  @include liquid-glass;
+
+  display: flex;
+  align-items: center;
+  gap: clamp(4px, 1.2vw, 12px);
+  padding: var(--space-1) var(--space-2);
+}
+
+// ---- Pill Nav (React Bits 방식) ----
+// 호버 시 밝은 원이 알약 아래에서 차오르고, 라벨이 위로 롤링되며
+// 반전된 색의 라벨이 아래에서 올라온다.
+
+.navLink {
+  position: relative;
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-size: var(--text-caption);
+  letter-spacing: 0.06em;
+  color: var(--color-text-secondary);
+  padding: var(--space-2) var(--space-4);
+  border-radius: 999px;
+
+  // 아래에서 차오르는 원
+  &::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 140%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background-color: var(--color-text);
+    transform: translate(-50%, 100%) scale(0.2);
+    transition: transform 0.35s var(--ease-out);
+  }
+
+  &:hover::before,
+  &:focus-visible::before {
+    transform: translate(-50%, 24%) scale(1.3);
+  }
+}
+
+.pillStack {
+  position: relative;
+  display: block;
+  overflow: hidden;
+}
+
+.pillLabel {
+  display: block;
+  transition: transform 0.35s var(--ease-out);
+
+  .navLink:hover &,
+  .navLink:focus-visible & {
+    transform: translateY(-130%);
+  }
+}
+
+// 원 위로 올라오는 반전 라벨
+.pillLabelHover {
+  position: absolute;
+  inset: 0;
+  display: block;
+  color: var(--color-bg);
+  font-weight: 600;
+  transform: translateY(130%);
+  transition: transform 0.35s var(--ease-out);
+
+  .navLink:hover &,
+  .navLink:focus-visible & {
+    transform: translateY(0);
+  }
+}
+
+.navLinkActive {
+  color: var(--color-accent);
+  background-color: rgba(255, 106, 0, 0.12);
+}

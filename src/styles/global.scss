@@ -1,0 +1,128 @@
+@use '@/styles/tokens';
+@use '@/styles/mixins' as mixins;
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  color-scheme: dark;
+  scroll-behavior: smooth;
+
+  @include mixins.reduced-motion {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+  word-break: keep-all;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-weight: 600;
+  line-height: var(--leading-tight);
+  text-wrap: balance;
+  overflow-wrap: break-word;
+}
+
+p {
+  overflow-wrap: break-word;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+
+  @include mixins.focus-ring;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+
+  @include mixins.focus-ring;
+}
+
+img,
+video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+::selection {
+  background-color: var(--color-accent);
+  color: var(--color-bg);
+}
+
+// 헤더 높이만큼 앵커 이동 보정
+[id] {
+  scroll-margin-top: 88px;
+}
+
+// 키보드 사용자용 본문 건너뛰기 링크
+.skip-link {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: calc(var(--z-header) + 1);
+  padding: var(--space-2) var(--space-4);
+  background-color: var(--color-accent);
+  color: var(--color-bg);
+  font-size: var(--text-small);
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  transform: translateY(-200%);
+
+  &:focus-visible {
+    transform: translateY(0);
+  }
+}
+
+// Lenis smooth scroll 권장 전역 스타일
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+// 애니메이션 없이도 콘텐츠가 항상 보이도록, 모션 감소 환경에서는 전역 비활성화
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

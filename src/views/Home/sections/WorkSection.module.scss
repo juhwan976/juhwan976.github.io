@@ -1,0 +1,176 @@
+@use '@/styles/mixins' as mixins;
+
+.section {
+  position: relative;
+  background-color: var(--scene-bg-base);
+  transition: background-color 0.3s linear;
+}
+
+.heading {
+  @include mixins.scene-edge;
+
+  padding-top: var(--section-gap);
+}
+
+.headingEyebrow {
+  @include mixins.mono-label;
+}
+
+// ---- 프로젝트 장면 ----
+
+.scene {
+  @include mixins.scene-edge;
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 100svh;
+  padding-block: clamp(48px, 8vh, 96px);
+  overflow: hidden;
+
+  & + & {
+    margin-top: 20vh;
+  }
+}
+
+// 그래픽 — 화면 우측을 넓게 채우는 중심 비주얼
+.sceneGraphic {
+  position: absolute;
+  top: 50%;
+  right: calc(var(--layout-inline) * -0.5);
+  transform: translateY(-52%);
+  width: min(72vw, 1100px);
+  z-index: 0;
+  opacity: 0.9;
+
+  svg {
+    width: 100%;
+    height: auto;
+  }
+
+  @include mixins.mobile-only {
+    position: static;
+    transform: none;
+    width: 100%;
+    margin-bottom: var(--space-6);
+  }
+}
+
+.sceneNumber {
+  @include mixins.mono-label;
+
+  position: absolute;
+  top: clamp(48px, 8vh, 96px);
+  left: var(--layout-inline);
+  z-index: 1;
+  display: flex;
+  gap: var(--space-3);
+  color: var(--color-accent);
+
+  @include mixins.mobile-only {
+    position: static;
+    margin-bottom: var(--space-4);
+  }
+}
+
+.sceneName {
+  color: var(--color-text-secondary);
+}
+
+.sceneTitle {
+  position: relative;
+  z-index: 1;
+  max-width: 9em;
+  margin-bottom: clamp(32px, 6vh, 72px);
+  font-size: var(--text-scene);
+  font-weight: var(--weight-display);
+  letter-spacing: var(--tracking-display);
+  line-height: var(--leading-display);
+  white-space: pre-line;
+}
+
+.sceneFooter {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-6);
+
+  @include mixins.mobile-only {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.sceneInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-5);
+}
+
+.sceneSummary {
+  max-width: var(--prose-max-width);
+  color: var(--color-text-secondary);
+  white-space: pre-line;
+
+  @include mixins.mobile-only {
+    white-space: normal;
+  }
+}
+
+.sceneStats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
+}
+
+.sceneStat {
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--color-text);
+
+  &:not(:last-child)::after {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 4px;
+    margin-left: var(--space-5);
+    border-radius: 50%;
+    background-color: var(--color-accent);
+    vertical-align: middle;
+  }
+}
+
+.sceneCta {
+  @include mixins.mono-label;
+
+  color: var(--color-text);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--color-border-strong);
+  transition:
+    color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out);
+
+  &:hover {
+    color: var(--color-accent-light);
+    border-color: var(--color-accent);
+  }
+}
+
+// 기술 스택 — 화면 하단 가장자리의 소형 메타 정보
+.sceneTech {
+  @include mixins.mono-label;
+
+  font-size: 0.6875rem;
+  text-align: right;
+  flex-shrink: 0;
+
+  @include mixins.mobile-only {
+    text-align: left;
+  }
+}

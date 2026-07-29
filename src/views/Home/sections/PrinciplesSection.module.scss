@@ -1,0 +1,68 @@
+@use '@/styles/mixins' as mixins;
+
+.section {
+  @include mixins.scene-edge;
+
+  padding-block: var(--section-gap);
+}
+
+.eyebrow {
+  @include mixins.mono-label;
+
+  margin-bottom: clamp(64px, 10vh, 140px);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(120px, 24vh, 260px);
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-5);
+  min-height: 40svh;
+  justify-content: center;
+}
+
+// 짝수 항목은 우측 정렬 — 비대칭 리듬
+.itemEnd {
+  composes: item;
+  align-items: flex-end;
+  text-align: right;
+}
+
+.itemLabel {
+  @include mixins.mono-label;
+
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.itemIndex {
+  color: var(--color-accent);
+}
+
+.itemStatement {
+  font-size: var(--text-statement);
+  font-weight: var(--weight-display);
+  letter-spacing: var(--tracking-display);
+  line-height: var(--leading-display);
+  white-space: pre-line;
+}
+
+.itemDescription {
+  max-width: var(--prose-max-width);
+  color: var(--color-text-secondary);
+}
+
+.footnote {
+  @include mixins.mono-label;
+
+  margin-top: clamp(96px, 16vh, 200px);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-border);
+}

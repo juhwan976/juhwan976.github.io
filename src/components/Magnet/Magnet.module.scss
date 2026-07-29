@@ -1,0 +1,13 @@
+.wrapper {
+  display: inline-block;
+}
+
+.inner {
+  display: inline-block;
+  will-change: transform;
+  transition: transform 0.5s var(--ease-out);
+}
+
+.active {
+  transition: transform 0.25s ease-out;
+}

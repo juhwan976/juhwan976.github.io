@@ -1,0 +1,450 @@
+@use '@/styles/mixins' as mixins;
+
+.root {
+  display: flex;
+  flex-direction: column;
+}
+
+// ---- 1. Hero — 풀블리드 장면 ----
+
+.hero {
+  @include mixins.scene-edge;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 90svh;
+  padding-top: 96px;
+  padding-bottom: clamp(48px, 8vh, 96px);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.heroNumber {
+  @include mixins.mono-label;
+
+  display: flex;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+  color: var(--color-accent);
+}
+
+.heroName {
+  color: var(--color-text-secondary);
+}
+
+.heroTitle {
+  max-width: 9em;
+  margin-bottom: clamp(40px, 8vh, 96px);
+  font-size: var(--text-scene);
+  font-weight: var(--weight-display);
+  letter-spacing: var(--tracking-display);
+  line-height: var(--leading-display);
+  white-space: pre-line;
+}
+
+.heroFooter {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-6);
+
+  @include mixins.mobile-only {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.heroInfo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.heroSummary {
+  max-width: var(--prose-max-width);
+  color: var(--color-text-secondary);
+  white-space: pre-line;
+
+  @include mixins.mobile-only {
+    white-space: normal;
+  }
+}
+
+.heroStats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-6);
+}
+
+.heroStat {
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.heroMeta {
+  @include mixins.mono-label;
+
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.6875rem;
+  text-align: right;
+  flex-shrink: 0;
+
+  @include mixins.mobile-only {
+    text-align: left;
+  }
+}
+
+// ---- 공통 섹션 ----
+
+.section,
+.challenge {
+  @include mixins.scene-edge;
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  // 홈보다 밀도를 높인 수직 리듬
+  padding-block: clamp(88px, 12vh, 160px);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.sectionLabel {
+  @include mixins.mono-label;
+
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+
+  &::before {
+    content: '';
+    display: inline-block;
+    width: 24px;
+    height: 1px;
+    background-color: var(--color-accent);
+  }
+}
+
+// ---- 2. Context ----
+
+.contextSplit {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-7);
+  align-items: start;
+
+  @include mixins.tablet-up {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  }
+}
+
+.contextBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.contextMedia {
+  min-width: 0;
+}
+
+.contextList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  max-width: var(--prose-max-width);
+  color: var(--color-text-secondary);
+
+  li {
+    position: relative;
+    padding-left: var(--space-5);
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.8em;
+      width: 8px;
+      height: 1px;
+      background-color: var(--color-accent);
+    }
+  }
+}
+
+.roleLine {
+  @include mixins.mono-label;
+
+  font-size: 0.6875rem;
+  max-width: 60ch;
+}
+
+// ---- 3. Key Challenge — 한 화면 하나의 문제 ----
+
+.challenge {
+  justify-content: center;
+}
+
+.challengeTitle {
+  max-width: 10em;
+  font-size: var(--text-statement);
+  font-weight: var(--weight-display);
+  letter-spacing: var(--tracking-display);
+  line-height: var(--leading-display);
+  white-space: pre-line;
+}
+
+.challengeProblem {
+  max-width: var(--prose-max-width);
+  color: var(--color-text-secondary);
+  white-space: pre-line;
+
+  @include mixins.mobile-only {
+    white-space: normal;
+  }
+}
+
+.challengeSplit {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-7);
+  margin-top: var(--space-6);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--color-border);
+
+  @include mixins.tablet-up {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: end;
+  }
+}
+
+.challengeApproach {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.splitLabel {
+  @include mixins.mono-label;
+}
+
+.splitList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  max-width: var(--prose-max-width);
+  color: var(--color-text-secondary);
+}
+
+// 결과는 큰 수치로
+.challengeResult {
+  font-family: var(--font-mono);
+  font-size: var(--text-title);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: var(--leading-tight);
+  white-space: pre-line;
+  color: var(--color-accent);
+
+  @include mixins.tablet-up {
+    text-align: right;
+  }
+}
+
+.challengeMedia {
+  margin-top: var(--space-7);
+}
+
+// ---- 4. Key Decisions ----
+
+.decisionList {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(80px, 14vh, 160px);
+}
+
+.decision {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.decisionTitle {
+  font-size: var(--text-title);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.decisionBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  max-width: var(--prose-max-width);
+  color: var(--color-text-secondary);
+}
+
+// ---- 5. Results — 큰 수치 ----
+
+.resultGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-7);
+
+  @include mixins.tablet-up {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.resultItem {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-border-strong);
+}
+
+.resultLabel {
+  @include mixins.mono-label;
+}
+
+.resultValue {
+  font-family: var(--font-mono);
+  font-size: var(--text-title);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: var(--leading-tight);
+}
+
+.resultNote {
+  font-size: var(--text-caption);
+  color: var(--color-text-secondary);
+}
+
+.resultProse {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  max-width: var(--prose-max-width);
+  margin-top: var(--space-5);
+  color: var(--color-text-secondary);
+
+  li {
+    position: relative;
+    padding-left: var(--space-5);
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.8em;
+      width: 8px;
+      height: 1px;
+      background-color: var(--color-accent);
+    }
+  }
+}
+
+// ---- Visuals — 미디어 그리드 ----
+
+.visualGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-6);
+
+  @include mixins.tablet-up {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+// ---- 6. Reflection ----
+
+.reflectionNote {
+  max-width: var(--prose-max-width);
+  color: var(--color-text-secondary);
+}
+
+.reflectionGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-7);
+
+  @include mixins.tablet-up {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.reflectionItem {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.reflectionTitle {
+  font-size: var(--text-subheading);
+  font-weight: 650;
+}
+
+.reflectionList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  color: var(--color-text-secondary);
+  font-size: var(--text-small);
+}
+
+// ---- Next Project ----
+
+.nextNav {
+  display: grid;
+  grid-template-columns: 1fr;
+
+  @include mixins.tablet-up {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.nextLink {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-8) var(--layout-inline);
+  border-bottom: 1px solid var(--color-border);
+  transition: background-color var(--duration-base) var(--ease-out);
+
+  @include mixins.tablet-up {
+    border-bottom: none;
+
+    &:first-child {
+      border-right: 1px solid var(--color-border);
+    }
+  }
+
+  &:hover {
+    background-color: var(--color-surface);
+
+    .nextName {
+      color: var(--color-accent);
+    }
+  }
+}
+
+.nextLinkEnd {
+  @include mixins.tablet-up {
+    text-align: right;
+    align-items: flex-end;
+  }
+}
+
+.nextDirection {
+  @include mixins.mono-label;
+
+  font-size: 0.625rem;
+}
+
+.nextName {
+  font-size: var(--text-subheading);
+  font-weight: 650;
+  transition: color var(--duration-fast) var(--ease-out);
+}
