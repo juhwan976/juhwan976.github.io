@@ -6,7 +6,13 @@ import type { ProjectChallenge, ProjectDecision } from "@/content/types";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import DiagramView from "@/views/ProjectDetail/components/DiagramView";
 import S from "@/views/ProjectDetail/ProjectDetailPage.styles";
-import { Navigate, useParams } from "react-router-dom";
+import { useCallback } from "react";
+import {
+  Navigate,
+  useLocation,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 
 const ROLE_SUMMARY_LIMIT = 4;
 
@@ -94,12 +100,24 @@ function DecisionBlock({
 export default function ProjectDetailPage(): React.ReactNode {
   const { projectSlug } = useParams();
   const project = projectSlug ? getProjectBySlug(projectSlug) : undefined;
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useDocumentTitle(
     project
       ? `${project.name} · ${siteConfig.pageTitle}`
       : `${siteConfig.name} · ${siteConfig.role}`,
   );
+
+  // 브라우저 뒤로가기와 동일하게 동작한다.
+  // 히스토리 없이 직접 진입한 경우(location.key === 'default')에만 홈으로 보낸다.
+  const goBack = useCallback(() => {
+    if (location.key === "default") {
+      void navigate(ROUTE_PATHS.ROOT);
+    } else {
+      void navigate(-1);
+    }
+  }, [location.key, navigate]);
 
   if (!project) {
     return <Navigate to={ROUTE_PATHS.NOT_FOUND} replace />;
@@ -112,7 +130,9 @@ export default function ProjectDetailPage(): React.ReactNode {
     <>
       <S.TopBar>
         <S.TopBarInner>
-          <S.BackLink to={ROUTE_PATHS.ROOT}>← Back</S.BackLink>
+          <S.BackLink type="button" onClick={goBack}>
+            ← Back
+          </S.BackLink>
           {/* 이력서 다운로드 기능은 당분간 사용하지 않는다.
           <S.ResumeLink
             href={siteConfig.resumeUrl}

@@ -23,7 +23,12 @@ export const TopBarInner = styled.div`
   justify-content: space-between;
 `;
 
-export const BackLink = styled(Link)`
+/** 브라우저 뒤로가기와 동일하게 동작하는 버튼 */
+export const BackLink = styled.button`
+  padding: 0;
+  background: none;
+  border: 0;
+  cursor: pointer;
   font-size: ${({ theme }) => theme.fontSizes.small};
   color: ${({ theme }) => theme.colors.textDim};
   transition: color 0.2s ease;
