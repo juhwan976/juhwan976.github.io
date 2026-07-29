@@ -59,12 +59,20 @@ export default function ClickSpark({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    // 비트맵을 실제 표시 크기 × devicePixelRatio로 맞춘다.
+    // innerWidth는 스크롤바 폭을 포함해 표시 크기와 어긋날 수 있으므로 rect 기준으로 잰다.
     const resize = (): void => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      const rect = canvas.getBoundingClientRect();
+      const ratio = window.devicePixelRatio || 1;
+      canvas.width = Math.round(rect.width * ratio);
+      canvas.height = Math.round(rect.height * ratio);
+      // 이후 그리기는 CSS 픽셀 좌표(clientX/Y) 그대로 사용한다.
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
     };
     resize();
-    window.addEventListener('resize', resize);
+    // 스크롤바 표시/숨김은 window resize를 발생시키지 않으므로 요소 크기를 직접 관찰한다.
+    const ro = new ResizeObserver(resize);
+    ro.observe(canvas);
 
     const onClick = (e: MouseEvent): void => {
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -117,7 +125,7 @@ export default function ClickSpark({
 
     return () => {
       cancelAnimationFrame(rafId);
-      window.removeEventListener('resize', resize);
+      ro.disconnect();
       window.removeEventListener('click', onClick);
     };
   }, [sparkColor, sparkSize, sparkRadius, sparkCount, duration, easing, extraScale]);
