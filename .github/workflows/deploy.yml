@@ -1,0 +1,52 @@
+# GitHub Pages 배포 — 소스 브랜치를 그대로 두고 Actions가 빌드해 배포한다.
+# 사용 전제: 저장소 Settings → Pages → Source를 "GitHub Actions"로 변경해야 한다.
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [gh-pages, main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build
+        run: yarn build
+
+      # SPA 딥링크(/projects/*) 새로고침 대응 — Pages는 404 시 404.html을 서빙한다.
+      - name: Create SPA fallback
+        run: cp dist/index.html dist/404.html
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
