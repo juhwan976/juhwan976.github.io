@@ -1,0 +1,78 @@
+---
+description: 이 규칙은 인증 상태 및 세션 처리 기준을 정의합니다.
+glob:
+alwaysApply: false
+---
+
+# 인증 / 세션 규칙
+
+---
+
+## 1. 기본 원칙
+
+- 인증 상태는 단일 원천(single source of truth)으로 관리한다.
+- Guard(`RequireAuth`, `RequireRole`)는 이 인증 상태 원천만 참조한다.
+- 인증 판정 로직을 View/Component에 분산하지 않는다.
+- 인증 상태 저장소는 Redux를 기본으로 사용한다.
+
+---
+
+## 2. 인증 상태 표준
+
+- 인증 상태 모델은 최소 아래 필드를 가진다.
+
+```typescript
+interface AuthState {
+  isAuthenticated: boolean;
+  accessToken: string | null;
+  expiresAt: number | null; // unix ms
+  userRole: string | null;
+}
+```
+
+- Guard 판정은 최소 `isAuthenticated`와 `expiresAt`를 함께 사용한다.
+- 세션 만료(`Date.now() >= expiresAt`) 상태는 미인증으로 취급한다.
+- AuthState는 인증 전역 상태로 store(`src/store/`)에서 관리한다.
+
+---
+
+## 3. 토큰 저장/사용 규칙
+
+- 토큰 저장 위치는 보안 정책에 따라 선택하되, 기본 권장 순서는 `httpOnly cookie` -> `메모리` -> `localStorage`다.
+- Redux에는 인증 판정에 필요한 상태를 저장하되, 토큰 원문 저장은 최소화한다.
+- 인증 토큰 직접 접근(`localStorage.getItem(...)`)은 View/Controller/Component에서 금지한다.
+- API 요청에 필요한 인증 헤더 주입은 API 레이어 또는 공통 HTTP 계층에서 처리한다.
+
+---
+
+## 4. 세션 만료/갱신 규칙
+
+- 요청 실패가 인증 만료(401/403)로 확인되면 세션 만료 처리 흐름을 실행한다.
+- 토큰 갱신 정책을 사용하는 경우, 갱신 실패 시 즉시 로그아웃 처리한다.
+- 만료/로그아웃 후에는 보호 라우트 접근 시 Guard가 리다이렉트를 수행한다.
+
+---
+
+## 5. 로그아웃 정리 범위
+
+- 로그아웃 시 아래를 함께 정리한다.
+  - 인증 상태(AuthState)
+  - 인증 토큰/세션 저장소
+  - 인증 의존 캐시(필요 시)
+- 정리 후 리다이렉트 경로는 `AUTH_REDIRECT_PATHS` 상수를 사용한다.
+
+---
+
+## 6. Guard 연동 규칙
+
+- `RequireAuth`는 인증 상태와 만료 상태를 판정해 접근을 허용/차단한다.
+- `RequireRole`는 인증 통과 이후 권한(`userRole`)을 검증한다.
+- 상세 리다이렉트 정책은 `.cursor/rules/guard.mdc`를 따른다.
+
+---
+
+## 금지 사항
+
+- View/Component에서 인증 상태를 임의 계산하지 말 것
+- 인증 만료 판정을 화면마다 중복 구현하지 말 것
+- 인증 토큰을 여러 레이어에서 직접 읽거나 쓰지 말 것

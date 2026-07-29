@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>와이어프레임 — Editorial Product Engineer Portfolio</title>
+<style>
+  :root {
+    --bg: #0e0f11;
+    --panel: #16181b;
+    --panel-2: #1d2024;
+    --line: #2c3036;
+    --text: #e8e6e1;
+    --dim: #8a8f96;
+    --accent: #ff5c1f;
+    --note: #d8b64e;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #232323;
+    color: var(--text);
+    font-family: -apple-system, "Pretendard", "Apple SD Gothic Neo", sans-serif;
+    padding: 48px 24px 120px;
+  }
+  h1 { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+  .doc-sub { color: #9a9a9a; font-size: 13px; margin-bottom: 48px; }
+  h2.frame-title {
+    font-size: 15px; font-weight: 600; color: #cfcfcf;
+    margin: 64px auto 12px; max-width: 1240px;
+  }
+  h2.frame-title span { color: #8a8a8a; font-weight: 400; }
+
+  /* ===== 데스크톱 프레임 ===== */
+  .frame {
+    max-width: 1240px; margin: 0 auto;
+    background: var(--bg); border: 1px solid #3a3a3a; border-radius: 10px;
+    overflow: hidden; font-size: 12px;
+  }
+  .frame-inner { position: relative; }
+
+  /* 스케일: 1728px 레이아웃을 1240px 프레임으로 표현 (비율 축소된 값 사용) */
+  .sec {
+    position: relative;
+    border-bottom: 1px dashed #33363b;
+    padding: 56px clamp(24px, 5vw, 64px);
+  }
+  .sec:last-child { border-bottom: none; }
+  .sec-tag {
+    position: absolute; top: 10px; right: 12px;
+    font-size: 10px; color: var(--note); letter-spacing: 0.08em;
+  }
+  .motion-tag {
+    position: absolute; top: 10px; left: 12px;
+    font-size: 10px; color: #5fa8ff; letter-spacing: 0.05em;
+  }
+  .label { font-size: 10px; letter-spacing: 0.18em; color: var(--dim); text-transform: uppercase; margin-bottom: 14px; }
+  .box { background: var(--panel); border: 1px solid var(--line); border-radius: 4px; }
+  .media {
+    background:
+      linear-gradient(135deg, transparent 49.6%, #3a3f46 49.6%, #3a3f46 50.4%, transparent 50.4%),
+      linear-gradient(45deg, transparent 49.6%, #3a3f46 49.6%, #3a3f46 50.4%, transparent 50.4%),
+      var(--panel-2);
+    border: 1px solid var(--line); border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--dim); font-size: 11px; letter-spacing: 0.05em;
+  }
+  .t-xxl { font-size: 34px; font-weight: 700; line-height: 1.25; letter-spacing: -0.01em; }
+  .t-xl { font-size: 26px; font-weight: 700; line-height: 1.3; }
+  .t-l { font-size: 18px; font-weight: 600; }
+  .t-body { font-size: 13px; color: var(--dim); line-height: 1.7; max-width: 460px; }
+  .t-num { font-family: "SF Mono", ui-monospace, monospace; color: var(--accent); font-size: 12px; }
+  .orange { color: var(--accent); }
+  .thin-btn {
+    display: inline-block; margin-top: 18px; padding: 8px 0;
+    border-bottom: 1px solid var(--accent); color: var(--accent);
+    font-size: 12px; letter-spacing: 0.06em;
+  }
+
+  /* 헤더 */
+  .hdr {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 18px clamp(24px, 5vw, 64px); border-bottom: 1px solid var(--line);
+    position: relative;
+  }
+  .hdr .nav { display: flex; gap: 22px; color: var(--dim); font-size: 11px; letter-spacing: 0.1em; }
+  .hdr .nav b { color: var(--text); font-weight: 500; }
+
+  /* Hero */
+  .hero { min-height: 430px; display: flex; flex-direction: column; justify-content: center; }
+  .hero-3d {
+    position: absolute; inset: 0; overflow: hidden; pointer-events: none;
+    background: radial-gradient(ellipse 60% 70% at 78% 45%, rgba(255,92,31,0.10), transparent 65%);
+  }
+  .hero-3d::after {
+    content: "3D 배경 (기존 HeroScene 유지 · 우측 절반 · 약한 마우스 반응)";
+    position: absolute; right: 40px; top: 46%;
+    color: #55391f; font-size: 11px; border: 1px dashed #55391f; padding: 26px 20px; border-radius: 6px;
+  }
+  .hero > .label, .hero > .t-xxl, .hero > .t-body, .hero > .thin-btn { position: relative; }
+  .hero .thin-btn { align-self: flex-start; }
+
+  /* About */
+  .about-grid { display: grid; grid-template-columns: 200px 1fr; gap: 40px; }
+
+  /* Work */
+  .work-item { display: grid; grid-template-columns: 5fr 7fr; gap: 40px; padding: 34px 0; border-top: 1px solid var(--line); align-items: center; }
+  .work-item:first-of-type { border-top: none; }
+  .work-meta { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 16px; color: var(--dim); font-size: 11px; }
+  .work-kpi { display: flex; gap: 28px; margin-top: 18px; }
+  .work-kpi div b { display: block; font-size: 16px; color: var(--text); }
+  .work-kpi div span { font-size: 10px; color: var(--dim); }
+
+  /* Career */
+  .career-row { display: grid; grid-template-columns: 150px 1fr 340px; gap: 28px; padding: 20px 0; border-top: 1px solid var(--line); }
+  .career-row .period { color: var(--dim); font-size: 11px; letter-spacing: 0.06em; padding-top: 3px; }
+  .career-row .role b { display: block; font-size: 14px; margin-bottom: 4px; }
+  .career-row .role span { color: var(--dim); font-size: 12px; }
+  .career-row .scope { color: var(--dim); font-size: 11px; line-height: 1.6; }
+  .career-row.current { background: linear-gradient(90deg, rgba(255,92,31,0.06), transparent 70%); border-left: 2px solid var(--accent); padding-left: 14px; margin-left: -16px; }
+
+  /* Principles */
+  .principle { padding: 30px 0; border-top: 1px solid var(--line); display: grid; grid-template-columns: 60px 1fr; gap: 24px; align-items: baseline; }
+  .principle .no { font-family: ui-monospace, monospace; color: var(--dim); font-size: 12px; }
+  .principle p { color: var(--dim); font-size: 12px; margin-top: 8px; max-width: 480px; }
+
+  /* Contact */
+  .contact { text-align: left; }
+  .contact-links { display: flex; gap: 28px; margin-top: 22px; font-size: 12px; }
+  .contact-links a { color: var(--text); border-bottom: 1px solid var(--line); padding-bottom: 4px; text-decoration: none; }
+  .big-name { font-size: 56px; font-weight: 800; letter-spacing: -0.02em; color: #24272b; margin-top: 48px; line-height: 1; }
+
+  /* ===== 상세 페이지 ===== */
+  .detail-hero { padding: 64px clamp(24px, 5vw, 64px) 40px; }
+  .detail-meta { display: flex; gap: 36px; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--dim); font-size: 11px; }
+  .detail-meta b { display: block; color: var(--text); font-size: 12px; margin-bottom: 3px; }
+  .detail-body { display: grid; grid-template-columns: 1fr 620px 1fr; }
+  .detail-body > * { grid-column: 2; }
+  .detail-body .full { grid-column: 1 / -1; }
+
+  /* ===== 모바일 프레임 ===== */
+  .mobiles { display: flex; gap: 24px; max-width: 1240px; margin: 0 auto; flex-wrap: wrap; }
+  .mobile {
+    width: 300px; background: var(--bg); border: 1px solid #3a3a3a; border-radius: 14px;
+    overflow: hidden; font-size: 10px; flex-shrink: 0;
+  }
+  .mobile .sec { padding: 28px 20px; }
+  .mobile .t-xxl { font-size: 21px; }
+  .mobile .t-xl { font-size: 17px; }
+  .mobile .t-body { font-size: 11px; }
+  .mobile .career-row { grid-template-columns: 1fr; gap: 6px; }
+  .mobile .work-kpi { gap: 16px; }
+  .mobile .work-kpi div b { font-size: 13px; }
+  .mobile-title { font-size: 11px; color: #9a9a9a; text-align: center; padding: 10px 0; background: #191919; border-bottom: 1px solid #333; }
+  .legend {
+    max-width: 1240px; margin: 24px auto 0; font-size: 12px; color: #9a9a9a; line-height: 1.9;
+  }
+  .legend i { font-style: normal; }
+  .legend .y { color: var(--note); } .legend .b { color: #5fa8ff; }
+</style>
+</head>
+<body>
+
+<h1>와이어프레임 — Editorial Product Engineer Portfolio</h1>
+<p class="doc-sub">2026-07-29 · 코드 수정 전 제안용 · 실제 구현 시 전체 레이아웃 최대 1728px, 본문 최대 620px, 좌우 여백 clamp(24px, 6vw, 120px)</p>
+<p class="legend">
+  <i class="y">■ 노란 라벨</i> = 참고 레퍼런스 &nbsp;·&nbsp; <i class="b">■ 파란 라벨</i> = 모션 적용 위치 &nbsp;·&nbsp; 빗금 상자 = 이미지/영상 자리
+</p>
+
+<h2 class="frame-title">1. 메인 페이지 — 데스크톱 <span>(1440~1920)</span></h2>
+<div class="frame"><div class="frame-inner">
+
+  <div class="hdr">
+    <div style="font-weight:700;">JOOHWAN JANG</div>
+    <div class="nav"><b>WORK</b><span>CAREER</span><span>CONTACT</span><span class="orange">RESUME ↗</span></div>
+    <span class="sec-tag">Brittany: 최소 내비 + Resume 상시 노출</span>
+  </div>
+
+  <div class="sec hero">
+    <div class="hero-3d"></div>
+    <span class="sec-tag">Emil: 문구 그대로 / Max: 3D 절제</span>
+    <span class="motion-tag">모션: 3D 약한 마우스 반응 1곳만</span>
+    <div class="label">Frontend Engineer / UX Engineer</div>
+    <div class="t-xxl">웹과 앱에서 필요한 기능을<br />설계하고 구현합니다.</div>
+    <p class="t-body" style="margin-top:18px;">React와 Flutter를 중심으로 모바일, 웹, TV,<br />데스크톱 애플리케이션을 개발해왔습니다.</p>
+    <span class="thin-btn">Selected Work ↓</span>
+  </div>
+
+  <div class="sec">
+    <span class="sec-tag">Emil: 2문단, 한 화면 이내</span>
+    <div class="about-grid">
+      <div class="label">About</div>
+      <div>
+        <div class="t-xl">Excel VBA로 테트리스를 만들면서<br />개발을 시작했습니다.</div>
+        <p class="t-body" style="margin-top:16px;">직접 생각한 기능이 실제로 동작하는 과정에 흥미를 느꼈습니다.
+        지금은 기능의 목적을 먼저 확인하고, 사용 방식과 유지보수 구조를 함께 고민합니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <span class="sec-tag">Pumo: 1프로젝트 = 1밴드 (텍스트 40 : 미디어 60)</span>
+    <span class="motion-tag">모션: 미디어 mask reveal + 미세 scale, 01은 배경 톤 전환</span>
+    <div class="label">Selected Work</div>
+
+    <div class="work-item">
+      <div>
+        <div class="t-num">01</div>
+        <div class="t-l" style="margin-top:6px;">물류 시뮬레이터</div>
+        <p class="t-body" style="margin-top:10px;">공장 도면 위에서 AGV 경로를 설계하고 운행을 검증하는 3D 시뮬레이터</p>
+        <div class="work-kpi">
+          <div><b>1개월</b><span>핵심 기능 프로토타입</span></div>
+          <div><b>2클릭</b><span>선로 설치 UX</span></div>
+          <div><b>2모드</b><span>탑뷰/자유 시점</span></div>
+        </div>
+        <div class="work-meta"><span>Electron</span><span>React</span><span>Three.js</span><span>TypeScript</span></div>
+        <span class="thin-btn">View Case Study →</span>
+      </div>
+      <div class="media" style="height:230px;">시뮬레이터 실제 화면 영상</div>
+    </div>
+
+    <div class="work-item">
+      <div>
+        <div class="t-num">02</div>
+        <div class="t-l" style="margin-top:6px;">LGSC</div>
+        <p class="t-body" style="margin-top:10px;">한 줄 설명</p>
+        <div class="work-kpi"><div><b>성과</b><span>최대 3개</span></div></div>
+        <div class="work-meta"><span>기술 최대 4개</span></div>
+        <span class="thin-btn">View Case Study →</span>
+      </div>
+      <div class="media" style="height:230px;">대표 화면</div>
+    </div>
+
+    <div class="work-item">
+      <div>
+        <div class="t-num">03</div>
+        <div class="t-l" style="margin-top:6px;">Travel+</div>
+        <p class="t-body" style="margin-top:10px;">한 줄 설명</p>
+        <div class="work-kpi"><div><b>성과</b><span>최대 3개</span></div></div>
+        <div class="work-meta"><span>기술 최대 4개</span></div>
+        <span class="thin-btn">View Case Study →</span>
+      </div>
+      <div class="media" style="height:230px;">대표 화면 (TV 프레임)</div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <span class="sec-tag">Brittany: 기간+역할 구조 / Max: 얇은 구분선 테이블</span>
+    <span class="motion-tag">모션: 현재(마지막) 항목만 강조</span>
+    <div class="label">Career — 아뮤즈, 역할이 확장된 과정</div>
+
+    <div class="career-row current">
+      <div class="period">2026 — 현재</div>
+      <div class="role"><b>Frontend Team Lead · 3D 시뮬레이터</b><span>Electron · Three.js · 아키텍처/일정/고객 커뮤니케이션</span></div>
+      <div class="scope">대표 성과 1줄 (Work와 중복 금지, 역할 관점만)</div>
+    </div>
+    <div class="career-row">
+      <div class="period">2025</div>
+      <div class="role"><b>AI 모바일 · 백엔드</b><span>담당 범위 1줄</span></div>
+      <div class="scope">대표 성과 1줄</div>
+    </div>
+    <div class="career-row">
+      <div class="period">2024</div>
+      <div class="role"><b>React · webOS 성능 개선</b><span>담당 범위 1줄</span></div>
+      <div class="scope">대표 성과 1줄</div>
+    </div>
+    <div class="career-row">
+      <div class="period">2023</div>
+      <div class="role"><b>IoT 앱 · 프로젝트 리드</b><span>담당 범위 1줄</span></div>
+      <div class="scope">대표 성과 1줄</div>
+    </div>
+    <div class="career-row">
+      <div class="period">2022</div>
+      <div class="role"><b>Flutter 모바일 앱 신규 개발</b><span>담당 범위 1줄</span></div>
+      <div class="scope">대표 성과 1줄</div>
+    </div>
+    <div class="career-row">
+      <div class="period">2021</div>
+      <div class="role"><b>Android 유지보수</b><span>담당 범위 1줄</span></div>
+      <div class="scope">대표 성과 1줄</div>
+    </div>
+    <span class="thin-btn">View Full Résumé ↗</span>
+  </div>
+
+  <div class="sec">
+    <span class="sec-tag">Rauno: 선언 한 줄 + 설명 ≤2줄, 한 항목씩 넓게</span>
+    <div class="label">Principles</div>
+    <div class="principle"><div class="no">P.01</div><div><div class="t-l">기능을 만들기 전에 목적부터 확인합니다.</div><p>설명 최대 두 줄</p></div></div>
+    <div class="principle"><div class="no">P.02</div><div><div class="t-l">사용자가 익숙한 방식을 우선합니다.</div><p>설명 최대 두 줄</p></div></div>
+    <div class="principle"><div class="no">P.03</div><div><div class="t-l">변경하기 쉬운 구조를 만듭니다.</div><p>설명 최대 두 줄</p></div></div>
+    <div class="principle"><div class="no">P.04</div><div><div class="t-l">프로젝트에 맞는 기술을 선택합니다.</div><p>설명 최대 두 줄</p></div></div>
+  </div>
+
+  <div class="sec contact">
+    <span class="sec-tag">Pumo+Brittany: 필수 정보만, 감성 문구 없음</span>
+    <div class="label">Contact</div>
+    <div class="t-xl">장주환 — Frontend Engineer / UX Engineer</div>
+    <div class="contact-links">
+      <a>email@example.com</a>
+      <a class="orange" style="border-color:var(--accent); color:var(--accent);">이력서 보기 (PDF)</a>
+      <a>GitHub ↗</a>
+    </div>
+    <div class="big-name">JOOHWAN JANG</div>
+  </div>
+
+</div></div>
+
+<h2 class="frame-title">2. 프로젝트 상세 (Case Study) — 데스크톱</h2>
+<div class="frame"><div class="frame-inner">
+
+  <div class="hdr">
+    <div style="color:var(--dim);">← Back</div>
+    <div class="nav"><span class="orange">RESUME ↗</span></div>
+  </div>
+
+  <div class="sec detail-hero">
+    <span class="motion-tag">모션: 페이지 진입 시 짧은 transition 1회</span>
+    <div class="t-num">01 — 물류 시뮬레이터</div>
+    <div class="t-xxl" style="margin-top:12px;">제약이 많은 선로 편집기를<br />빠른 설계 도구로 바꾸다.</div>
+    <div class="detail-meta">
+      <div><b>기간</b>2026.07 — 현재</div>
+      <div><b>팀</b>1인 개발</div>
+      <div><b>역할</b>UX 설계 · 아키텍처 · 개발 전체</div>
+      <div><b>기술</b>Electron · React · Three.js · RTK</div>
+    </div>
+  </div>
+
+  <div class="sec" style="padding-top:0; padding-bottom:0;">
+    <div class="media" style="height:300px; border-radius:0; margin:0 -64px;">대표 영상 — 풀블리드</div>
+  </div>
+
+  <div class="sec detail-body">
+    <div>
+      <div class="label">Background</div>
+      <p class="t-body">배경 목록 → 본문 620px 컬럼, 문단으로. (기존 콘텐츠 유지)</p>
+      <div class="label" style="margin-top:36px;">Key Challenge — 선로 설치, 두 번의 클릭으로</div>
+      <p class="t-body">문제 → 접근 → 결과. 문단 사이에 실제 화면 삽입.</p>
+    </div>
+    <div class="media full" style="height:200px; margin-top:28px;">Before / After 전환 (Rauno: 상태 변화 설명형 인터랙션)</div>
+    <div style="margin-top:28px;">
+      <div class="label">Architecture</div>
+      <p class="t-body">아키텍처 다이어그램 — 스크롤 진입 시 흐름 순차 표시 (기존 DiagramView 개선)</p>
+    </div>
+    <div style="margin-top:28px; padding-bottom:40px;">
+      <div class="label">Outcome</div>
+      <p class="t-body">성과 수치 나열 (기존 highlights 유지)</p>
+    </div>
+  </div>
+
+  <div class="sec" style="display:flex; justify-content:space-between;">
+    <span class="t-body">← 이전: Travel+</span>
+    <span class="t-body">다음: LGSC →</span>
+  </div>
+
+</div></div>
+
+<h2 class="frame-title">3. 모바일 <span>(390×844)</span> — 좌: 메인 / 우: 상세</h2>
+<div class="mobiles">
+  <div class="mobile">
+    <div class="mobile-title">메인 — 세로 스택, 정보 생략 없음</div>
+    <div class="hdr" style="padding:14px 20px;"><b style="font-size:11px;">JOOHWAN JANG</b><span style="color:var(--dim); font-size:10px;">MENU</span></div>
+    <div class="sec">
+      <div class="label">Hero — 3D는 정적 배경으로 축소(마우스 반응 없음)</div>
+      <div class="t-xxl">웹과 앱에서 필요한<br />기능을 설계하고<br />구현합니다.</div>
+      <p class="t-body" style="margin-top:10px;">React와 Flutter를 중심으로…</p>
+      <span class="thin-btn">Selected Work ↓</span>
+    </div>
+    <div class="sec">
+      <div class="label">Work — 미디어가 먼저, 성과는 접지 않고 노출</div>
+      <div class="media" style="height:130px; margin-bottom:12px;">대표 화면</div>
+      <div class="t-num">01</div>
+      <div class="t-l">물류 시뮬레이터</div>
+      <div class="work-kpi">
+        <div><b>1개월</b><span>프로토타입</span></div>
+        <div><b>2클릭</b><span>선로 설치</span></div>
+      </div>
+      <span class="thin-btn">Case Study →</span>
+    </div>
+    <div class="sec">
+      <div class="label">Career — 기간이 위로 (테이블 → 스택)</div>
+      <div class="career-row current"><div class="period">2026 — 현재</div><div class="role"><b>Frontend Team Lead</b></div></div>
+      <div class="career-row"><div class="period">2025</div><div class="role"><b>AI 모바일 · 백엔드</b></div></div>
+    </div>
+    <div class="sec">
+      <div class="label">Contact</div>
+      <div class="t-l">장주환</div>
+      <div class="contact-links" style="flex-direction:column; gap:10px;">
+        <a>email@example.com</a><a class="orange" style="color:var(--accent); border-color:var(--accent);">이력서 보기 (PDF)</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="mobile">
+    <div class="mobile-title">상세 — 메타 2열 그리드, 미디어 풀폭</div>
+    <div class="sec">
+      <div class="t-num">01 — 물류 시뮬레이터</div>
+      <div class="t-xl" style="margin-top:8px;">제약이 많은 선로 편집기를 빠른 설계 도구로 바꾸다.</div>
+      <div class="detail-meta" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+        <div><b>기간</b>2026.07 —</div>
+        <div><b>팀</b>1인 개발</div>
+      </div>
+    </div>
+    <div class="media" style="height:150px; border-radius:0;">대표 영상 풀폭</div>
+    <div class="sec">
+      <div class="label">Key Challenge</div>
+      <p class="t-body">본문은 문단 그대로, Before/After는 탭 전환으로 단순화</p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

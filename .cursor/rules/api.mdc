@@ -1,0 +1,279 @@
+---
+description: 이 규칙은 앱 내 Api 관련 파일을 작성할 때 필요한 규칙을 정의합니다.
+glob:
+alwaysApply: false
+---
+
+# API 생성 규칙
+
+---
+
+## 생성 방법 (Hygen)
+
+- 기본 생성 명령: `yarn g:api`
+- 비대화형 생성 예시:
+  - `yarn hygen api new --name Resource --domain resource`
+- 생성 결과:
+  - 도메인 폴더 내 기본 7개 파일 생성 (빈 스캐폴드 + 주석 예시 포함)
+  - 생성 직후 메서드는 비어 있고, 구현 예시는 주석으로 제공
+  - `src/api/index.ts`(barrel), `src/api/ApiProvider.tsx` 자동 주입
+
+---
+
+## 1. 생성 위치
+
+`src/api/{도메인명}/`
+
+---
+
+## 2. IApi 베이스 클래스 (`src/api/IApi.ts`)
+
+모든 API는 이 클래스를 상속한다. 직접 수정하지 않고 그대로 사용한다.
+
+- `baseUrl`을 생성자에서 받아 모든 요청 URL 앞에 결합한다.
+- HTTP 메서드(`get`, `post`, `put`, `delete`)는 `protected`로 하위 클래스에서만 사용한다.
+- `extractErrorMessage(e: unknown)`를 통해 catch 블록의 에러 메시지를 추출한다.
+
+```typescript
+import type { AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios from 'axios';
+
+export default abstract class IApi {
+  private readonly baseUrl: string;
+
+  constructor(baseUrl: string = '') {
+    this.baseUrl = baseUrl;
+  }
+
+  protected extractErrorMessage(e: unknown): string {
+    if (e instanceof Error) {
+      return e.message;
+    }
+
+    return 'Unknown error';
+  }
+
+  protected async get<T = unknown>(
+    url: string,
+    config?: AxiosRequestConfig,
+  ): Promise<AxiosResponse<T>> {
+    return axios.get<T>(`${this.baseUrl}${url}`, config);
+  }
+
+  protected async post<T = unknown>(
+    url: string,
+    data?: unknown,
+    config?: AxiosRequestConfig,
+  ): Promise<AxiosResponse<T>> {
+    return axios.post<T>(`${this.baseUrl}${url}`, data, config);
+  }
+
+  protected async put<T = unknown>(
+    url: string,
+    data?: unknown,
+    config?: AxiosRequestConfig,
+  ): Promise<AxiosResponse<T>> {
+    return axios.put<T>(`${this.baseUrl}${url}`, data, config);
+  }
+
+  protected async delete<T = unknown>(
+    url: string,
+    config?: AxiosRequestConfig,
+  ): Promise<AxiosResponse<T>> {
+    return axios.delete<T>(`${this.baseUrl}${url}`, config);
+  }
+}
+```
+
+---
+
+## 3. 반드시 생성해야하는 7개 파일
+
+- `I{API이름}Api.ts` (추상 클래스)
+- `I{API이름}.ts` (Params/Result 인터페이스)
+- `{API이름}Api.ts` (실제 구현)
+- `Fake{API이름}Api.ts` (Mock 구현)
+- `{API이름}ApiContext.ts` (Context 객체)
+- `{API이름}ApiProvider.tsx` (Provider 컴포넌트)
+- `use{API이름}Api.ts` (접근 훅)
+
+---
+
+## 4. I{API이름}Api.ts 규칙
+
+- 반드시 IApi를 상속한다.
+- 기본 생성 시 메서드 없는 빈 추상 클래스로 시작한다.
+- 실제 사용 메서드가 확정되면 `abstract` 메서드를 추가한다.
+- 반환 타입은 `{메서드명}Result` 형식을 따른다.
+- 인자는 옵셔널이 필요할 경우 `{메서드명}Params`로 선언한다.
+
+예시
+
+```typescript
+export default abstract class IResourceApi extends IApi {}
+```
+
+---
+
+## 5. I{API이름}.ts 규칙
+
+- 기본 생성 시 빈 타입 스캐폴드로 생성한다.
+- 여기에는 API 내에서 사용하는 Params와 각종 Result를 선언한다.
+- Param 이름은 `{메서드명}Params`로 선언한다.
+- Result 이름은 `{메서드명}Result`로 선언한다.
+
+### 5-1. Result 선언 규칙
+
+- 모든 Result는 `src/types/BaseResult.ts`의 `BaseResult`를 기반으로 한다.
+- 추가 데이터가 있는 경우 `extends BaseResult`로 확장한다.
+- 추가 데이터가 없는 경우 `type {메서드명}Result = BaseResult`로 선언한다.
+
+```typescript
+// BaseResult (src/types/BaseResult.ts)
+export default interface BaseResult {
+  success: boolean;
+  message: string | null;
+}
+```
+
+```typescript
+// 데이터가 있는 경우
+export interface GetResourcesResult extends BaseResult {
+  data: ResourceEntity[];
+}
+
+export interface CreateResourceResult extends BaseResult {
+  data: ResourceEntity | null;
+}
+
+// 데이터가 없는 경우
+export type DeleteResourceResult = BaseResult;
+```
+
+---
+
+## 6. {API이름}Api.ts 규칙
+
+- 반드시 `I{API이름}Api` 를 상속한다.
+- 기본 생성 시 메서드 없는 빈 구현 클래스로 생성한다.
+- 실제 구현이 시작되면 필요한 메서드만 점진적으로 추가한다.
+- API 응답을 Entity로 변환하여 반환한다. 응답 객체를 그대로 반환하지 않는다.
+- 반드시 `Entity.fromJson()`을 통해 Entity로 변환한다.
+- 에러가 생길 경우를 대비해서 항상 try-catch로 감싼다.
+
+### 6-1. 에러 처리 규칙
+
+- catch 블록에서 에러 메시지를 직접 추출하지 않는다.
+- 반드시 `IApi`의 `this.extractErrorMessage(e)`를 사용한다.
+
+예시
+
+```typescript
+export default class ResourceApi extends IResourceApi {}
+```
+
+---
+
+## 7. Fake{API이름}Api.ts 규칙
+
+- 실제 API와 동일한 반환 타입을 가진다.
+- 기본 생성 시 메서드 없는 빈 구현 클래스로 생성한다.
+- Entity를 직접 생성하거나 `fromJson`을 사용한다.
+- 반환 구조는 Real API와 완전히 동일해야한다.
+- 더미 데이터 파일은 필요할 때 도메인/시나리오별로 추가한다. (Fake를 사용하는 경우 JSON 파일을 기본으로 사용한다)
+
+### 7-1. Fake 데이터 파일 규칙
+
+- Fake API(`Fake{API이름}Api.ts`)에서 사용하는 더미 데이터는 **`src/assets/dummies/` 하위 JSON 파일**로 관리한다.
+- 도메인별 디렉터리 구조:
+  - `src/assets/dummies/{domain}/`
+  - 예: `todo` → `src/assets/dummies/todo/`, `tag` → `src/assets/dummies/tag/`
+- 파일명 규칙:
+  - 목록: `{resource}_list.json` (예: `todos_list.json`, `tags_list.json`)
+  - 시나리오 분리 필요 시: `{resource}_{scenario}.json`
+    - 예: `todo_detail_default.json`, `todo_detail_not_found.json`
+- Fake API는 더미 데이터를 직접 하드코딩하지 않고, 위 JSON 파일을 import 해서 사용한다.
+  - 예: `import raw from '@/assets/dummies/todo/todos_list.json';`
+  - `const entities = (raw as unknown[]).map((item) => TodoEntity.fromJson(item));`
+- JSON → Entity 변환은 항상 `Entity.fromJson()`으로 수행하며, JSON 구조는 해당 Entity의 `fromJson`이 기대하는 서버 응답 스키마를 그대로 따른다.
+
+---
+
+## 8. {API이름}ApiProvider.tsx 규칙
+
+- Context 기반 Provider를 생성한다.
+- Fake/Real 전환은 설정값 (`src/constants/api_config.ts`)의 `API_CONFIG.USE_FAKE` 값을 이용하여 설정한다.
+- View에서 API를 직접 import 하지 않는다.
+- Context, Provider, Hook은 각각 별도 파일로 분리한다. (Fast Refresh 대응)
+  - `{API이름}ApiContext.ts` — Context 객체
+  - `{API이름}ApiProvider.tsx` — Provider 컴포넌트
+  - `use{API이름}Api.ts` — 접근 훅
+
+- `src/api/ApiProvider.tsx` 파일 내 생성한 ApiProvider를 추가한다.
+
+예시
+
+```typescript
+// ApiProvider.tsx
+type ProviderComponent = React.ComponentType<{children: React.ReactNode}>;
+
+const providers: ProviderComponent[] = [
+  ResourceApiProvider,
+];
+
+const composeProviders = (providerList: ProviderComponent[]) => {
+  return providerList.reduce(
+    (Previous, Current) => {
+      return ({ children }: { children: React.ReactNode }) => (
+        <Previous>
+          <Current>{children}</Current>
+        </Previous>
+      );
+    },
+    ({ children }: { children: React.ReactNode }) => <>{children}</>
+  );
+};
+
+const AllProviders = composeProviders(providers);
+
+const ApiProviders = ({ children }: { children: React.ReactNode }) => {
+  return <AllProviders>{children}</AllProviders>;
+};
+
+export default ApiProviders;
+```
+
+---
+
+## 9. Barrel Export 규칙 (`src/api/index.ts`)
+
+- API 레이어 외부에서는 `@/api` (barrel)를 통해서만 import 한다.
+- `@/api/resource/useResourceApi` 같은 직접 경로 import는 ESLint에 의해 차단된다.
+- barrel에는 외부에 공개할 대상만 export 한다: `ApiProviders`, `use{API이름}Api` 훅.
+- 새 API 도메인 추가 시 barrel에 해당 훅을 추가한다.
+
+예시
+
+```typescript
+// src/api/index.ts
+export { default as ApiProviders } from './ApiProvider';
+export { default as useResourceApi } from './resource/useResourceApi';
+```
+
+```typescript
+// View에서 사용 (올바른 방법)
+import { useResourceApi } from '@/api';
+
+// 직접 경로 import (ESLint 차단)
+import useResourceApi from '@/api/resource/useResourceApi'; // Error
+```
+
+---
+
+## 금지 사항
+
+- DTO 타입/클래스는 따로 만들지 않는다. 응답은 Entity.fromJson()으로 변환해 사용한다.
+- API 내부에서 ViewModel을 생성하지 말 것
+- Entity 생성을 생략하지 말 것
+- catch 블록에서 에러 메시지를 직접 추출하지 말 것 (`this.extractErrorMessage` 사용)
+- Result에 `success`, `message`를 직접 선언하지 말 것 (`BaseResult`를 확장)

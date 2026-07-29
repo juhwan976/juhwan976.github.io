@@ -1,0 +1,103 @@
+---
+description: 이 규칙은 앱 내 ViewModel 관련 파일을 작성할 때 필요한 규칙을 정의합니다.
+glob:
+alwaysApply: false
+---
+
+# ViewModel 생성 규칙
+
+---
+
+## 1. 생성 위치
+
+`src/view_models/{도메인명}/`
+
+---
+
+## 2. 기본 구조
+
+```typescript
+interface UserViewModelProps {
+  displayName: string;
+}
+
+export default class UserViewModel extends BaseViewModel {
+  readonly displayName: string;
+
+  constructor(props: UserViewModelProps) {
+    super();
+
+    this.displayName = props.displayName;
+  };
+}
+```
+
+---
+
+## 3. 변환 유틸 생성 규칙
+
+각 ViewModel은 반드시 Entity -> ViewModel 변환 함수를 가진다.
+
+```typescript
+export function createUserViewModel(entity: UserEntity): UserViewModel {
+  return new UserViewModel({
+    displayName: entity.name,
+  });
+}
+```
+
+## 4. 필수 규칙
+
+- 반드시 `BaseViewModel`을 상속한다.
+- 네트워크 로직을 포함하지 않는다.
+- Entity를 내부에 그대로 보관하지 않는다.
+- 모든 속성은 readonly로 선언한다.
+- UI 표현을 위한 데이터 가공만 수행한다.
+
+---
+
+## 5. 상태 책임 구분
+
+- **로딩/에러 상태**(`loadState`, `errorMessage`, `isLoading`)는 ViewModel이 아니라 **Controller 훅**에서 보관하고 View에 넘긴다.
+- ViewModel은 "무엇을 보여줄지"(데이터·파생 값)만 담당한다. "지금 로딩 중인지/에러인지"는 Controller가 관리한다.
+
+---
+
+## 6. 파생 값 규칙
+
+- ViewModel은 UI에 필요한 파생 값(예: `fullName`, `isOverdue`, `displayPrice`)을 가진다.
+- 동일한 파생 값 로직을 View나 컴포넌트에서 중복 계산하지 말고, ViewModel에 모은다.
+- 도메인 규칙을 크게 바꾸는 비즈니스 핵심 로직은 ViewModel이 아니라 Domain/Service 레이어에 둔다.
+
+---
+
+## 7. 프로파일 기준 (S/M/L)
+
+- 기본 시작 프로파일은 `M`이다.
+- `S (Simple)`: 단일 화면의 단순 CRUD이고 UI 가공이 거의 없을 때만 ViewModel 생략을 허용한다. (Entity 경계는 유지)
+- `M (Default)`: ViewModel을 생성하고 Controller에서 Entity -> ViewModel 변환을 수행한다.
+- `L (Complex)`: 표현 모델 조합/파생 로직이 커지고 여러 화면에서 공유되면 Service/UseCase와 함께 분리 설계를 적용한다.
+- 승격 규칙: 재사용 2곳 이상, 정책성 로직 필요, 비동기 단계 3단계 이상 중 하나라도 만족하면 `M/L`로 승격한다.
+- `S`로 시작한 구현이 승격 조건을 만족하면 `M` 또는 `L`로 반드시 승격한다.
+- 다운그레이드(`L→M`, `M→S`)는 복잡도 감소 근거가 있을 때 허용한다.
+
+---
+
+## 8. 변경 체크리스트 (S/M/L)
+
+- [ ] 이번 변경의 프로파일(`S/M/L`)을 선택했고, 근거를 **재사용 N곳 / 정책성 로직 유무 / 비동기 단계 수**로 기록했다.
+- [ ] 승격 조건(재사용 2곳+, 정책성 로직 필요(재시도/캐시/동시성 포함), 비동기 단계 3단계 이상) 충족 시 `M/L`로 반영했다.
+- [ ] 다운그레이드 시 삭제된 복잡도(정책 제거/재사용 감소/비동기 단순화) 근거를 함께 기록했다.
+- [ ] View는 API/Entity에 직접 의존하지 않고 Controller 경계를 지켰다.
+- [ ] ViewModel은 네트워크/스토어에 의존하지 않고 표현 모델 역할만 유지했다.
+- [ ] 로딩/에러 상태 모델(`isLoading` 또는 `loadState`)을 규칙에 맞게 적용했다.
+- [ ] 테스트 범위를 프로파일 수준에 맞게 반영했다. (`S`: 핵심 흐름, `M`: 경계+상태 전이, `L`: 정책/오케스트레이션 포함)
+
+---
+
+## 금지 사항
+
+- API 레이어 import 금지
+- React import 금지
+- API 응답 객체 직접 사용 금지
+- 비즈니스 핵심 로직 추가 금지

@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" font-family="'Pretendard Variable', Pretendard, -apple-system, 'Apple SD Gothic Neo', sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#686d74"/>
+    </marker>
+  </defs>
+  <rect width="1600" height="1000" fill="#0e0f11"/>
+  <text x="80" y="110" font-family="'SF Mono', ui-monospace, Menlo, monospace" font-size="26" letter-spacing="6" fill="#686d74">SIMULATION PIPELINE</text>
+  <text x="1520" y="110" text-anchor="end" font-size="26" fill="#9aa0a8">계산은 한 번, 재생은 조회만</text>
+  <rect x="80" y="200" width="310" height="280" rx="14" fill="#15171a" stroke="#26292e" stroke-width="2"/>
+  <text x="112" y="266" font-family="'SF Mono', ui-monospace, Menlo, monospace" font-size="20" letter-spacing="3" fill="#686d74">INPUT</text>
+  <text x="112" y="322" font-size="30" font-weight="600" fill="#eceae5">Document</text>
+  <text x="112" y="362" font-size="30" font-weight="600" fill="#eceae5">Snapshot</text>
+  <text x="112" y="412" font-size="22" fill="#9aa0a8">도면 · 도로망 · 지점</text>
+  <text x="112" y="446" font-size="22" fill="#9aa0a8">시나리오 설정</text>
+  <line x1="390" y1="340" x2="452" y2="340" stroke="#686d74" stroke-width="3" marker-end="url(#arrow)"/>
+  <rect x="460" y="200" width="310" height="280" rx="14" fill="#15171a" stroke="#ff5c1f" stroke-width="2"/>
+  <text x="492" y="266" font-family="'SF Mono', ui-monospace, Menlo, monospace" font-size="20" letter-spacing="3" fill="#ff5c1f">COMPUTE ×1</text>
+  <text x="492" y="322" font-size="30" font-weight="600" fill="#eceae5">Engine Run</text>
+  <text x="492" y="372" font-size="22" fill="#9aa0a8">Web Worker에서</text>
+  <text x="492" y="406" font-size="22" fill="#9aa0a8">전 구간 1회 계산</text>
+  <text x="492" y="446" font-size="22" fill="#9aa0a8">고정 타임스텝 · 결정론</text>
+  <line x1="770" y1="340" x2="832" y2="340" stroke="#686d74" stroke-width="3" marker-end="url(#arrow)"/>
+  <rect x="840" y="200" width="310" height="280" rx="14" fill="#15171a" stroke="#26292e" stroke-width="2"/>
+  <text x="872" y="266" font-family="'SF Mono', ui-monospace, Menlo, monospace" font-size="20" letter-spacing="3" fill="#686d74">RESULT</text>
+  <text x="872" y="322" font-size="30" font-weight="600" fill="#eceae5">Result Timeline</text>
+  <text x="872" y="372" font-size="22" fill="#9aa0a8">AGV별 궤적 세그먼트</text>
+  <text x="872" y="406" font-size="22" fill="#9aa0a8">이벤트 · 상태 구간</text>
+  <text x="872" y="446" font-size="22" fill="#9aa0a8">통계의 단일 원천</text>
+  <line x1="1150" y1="340" x2="1212" y2="340" stroke="#686d74" stroke-width="3" marker-end="url(#arrow)"/>
+  <rect x="1220" y="200" width="310" height="280" rx="14" fill="#15171a" stroke="#26292e" stroke-width="2"/>
+  <text x="1252" y="266" font-family="'SF Mono', ui-monospace, Menlo, monospace" font-size="20" letter-spacing="3" fill="#686d74">PLAYBACK</text>
+  <text x="1252" y="322" font-size="30" font-weight="600" fill="#eceae5">Read Only</text>
+  <text x="1252" y="372" font-size="22" fill="#9aa0a8">이진탐색 + 보간 조회</text>
+  <text x="1252" y="406" font-size="22" fill="#9aa0a8">배속 · 시간 이동에</text>
+  <text x="1252" y="446" font-size="22" fill="#ff5c1f">재계산 없음</text>
+  <rect x="80" y="560" width="1450" height="280" rx="14" fill="#15171a" stroke="#26292e" stroke-width="2"/>
+  <text x="112" y="622" font-family="'SF Mono', ui-monospace, Menlo, monospace" font-size="20" letter-spacing="3" fill="#686d74">AGV TIMELINE</text>
+  <rect x="150" y="656" width="360" height="26" rx="6" fill="#26292e"/>
+  <rect x="518" y="656" width="150" height="26" rx="6" fill="#3a3e45"/>
+  <rect x="676" y="656" width="420" height="26" rx="6" fill="#26292e"/>
+  <rect x="1104" y="656" width="300" height="26" rx="6" fill="#26292e"/>
+  <rect x="150" y="700" width="220" height="26" rx="6" fill="#26292e"/>
+  <rect x="378" y="700" width="330" height="26" rx="6" fill="#ff5c1f" opacity="0.8"/>
+  <rect x="716" y="700" width="240" height="26" rx="6" fill="#26292e"/>
+  <rect x="964" y="700" width="440" height="26" rx="6" fill="#3a3e45"/>
+  <rect x="150" y="744" width="480" height="26" rx="6" fill="#3a3e45"/>
+  <rect x="638" y="744" width="330" height="26" rx="6" fill="#26292e"/>
+  <rect x="976" y="744" width="428" height="26" rx="6" fill="#26292e"/>
+  <line x1="866" y1="600" x2="866" y2="800" stroke="#ff5c1f" stroke-width="3"/>
+  <text x="884" y="806" font-family="'SF Mono', ui-monospace, Menlo, monospace" font-size="20" fill="#ff5c1f">Tc</text>
+  <text x="80" y="920" font-size="24" fill="#686d74">동일한 입력은 항상 동일한 결과를 재현한다 — 시뮬레이션 결과를 신뢰할 수 있는 이유.</text>
+</svg>

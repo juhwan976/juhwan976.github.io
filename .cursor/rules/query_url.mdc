@@ -1,0 +1,82 @@
+---
+description: 이 규칙은 URL path 및 query(search params) 컨벤션을 정의합니다.
+glob:
+alwaysApply: false
+---
+
+# URL / Query 컨벤션
+
+---
+
+## 1. Path 네이밍 규칙
+
+- 리소스 경로는 복수형을 사용한다. (`/item` 금지, `/items` 사용)
+- 상세 경로의 동적 파라미터는 `{도메인}Id` 형식을 사용한다.
+  - 예: `/items/:itemId`, `/categories/:categoryId`
+- 경로 세그먼트는 kebab-case를 사용한다.
+  - 예: `/user-settings`, `/team-members`
+
+---
+
+## 2. Query 키 표준
+
+리스트/검색 화면은 아래 키를 기본으로 사용한다.
+
+- `page`: 페이지 번호 (1부터 시작)
+- `size`: 페이지 크기
+- `sort`: 정렬 기준 필드
+- `order`: 정렬 방향 (`asc` | `desc`)
+- `q`: 검색어
+- `status`: 상태 필터
+
+추가 키가 필요하면 도메인 접두어를 사용한다.
+
+- 예: `itemPriority`, `itemOwnerId`
+
+---
+
+## 3. 상태 원천(Single Source of Truth)
+
+- 필터/정렬/페이지네이션 상태는 URL search params를 단일 원천으로 사용한다.
+- 동일한 값을 로컬 state나 store에 중복 보관하지 않는다.
+- Controller 훅은 URL 값을 읽어 API 호출 파라미터를 구성한다.
+
+---
+
+## 4. 기본값 및 보정 규칙
+
+- query가 없거나 잘못된 값이면 기본값으로 보정한다.
+  - `page`: 1
+  - `size`: 20
+  - `order`: `desc`
+- 보정 후 필요하면 URL을 정규화된 값으로 replace한다.
+
+```typescript
+// 예시
+// /items?page=abc -> /items?page=1&size=20&order=desc
+```
+
+---
+
+## 5. 파라미터 타입 규칙
+
+- 숫자형 query/path는 파싱 후 유효성 검증한다.
+- 파싱 실패 시:
+  - path 파라미터는 API 호출 없이 `ROUTE_PATHS.NOT_FOUND`로 `replace` 이동한다.
+  - query 파라미터는 기본값으로 보정한다.
+
+---
+
+## 6. 업데이트 규칙
+
+- 필터/정렬 변경은 search params를 업데이트한다.
+- 페이지 이동은 search params의 `page`만 변경한다.
+- 검색어 변경 시 `page`를 1로 리셋한다.
+
+---
+
+## 금지 사항
+
+- 동일 상태를 URL과 local state/store에 이중 저장하지 말 것
+- 임의 query 키를 화면마다 다르게 만들지 말 것
+- path/query를 문자열로 수동 조합하지 말 것 (`URLSearchParams`/router API 사용)

@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" font-family="'Pretendard Variable', Pretendard, -apple-system, 'Apple SD Gothic Neo', sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#686d74"/>
+    </marker>
+  </defs>
+  <rect width="1600" height="1000" fill="#0e0f11"/>
+  <text x="80" y="110" font-family="'SF Mono', ui-monospace, Menlo, monospace" font-size="26" letter-spacing="6" fill="#686d74">EDITING FLOW</text>
+  <text x="1520" y="110" text-anchor="end" font-size="26" fill="#9aa0a8">지점을 먼저, 선로는 나중에</text>
+  <rect x="80" y="200" width="420" height="560" rx="16" fill="#15171a" stroke="#26292e" stroke-width="2"/>
+  <text x="120" y="272" font-family="'SF Mono', ui-monospace, Menlo, monospace" font-size="22" letter-spacing="4" fill="#ff5c1f">STEP 1</text>
+  <text x="120" y="330" font-size="34" font-weight="600" fill="#eceae5">지점 배치</text>
+  <text x="120" y="378" font-size="23" fill="#9aa0a8">위치가 정해진 요소부터 —</text>
+  <text x="120" y="412" font-size="23" fill="#9aa0a8">체크리스트 기반 배치</text>
+  <rect x="140" y="470" width="170" height="120" rx="8" fill="#0e0f11" stroke="#3a3e45" stroke-width="2"/>
+  <rect x="160" y="492" width="34" height="30" rx="4" fill="#26292e"/>
+  <rect x="204" y="492" width="34" height="30" rx="4" fill="#26292e"/>
+  <rect x="248" y="492" width="34" height="30" rx="4" fill="#26292e"/>
+  <rect x="160" y="534" width="34" height="30" rx="4" fill="#26292e"/>
+  <rect x="204" y="534" width="34" height="30" rx="4" fill="#26292e"/>
+  <text x="140" y="632" font-size="21" fill="#686d74">보관 구역</text>
+  <rect x="360" y="470" width="80" height="54" rx="8" fill="#0e0f11" stroke="#3a3e45" stroke-width="2"/>
+  <rect x="360" y="546" width="80" height="54" rx="8" fill="#0e0f11" stroke="#3a3e45" stroke-width="2"/>
+  <text x="360" y="632" font-size="21" fill="#686d74">작업 지점</text>
+  <circle cx="150" cy="700" r="7" fill="#ff5c1f"/>
+  <text x="172" y="708" font-size="21" fill="#9aa0a8">배치 = 데이터와 자동 연결</text>
+  <line x1="500" y1="480" x2="572" y2="480" stroke="#686d74" stroke-width="3" marker-end="url(#arrow)"/>
+  <rect x="590" y="200" width="420" height="560" rx="16" fill="#15171a" stroke="#26292e" stroke-width="2"/>
+  <text x="630" y="272" font-family="'SF Mono', ui-monospace, Menlo, monospace" font-size="22" letter-spacing="4" fill="#ff5c1f">STEP 2</text>
+  <text x="630" y="330" font-size="34" font-weight="600" fill="#eceae5">선로 설치</text>
+  <text x="630" y="378" font-size="23" fill="#9aa0a8">지점들을 도로망으로 연결 —</text>
+  <text x="630" y="412" font-size="23" fill="#9aa0a8">연결성 · 도달성 검증</text>
+  <g stroke="#3a3e45" stroke-width="4">
+    <line x1="660" y1="560" x2="820" y2="560"/>
+    <line x1="820" y1="560" x2="940" y2="480"/>
+    <line x1="820" y1="560" x2="940" y2="640"/>
+    <line x1="660" y1="700" x2="820" y2="560"/>
+  </g>
+  <circle cx="660" cy="560" r="10" fill="#686d74"/>
+  <circle cx="940" cy="480" r="10" fill="#686d74"/>
+  <circle cx="940" cy="640" r="10" fill="#686d74"/>
+  <circle cx="660" cy="700" r="10" fill="#686d74"/>
+  <circle cx="820" cy="560" r="14" fill="#0e0f11" stroke="#ff5c1f" stroke-width="4"/>
+  <text x="850" y="530" font-size="21" fill="#ff5c1f">교차로</text>
+  <line x1="1010" y1="480" x2="1082" y2="480" stroke="#686d74" stroke-width="3" marker-end="url(#arrow)"/>
+  <rect x="1100" y="200" width="420" height="560" rx="16" fill="#15171a" stroke="#26292e" stroke-width="2"/>
+  <text x="1140" y="272" font-family="'SF Mono', ui-monospace, Menlo, monospace" font-size="22" letter-spacing="4" fill="#ff5c1f">STEP 3</text>
+  <text x="1140" y="330" font-size="34" font-weight="600" fill="#eceae5">시뮬레이션</text>
+  <text x="1140" y="378" font-size="23" fill="#9aa0a8">다중 AGV 운행 · 배속 재생 —</text>
+  <text x="1140" y="412" font-size="23" fill="#9aa0a8">통계로 정량 검증</text>
+  <path d="M1170 470 H1450" stroke="#3a3e45" stroke-width="4" stroke-dasharray="2 14" stroke-linecap="round"/>
+  <rect x="1240" y="454" width="30" height="30" rx="6" fill="#ff5c1f"/>
+  <rect x="1370" y="454" width="30" height="30" rx="6" fill="#ff5c1f" opacity="0.55"/>
+  <rect x="1170" y="560" width="46" height="90" rx="4" fill="#26292e"/>
+  <rect x="1236" y="530" width="46" height="120" rx="4" fill="#26292e"/>
+  <rect x="1302" y="584" width="46" height="66" rx="4" fill="#ff5c1f" opacity="0.85"/>
+  <rect x="1368" y="548" width="46" height="102" rx="4" fill="#26292e"/>
+  <text x="1170" y="708" font-size="21" fill="#9aa0a8">가동율 · 정체 · 지연 도착 집계</text>
+  <text x="80" y="880" font-size="24" fill="#686d74">모든 스텝은 자유롭게 오갈 수 있고, 실행 전 검증이 부족한 항목을 안내한다.</text>
+</svg>

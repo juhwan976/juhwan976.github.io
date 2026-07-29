@@ -1,112 +1,74 @@
-import { useEffect, useState } from 'react';
-import { Link, matchPath, useLocation } from 'react-router-dom';
-import { buildProjectPath, ROUTE_PATHS } from '@/constants/route_paths';
-import { getAdjacentProjects, getProjectBySlug } from '@/content/projects';
-import { siteConfig } from '@/content/site';
-import styles from './Header.module.scss';
+import { useCallback, useEffect, useState } from "react";
+import S from "@/components/Header/Header.styles";
+import { siteConfig } from "@/content/site";
 
-interface PillLabelProps {
-  label: string;
-}
+const MENU_ID = "header-mobile-menu";
 
-/** 호버 시 라벨이 위로 플립되는 이중 라벨 (React Bits Pill Nav 방식) */
-function PillLabel({ label }: PillLabelProps): React.ReactNode {
-  return (
-    <span className={styles.pillStack}>
-      <span className={styles.pillLabel}>{label}</span>
-      <span className={styles.pillLabelHover} aria-hidden="true">
-        {label}
-      </span>
-    </span>
-  );
-}
-
-/** 홈에서는 섹션 내비게이션, 프로젝트 상세에서는 이전/다음 이동을 제공한다. */
+// 메인 페이지 상단 고정 내비게이션.
+// 데스크톱은 섹션 앵커를 그대로 노출하고,
+// 모바일은 햄버거 메뉴로 접되 Resume 링크는 항상 보여준다.
 export default function Header(): React.ReactNode {
-  const location = useLocation();
-  const detailMatch = matchPath(ROUTE_PATHS.PROJECT_DETAIL, location.pathname);
-  const projectSlug = detailMatch?.params.projectSlug;
-  const currentProject = projectSlug ? getProjectBySlug(projectSlug) : undefined;
-  const adjacent = projectSlug ? getAdjacentProjects(projectSlug) : undefined;
-  const isDetail = Boolean(currentProject);
+  const [menuOpen, setMenuOpen] = useState(false);
 
-  const [activeSection, setActiveSection] = useState('');
+  const toggleMenu = useCallback(() => setMenuOpen((open) => !open), []);
+  const closeMenu = useCallback(() => setMenuOpen(false), []);
 
+  // 메뉴가 열린 동안 Escape로 닫을 수 있게 한다.
   useEffect(() => {
-    if (isDetail) {
-      return;
-    }
-    const elements = siteConfig.nav
-      .map((item) => document.getElementById(item.id))
-      .filter((element): element is HTMLElement => element !== null);
-    if (elements.length === 0) {
-      return;
-    }
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
-          }
-        }
-      },
-      { rootMargin: '-30% 0px -60% 0px' },
-    );
-    elements.forEach((element) => observer.observe(element));
-    return () => observer.disconnect();
-  }, [isDetail, location.pathname]);
+    if (!menuOpen) return;
+    const onKeyDown = (e: KeyboardEvent): void => {
+      if (e.key === "Escape") setMenuOpen(false);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [menuOpen]);
 
   return (
-    <header className={styles.header}>
-      <div className={styles.inner}>
-        <Link to={ROUTE_PATHS.ROOT} className={styles.identity}>
-          <span className={styles.name}>{siteConfig.name}</span>
-          <span className={styles.role}>{siteConfig.role}</span>
-        </Link>
-
-        {isDetail && adjacent && currentProject ? (
-          <nav className={styles.nav} aria-label="프로젝트 내비게이션">
-            <Link
-              to={ROUTE_PATHS.ROOT}
-              className={styles.navLink}
-              aria-label="홈으로 돌아가기"
+    <S.Bar>
+      <S.Inner>
+        <S.Brand href="#top" aria-label="맨 위로 이동" onClick={closeMenu}>
+          {siteConfig.pageTitle}
+        </S.Brand>
+        <S.Nav aria-label="섹션 이동">
+          {siteConfig.nav.map((item) => (
+            <S.NavLink key={item.id} href={`#${item.id}`}>
+              {item.label}
+            </S.NavLink>
+          ))}
+          {/* 이력서 다운로드 기능은 당분간 사용하지 않는다.
+          <S.ResumeLink
+            href={siteConfig.resumeUrl}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Resume ↗
+          </S.ResumeLink>
+          */}
+          <S.MenuButton
+            type="button"
+            $open={menuOpen}
+            aria-expanded={menuOpen}
+            aria-controls={MENU_ID}
+            aria-label={menuOpen ? "메뉴 닫기" : "메뉴 열기"}
+            onClick={toggleMenu}
+          >
+            <span aria-hidden="true" />
+          </S.MenuButton>
+        </S.Nav>
+      </S.Inner>
+      {menuOpen && (
+        <S.MobileMenu id={MENU_ID} aria-label="섹션 이동 (모바일)">
+          {siteConfig.nav.map((item) => (
+            <S.MobileMenuLink
+              key={item.id}
+              href={`#${item.id}`}
+              onClick={closeMenu}
             >
-              <PillLabel label="← Home" />
-            </Link>
-            <Link
-              to={buildProjectPath(adjacent.previous.slug)}
-              className={styles.navLink}
-              aria-label={`이전 프로젝트: ${adjacent.previous.name}`}
-            >
-              <PillLabel label="Prev" />
-            </Link>
-            <Link
-              to={buildProjectPath(adjacent.next.slug)}
-              className={styles.navLink}
-              aria-label={`다음 프로젝트: ${adjacent.next.name}`}
-            >
-              <PillLabel label="Next" />
-            </Link>
-          </nav>
-        ) : (
-          <nav className={styles.nav} aria-label="섹션 내비게이션">
-            {siteConfig.nav.map((item) => (
-              <a
-                key={item.id}
-                href={`#${item.id}`}
-                className={
-                  activeSection === item.id
-                    ? `${styles.navLink} ${styles.navLinkActive}`
-                    : styles.navLink
-                }
-                aria-current={activeSection === item.id ? 'true' : undefined}
-              >
-                <PillLabel label={item.label} />
-              </a>
-            ))}
-          </nav>
-        )}
-      </div>
-    </header>
+              {item.label}
+            </S.MobileMenuLink>
+          ))}
+        </S.MobileMenu>
+      )}
+    </S.Bar>
   );
 }

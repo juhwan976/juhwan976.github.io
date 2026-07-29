@@ -1,87 +1,54 @@
-import { lazy, Suspense } from 'react';
-import Magnet from '@/components/Magnet/Magnet';
-import { siteConfig } from '@/content/site';
-import { useMediaQuery } from '@/hooks/useMediaQuery';
-import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
-import styles from './HeroSection.module.scss';
+import { siteConfig } from "@/content/site";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { theme } from "@/styles/theme";
+import S from "@/views/Home/sections/HeroSection.styles";
+import { Suspense, lazy, useEffect } from "react";
 
-const HeroScene = lazy(() => import('@/three/HeroScene'));
+// three.js 번들을 초기 로드에서 분리한다.
+const HeroBackdrop = lazy(
+  () => import("@/components/Backdrop/FerrofluidBackdrop"),
+);
 
-/** 3D를 사용할 수 없는 환경을 위한 정적 노드-연결선 그래픽 */
-function StaticWireframe(): React.ReactNode {
-  return (
-    <svg
-      className={styles.staticWireframe}
-      viewBox="0 0 480 480"
-      aria-hidden="true"
-      focusable="false"
-    >
-      <g stroke="rgba(255, 255, 255, 0.14)" strokeWidth="1" fill="none">
-        <path d="M60 380 L160 300 L240 340 L330 220 L420 260" />
-        <path d="M160 300 L200 160 L330 220" />
-        <path d="M60 380 L200 160" />
-        <path d="M240 340 L420 260" />
-        <rect x="280" y="120" width="120" height="76" rx="4" />
-        <rect x="90" y="120" width="88" height="56" rx="4" />
-        <rect x="300" y="310" width="96" height="60" rx="4" />
-      </g>
-      <path
-        d="M60 380 L160 300 L240 340 L330 220"
-        stroke="#ff6a00"
-        strokeWidth="1.5"
-        fill="none"
-      />
-      <g fill="#18181c" stroke="rgba(255, 255, 255, 0.4)" strokeWidth="1">
-        <circle cx="60" cy="380" r="5" />
-        <circle cx="160" cy="300" r="5" />
-        <circle cx="200" cy="160" r="5" />
-        <circle cx="240" cy="340" r="5" />
-        <circle cx="420" cy="260" r="5" />
-      </g>
-      <circle cx="330" cy="220" r="6" fill="#ff6a00" />
-    </svg>
-  );
+interface HeroSectionProps {
+  /** 배경 셰이더 첫 프레임(모바일은 즉시) 시점에 호출 — 스플래시 해제용 */
+  readonly onBackdropReady?: () => void;
 }
 
-export default function HeroSection(): React.ReactNode {
-  const isTabletUp = useMediaQuery('(min-width: 768px)');
-  const prefersReducedMotion = usePrefersReducedMotion();
-  const { hero } = siteConfig;
-  const use3d = isTabletUp && !prefersReducedMotion;
+// Hero — 이름, 직무, 확정 문구, Selected Work 링크만 표시한다.
+// 3D 배경은 데스크톱에서만 렌더링한다.
+export default function HeroSection({
+  onBackdropReady,
+}: HeroSectionProps): React.ReactNode {
+  const isMobile = useMediaQuery("(max-width: 767px)");
+
+  // 모바일은 배경을 렌더링하지 않으므로 즉시 준비 완료로 간주한다.
+  useEffect(() => {
+    if (isMobile) onBackdropReady?.();
+  }, [isMobile, onBackdropReady]);
 
   return (
-    <section className={styles.hero} aria-label="소개">
-      {/* 텍스트 뒤를 관통하는 하나의 장면으로 렌더 */}
-      <div className={styles.visual} aria-hidden="true">
-        {use3d ? (
-          <Suspense fallback={<StaticWireframe />}>
-            <HeroScene />
+    <S.Section id="top" aria-label="소개">
+      {!isMobile && (
+        <S.Backdrop aria-hidden>
+          <Suspense fallback={null}>
+            <HeroBackdrop
+              speed={0.05}
+              shimmer={1.0}
+              sharpness={3.0}
+              mouseRadius={0.2}
+              turbulence={0.2}
+              colors={[theme.colors.accent]}
+              onFirstFrame={onBackdropReady}
+            />
           </Suspense>
-        ) : (
-          <StaticWireframe />
-        )}
-      </div>
-
-      <div className={styles.stage}>
-        <h1 className={styles.headline}>{hero.headline}</h1>
-      </div>
-
-      <div className={styles.edgeBottom}>
-        <p className={styles.roles}>
-          {hero.roles.map((role) => (
-            <span key={role} className={styles.roleLine}>
-              {role}
-            </span>
-          ))}
-          <span className={styles.techLine}>{hero.techLine}</span>
-        </p>
-        <Magnet>
-          <a href="#work" className={styles.cta}>
-            {hero.cta}
-            <span aria-hidden="true"> ↓</span>
-          </a>
-        </Magnet>
-      </div>
-    </section>
+        </S.Backdrop>
+      )}
+      <S.Inner>
+        <S.RoleLabel as="p">{siteConfig.role}</S.RoleLabel>
+        <S.Headline>{siteConfig.hero.headline}</S.Headline>
+        <S.Description>{siteConfig.hero.description}</S.Description>
+        <S.Cta href="#work">{siteConfig.hero.cta} ↓</S.Cta>
+      </S.Inner>
+    </S.Section>
   );
 }

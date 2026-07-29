@@ -1,0 +1,91 @@
+---
+description: 이 규칙은 앱 내 에러 및 로딩 상태 처리 기준을 정의합니다.
+glob:
+alwaysApply: false
+---
+
+# 에러 / 로딩 상태 규칙
+
+---
+
+## 1. 상태 책임
+
+- API 레이어는 `BaseResult`(`success`, `message`)를 반환한다.
+- Controller 훅은 API 결과를 받아 화면 상태(`isLoading`, `errorMessage`)를 관리한다.
+- View는 Controller가 반환한 상태만 사용해 렌더링을 분기한다.
+
+---
+
+## 2. 상태 필드 표준
+
+- Controller 반환 타입에서 로딩 필드는 `isLoading: boolean`을 기본으로 사용한다.
+- 에러 필드는 `errorMessage: string | null`을 기본으로 사용한다.
+- 리스트 화면이라도 상태 필드 이름은 동일하게 유지한다.
+- 상태 전이가 복잡해지면(`idle/loading/success/error` 구분 필요) `loadState` enum(또는 union)으로 승격할 수 있다.
+- 승격 시에도 `errorMessage` 필드는 유지한다.
+- `loadState`를 사용하는 경우 초기 조회와 사용자 액션 로딩을 분리한다.
+  - 예: `initialLoading | actionLoading | idle`
+- `loadState` 타입/상수는 공통 타입 파일(`src/types/load_state.ts`)에서 재사용한다.
+
+```typescript
+interface UsePageReturn {
+  items: ItemViewModel[];
+  isLoading: boolean;
+  errorMessage: string | null;
+  onRetry: () => void;
+}
+```
+
+---
+
+## 3. API 결과 매핑 규칙
+
+- API 결과가 실패(`success === false`)면 `errorMessage = result.message ?? '요청 처리 중 오류가 발생했습니다.'`로 매핑한다.
+- API 결과가 성공이면 `errorMessage`를 `null`로 초기화한다.
+- `message` 원문은 Controller에서 필요한 범위 내에서만 가공하고, View에서는 표시용 문자열만 사용한다.
+
+---
+
+## 4. Controller 처리 패턴
+
+- 요청 시작 전: `setIsLoading(true)`, 필요 시 `setErrorMessage(null)`
+- 요청 성공: ViewModel 변환 후 상태 반영
+- 요청 실패: `setErrorMessage(...)`
+- 요청 종료: 성공/실패/예외와 무관하게 `finally`에서 `setIsLoading(false)`
+- 생성/저장 액션은 성공 여부를 반환(`Promise<boolean>`)해 View가 후속 UI 처리(예: 폼 초기화)를 안전하게 분기할 수 있게 한다.
+
+```typescript
+setIsLoading(true);
+setErrorMessage(null);
+
+try {
+  const result = await api.getList();
+
+  if (result.success) {
+    setItems(result.data.map(createItemViewModel));
+    setErrorMessage(null);
+  } else {
+    setErrorMessage(result.message ?? '요청 처리 중 오류가 발생했습니다.');
+  }
+} catch {
+  setErrorMessage('요청 처리 중 오류가 발생했습니다.');
+} finally {
+  setIsLoading(false);
+}
+```
+
+---
+
+## 5. View 렌더링 규칙
+
+- `isLoading`이 `true`이면 로딩 UI를 우선 렌더링한다.
+- `errorMessage`가 존재하면 에러 UI(메시지 + 재시도 액션)를 렌더링한다.
+- 로딩/에러가 아니면 본문 UI를 렌더링한다.
+
+---
+
+## 금지 사항
+
+- View에서 API `result.message`를 직접 다루지 말 것
+- Controller 없이 View에서 로딩/에러 상태를 중복 관리하지 말 것
+- 에러 상태를 boolean만으로 표현하지 말 것 (`errorMessage`를 기본으로 사용)

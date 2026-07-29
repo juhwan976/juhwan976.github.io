@@ -1,111 +1,126 @@
 import { useEffect, useRef } from 'react';
-import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
-import styles from './ClickSpark.module.scss';
+import S from '@/components/ClickSpark/ClickSpark.styles';
 
-// reactbits.dev의 Click Spark 컴포넌트를 프로젝트 컨벤션에 맞게 재구현.
-// 클릭 지점에서 악센트 컬러의 짧은 스파크 선이 퍼져나가는 피드백.
-// 전역 오버레이 캔버스 1개로 동작하며, 모션 감소 환경에서는 렌더하지 않는다.
+// reactbits의 Click Spark를 프로젝트 컨벤션에 맞게 이식한 컴포넌트.
+// 원본은 부모 크기의 캔버스를 사용하지만, 문서 전체 높이만큼 캔버스가
+// 커지는 것을 피하기 위해 뷰포트 고정 캔버스 + window 클릭 수신으로 바꿨다.
 
-const SPARK_COLOR = '#ff6a00';
-const SPARK_COUNT = 8;
-const SPARK_SIZE = 9;
-const SPARK_RADIUS = 18;
-const DURATION_MS = 420;
+export type SparkEasing = 'linear' | 'ease-in' | 'ease-out' | 'ease-in-out';
 
-interface Spark {
-  x: number;
-  y: number;
-  angle: number;
-  startedAt: number;
+interface ClickSparkProps {
+  readonly sparkColor?: string;
+  /** 스파크 선 길이 */
+  readonly sparkSize?: number;
+  /** 스파크가 퍼지는 반경 */
+  readonly sparkRadius?: number;
+  /** 클릭당 스파크 개수 */
+  readonly sparkCount?: number;
+  /** 애니메이션 시간 (ms) */
+  readonly duration?: number;
+  readonly easing?: SparkEasing;
+  readonly extraScale?: number;
 }
 
-const easeOut = (t: number): number => t * (2 - t);
+interface Spark {
+  readonly x: number;
+  readonly y: number;
+  readonly angle: number;
+  readonly startTime: number;
+}
 
-export default function ClickSpark(): React.ReactNode {
-  const prefersReducedMotion = usePrefersReducedMotion();
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+const ease = (t: number, easing: SparkEasing): number => {
+  switch (easing) {
+    case 'linear':
+      return t;
+    case 'ease-in':
+      return t * t;
+    case 'ease-in-out':
+      return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+    default:
+      return t * (2 - t);
+  }
+};
+
+export default function ClickSpark({
+  sparkColor = '#fff',
+  sparkSize = 10,
+  sparkRadius = 15,
+  sparkCount = 8,
+  duration = 400,
+  easing = 'ease-out',
+  extraScale = 1,
+}: ClickSparkProps): React.ReactNode {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const sparksRef = useRef<Spark[]>([]);
 
   useEffect(() => {
-    if (prefersReducedMotion) {
-      return;
-    }
     const canvas = canvasRef.current;
-    const context = canvas?.getContext('2d');
-    if (!canvas || !context) {
-      return;
-    }
-
-    const sparks: Spark[] = [];
-    let frameId = 0;
-    let isAnimating = false;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
 
     const resize = (): void => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     };
     resize();
+    window.addEventListener('resize', resize);
 
-    const draw = (now: number): void => {
-      context.clearRect(0, 0, canvas.width, canvas.height);
+    const onClick = (e: MouseEvent): void => {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        return;
+      }
+      const now = performance.now();
+      const created: Spark[] = Array.from({ length: sparkCount }, (_, i) => ({
+        x: e.clientX,
+        y: e.clientY,
+        angle: (2 * Math.PI * i) / sparkCount,
+        startTime: now,
+      }));
+      sparksRef.current.push(...created);
+    };
+    window.addEventListener('click', onClick);
 
-      for (let i = sparks.length - 1; i >= 0; i -= 1) {
-        const spark = sparks[i];
-        const progress = (now - spark.startedAt) / DURATION_MS;
-        if (progress >= 1) {
-          sparks.splice(i, 1);
-          continue;
-        }
-        const eased = easeOut(progress);
-        const distance = eased * SPARK_RADIUS;
-        const lineLength = SPARK_SIZE * (1 - eased);
+    let rafId = 0;
+    const draw = (timestamp: number): void => {
+      rafId = requestAnimationFrame(draw);
+      if (sparksRef.current.length === 0) {
+        return;
+      }
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      sparksRef.current = sparksRef.current.filter((spark) => {
+        const elapsed = timestamp - spark.startTime;
+        if (elapsed >= duration) return false;
+
+        const progress = ease(elapsed / duration, easing);
+        const distance = progress * sparkRadius * extraScale;
+        const lineLength = sparkSize * (1 - progress);
         const x1 = spark.x + distance * Math.cos(spark.angle);
         const y1 = spark.y + distance * Math.sin(spark.angle);
         const x2 = spark.x + (distance + lineLength) * Math.cos(spark.angle);
         const y2 = spark.y + (distance + lineLength) * Math.sin(spark.angle);
 
-        context.strokeStyle = SPARK_COLOR;
-        context.lineWidth = 2;
-        context.beginPath();
-        context.moveTo(x1, y1);
-        context.lineTo(x2, y2);
-        context.stroke();
-      }
-
-      if (sparks.length > 0) {
-        frameId = requestAnimationFrame(draw);
-      } else {
-        isAnimating = false;
-      }
-    };
-
-    const handleClick = (event: MouseEvent): void => {
-      const startedAt = performance.now();
-      for (let i = 0; i < SPARK_COUNT; i += 1) {
-        sparks.push({
-          x: event.clientX,
-          y: event.clientY,
-          angle: (Math.PI * 2 * i) / SPARK_COUNT,
-          startedAt,
-        });
-      }
-      if (!isAnimating) {
-        isAnimating = true;
-        frameId = requestAnimationFrame(draw);
+        ctx.strokeStyle = sparkColor;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+        return true;
+      });
+      // 마지막 스파크가 사라진 프레임의 잔상을 지운다.
+      if (sparksRef.current.length === 0) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
       }
     };
+    rafId = requestAnimationFrame(draw);
 
-    window.addEventListener('click', handleClick, { passive: true });
-    window.addEventListener('resize', resize);
     return () => {
-      window.removeEventListener('click', handleClick);
+      cancelAnimationFrame(rafId);
       window.removeEventListener('resize', resize);
-      cancelAnimationFrame(frameId);
+      window.removeEventListener('click', onClick);
     };
-  }, [prefersReducedMotion]);
+  }, [sparkColor, sparkSize, sparkRadius, sparkCount, duration, easing, extraScale]);
 
-  if (prefersReducedMotion) {
-    return null;
-  }
-
-  return <canvas ref={canvasRef} className={styles.canvas} aria-hidden="true" />;
+  return <S.Canvas ref={canvasRef} aria-hidden="true" />;
 }

@@ -1,0 +1,134 @@
+---
+description: 이 규칙은 앱 내 Component 관련 파일을 작성할 때 필요한 규칙을 정의합니다.
+glob:
+alwaysApply: false
+---
+
+# Component 생성 규칙
+
+---
+
+## 1. 생성 위치
+
+- 전역 컴포넌트: `src/components/`
+- 특정 View 전용 컴포넌트: 해당 View 내부에 로컬 선언
+
+---
+
+## 2. 기본 구조
+
+```typescript
+import type ResourceViewModel from '@/view_models/resource/ResourceViewModel';
+import { Container } from './ResourceItem.styles';
+
+interface ResourceItemProps {
+  model: ResourceViewModel;
+  onClick?: () => void;
+}
+
+export default function ResourceItem({
+  model,
+  onClick,
+}: ResourceItemProps): React.ReactNode {
+  return (
+    <Container $isArchived={model.isArchived} onClick={onClick}>
+      <span>{model.title}</span>
+    </Container>
+  );
+}
+```
+
+---
+
+## 3. 데이터 전달 규칙
+
+### 3-1. 도메인/비즈니스 컴포넌트
+
+한 도메인 개념(할일, 상품, 사용자 등)의 여러 필드를 함께 다루는 컴포넌트는 `model`로 ViewModel을 전달한다.
+
+- `model`이라는 이름의 ViewModel 객체로 전달한다.
+- 콜백(`onClick`, `onKeyDown` 등)은 별도 prop으로 전달한다.
+- Entity나 API 응답 객체를 직접 전달하지 않는다.
+
+예: ResourceItem, ProductCard, UserProfile
+
+### 3-2. 프레젠테이션 원시 컴포넌트
+
+도메인에 묶이지 않은 범용 UI 블록은 개별 props로 전달한다.
+
+- `title`, `content`, `placeholder`, `label` 등 필요한 값만 prop으로 넘긴다.
+- ViewModel이 필요하지 않다.
+
+예: Title, TextField, Label, Badge, Card(제목+내용만 받는 경우)
+
+```typescript
+interface TitleProps {
+  title: string;
+  $level?: 1 | 2 | 3;
+}
+
+interface TextFieldProps {
+  value: string;
+  placeholder?: string;
+  onChange: (value: string) => void;
+}
+```
+
+---
+
+## 4. StyledComponent 규칙
+
+- 상태에 따른 스타일 변경은 transient props(`$` prefix)로 전달한다.
+- StyledComponent는 `$` prefix가 붙은 props만 스타일에 사용하고, DOM에는 전달하지 않는다.
+
+```typescript
+// 올바른 방법: transient props로 제어
+<Container $isActive={isActive} $variant={variant} />
+```
+
+---
+
+## 5. 성능 규칙
+
+- 불필요한 재렌더링을 방지한다.
+- `useMemo` / `useCallback`을 적절히 사용한다.
+- JSX 내부에서 불필요한 객체/함수를 생성하지 않는다.
+- 이미지에 `loading="lazy"`를 사용한다.
+- JSX 이벤트 prop(`onClick`, `onChange` 등)에 인라인 함수(`() => ...`)를 직접 작성하지 않는다.
+- 리스트 항목 이벤트 핸들러는 `useMemo` 기반 핸들러 맵 패턴을 사용한다.
+- 폼 입력 초기화(`reset`)는 성공 액션 이후에만 수행하고, 실패 시 사용자 입력값을 유지한다.
+
+```typescript
+// 금지: JSX 내부에서 매번 새 객체 생성
+<Item style={{ color: 'red' }} />
+
+// 금지: JSX 내부에서 매번 새 함수 생성
+<Item onClick={() => handleClick(id)} />
+```
+
+```typescript
+// 권장: useMemo 핸들러 맵
+const clickHandlers = useMemo(() => {
+  const map = new Map<number, () => void>();
+
+  for (const item of items) {
+    map.set(item.id, () => {
+      void onDelete(item.id);
+    });
+  }
+
+  return map;
+}, [items, onDelete]);
+
+<button onClick={clickHandlers.get(item.id)}>삭제</button>
+```
+
+---
+
+## 금지 사항
+
+- Entity / API 응답 객체를 직접 prop으로 받지 말 것
+- API 레이어를 직접 import 하지 말 것
+- 컴포넌트 내부에서 API 호출을 하지 말 것
+- ViewModel 변환 로직을 컴포넌트 내부에 넣지 말 것
+- 비즈니스 결과 분기(성공/실패에 따른 상태 전이, 후속 이동)를 View/Component에서 직접 처리하지 말 것

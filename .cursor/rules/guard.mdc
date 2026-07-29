@@ -1,0 +1,84 @@
+---
+description: 이 규칙은 라우트 접근 제어(Guard) 정책을 정의합니다.
+glob:
+alwaysApply: false
+---
+
+# Guard 정책 규칙
+
+---
+
+## 1. 목적
+
+- 인증/권한 검증을 페이지 내부가 아닌 라우트 경계에서 공통 처리한다.
+- View는 비즈니스/UI 렌더링에 집중하고, 접근 제어는 Guard가 담당한다.
+
+---
+
+## 2. 기본 Guard 종류
+
+- `RequireAuth`: 로그인 여부 검증
+- `RequireRole`: 권한(role) 검증
+
+권한 검증이 필요 없는 페이지는 Guard를 생략할 수 있다.
+
+---
+
+## 3. 리다이렉트 정책
+
+- 미인증/권한 부족/미존재 경로의 리다이렉트 대상은 **프로젝트별 라우팅 정책**으로 결정한다.
+- Guard 규칙은 "어떤 경우에 리다이렉트할지"만 정의하고, 실제 경로 값은 상수/설정 파일에서 관리한다.
+- 예: `AUTH_REDIRECT_PATHS.LOGIN`, `AUTH_REDIRECT_PATHS.FORBIDDEN`, `ROUTE_PATHS.NOT_FOUND`
+- 권한 값은 상수/타입(`ROLE_TYPES`)으로 관리한다.
+
+---
+
+## 4. 적용 순서
+
+- 권한 검증이 필요한 라우트는 `RequireAuth` -> `RequireRole` 순서로 중첩한다.
+
+```typescript
+<Route
+  path={ROUTE_PATHS.PROTECTED}
+  element={
+    <RequireAuth>
+      <RequireRole roles={[ROLE_TYPES.REQUIRED_ROLE]}>
+        <ProtectedPage />
+      </RequireRole>
+    </RequireAuth>
+  }
+/>
+```
+
+---
+
+## 5. 구현 규칙
+
+- Guard는 `src/routes/guards/` 하위에 생성한다.
+- Guard는 `children`을 받아 통과 시 그대로 렌더링한다.
+- 검증 실패 시 `Navigate`로 리다이렉트한다.
+- Guard 내부에서 API 호출은 금지한다. (필요한 인증 상태는 store/context에서 읽는다.)
+- 어떤 라우트가 보호 대상인지(공개/인증필수/권한필수 목록)는 프로젝트별 라우트 정의에서 관리한다.
+- 인증 상태/세션 판정 기준은 `.cursor/rules/auth_session.mdc`를 따른다.
+
+---
+
+## 6. URL 유지 규칙
+
+- 로그인 리다이렉트 시 `redirectTo` query를 유지해, 로그인 후 원래 경로로 복귀 가능하게 한다.
+- `redirectTo`는 내부 경로만 허용하고, 외부 URL은 차단한다.
+
+```typescript
+<Navigate
+  to={`${AUTH_REDIRECT_PATHS.LOGIN}?redirectTo=${encodeURIComponent(location.pathname + location.search)}`}
+  replace
+/>
+```
+
+---
+
+## 금지 사항
+
+- 페이지 컴포넌트 내부에서 인증/권한 리다이렉트 로직을 중복 구현하지 말 것
+- Guard에서 API를 직접 호출하지 말 것
+- 권한 문자열을 페이지마다 임의로 정의하지 말 것 (상수/타입으로 통일)

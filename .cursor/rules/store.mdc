@@ -1,0 +1,175 @@
+---
+description: 이 규칙은 앱 내 Redux Store 관련 파일을 작성할 때 필요한 규칙을 정의합니다.
+glob:
+alwaysApply: false
+---
+
+# Redux / Store 규칙
+
+---
+
+## 1. 생성 위치
+
+`src/store/`
+
+---
+
+## 2. 기본 구조
+
+```typescript
+// src/store/index.ts
+import { configureStore } from '@reduxjs/toolkit';
+import resourceReducer from '@/store/slices/resource/slice';
+import metadataReducer from '@/store/slices/metadata/slice';
+
+const store = configureStore({
+  reducer: {
+    resource: resourceReducer,
+    metadata: metadataReducer,
+  },
+});
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
+
+export default store;
+```
+
+---
+
+## 3. Slice 구조
+
+Slice는 `src/store/slices/{sliceName}/` 하위에 생성한다.
+
+```typescript
+// src/store/slices/resource/slice.ts
+import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
+import type { PayloadAction } from '@reduxjs/toolkit';
+import type { ResourceStateItem } from './types';
+
+const resourceAdapter = createEntityAdapter<ResourceStateItem>({});
+
+const resourceSlice = createSlice({
+  name: 'resource',
+  initialState: resourceAdapter.getInitialState(),
+  reducers: {
+    setAllResources(state, action: PayloadAction<ResourceStateItem[]>) {
+      resourceAdapter.setAll(state, action.payload);
+    },
+    upsertResource(state, action: PayloadAction<ResourceStateItem>) {
+      resourceAdapter.upsertOne(state, action.payload);
+    },
+    removeResourceById(state, action: PayloadAction<number>) {
+      resourceAdapter.removeOne(state, action.payload);
+    },
+  },
+});
+
+export const { setAllResources, upsertResource, removeResourceById } =
+  resourceSlice.actions;
+export default resourceSlice.reducer;
+```
+
+```typescript
+// src/store/slices/resource/selectors.ts
+import type { RootState } from '@/store';
+import { resourceAdapter } from './slice';
+
+const selectors = resourceAdapter.getSelectors((state: RootState) => state.resource);
+
+export const selectAllResourceItems = selectors.selectAll;
+export const selectResourceItemById = selectors.selectById;
+```
+
+---
+
+## 4. 저장 대상 규칙
+
+- Redux에는 ViewModel class가 아닌, ViewModel의 serializable plain object(UI state) 또는 UI 상태만 저장한다.
+- id 기반 컬렉션(목록/상세 캐시)은 `createEntityAdapter` 사용을 기본으로 한다.
+- 인증 상태(AuthState)는 예외적으로 Redux 전역 상태로 저장할 수 있다. (기준: `.cursor/rules/auth_session.mdc`)
+- 앱 전역 상태값(App Global State)도 Redux에 저장할 수 있다.
+  - 예: 현재 사용자, 권한/세션 상태, 다크모드, 언어(locale), 전역 알림 배지, 전역 feature flag
+- 전역 상태 기준: 2개 이상 화면/레이아웃에서 공통으로 참조되거나, 라우트 전환 후에도 유지가 필요한 값
+- 단일 페이지에서만 쓰는 임시 상태(모달 열림, 입력값 등)는 Redux 대신 로컬 state를 우선 사용한다.
+- Entity를 store에 직접 저장하지 않는다.
+- Entity → ViewModel 변환은 store에 넣기 전에 수행한다.
+- Redux 내부 상태(state/action payload)는 serializable plain object로 유지한다.
+- 목록 반영 기본 전략은 `setAll`이다. (서버 순서 유지)
+- 상세 조회는 `selectById` 우선, 캐시 miss일 때만 API를 호출한다.
+
+---
+
+## 5. 입출력 경계 규칙 (Class <-> Plain)
+
+- Store 외부 경계(Controller/selector)에서는 ViewModel class를 사용할 수 있다.
+- Store 내부(슬라이스 state/action payload)는 plain object만 사용한다.
+- 경계에서 변환 어댑터를 둔다.
+  - 입력: `ViewModel class -> Plain`
+  - 출력: `Plain -> ViewModel class`
+- 변환 어댑터는 slice 기준으로 파일 위치를 고정한다.
+  - 예: `src/store/slices/{sliceName}/adapters.ts`
+- state/payload 필드 네이밍은 camelCase를 사용한다.
+
+```typescript
+// adapter 예시
+function toResourceStateItem(model: ResourceViewModel): ResourceStateItem {
+  return {
+    id: model.id,
+    title: model.title,
+    isArchived: model.isArchived,
+  };
+}
+
+function toResourceViewModel(item: ResourceStateItem): ResourceViewModel {
+  return new ResourceViewModel({
+    id: item.id,
+    title: item.title,
+    isArchived: item.isArchived,
+  });
+}
+```
+
+---
+
+## 6. 비동기 처리 규칙
+
+- 비동기 로직은 기본적으로 Controller 훅(또는 thunk)에서 처리한다.
+- `createEntityAdapter`를 사용해도 API 호출 책임은 Controller(또는 Service)에 둔다.
+- 서비스 레이어는 복잡한 유스케이스/공유 비동기 로직이 증가할 때 분리한다.
+- 서비스 분리 기준은 `.cursor/rules/service_boundary.mdc`를 따른다.
+- Slice 내부에 복잡한 비즈니스 로직을 두지 않는다.
+- Slice의 reducer는 단순한 상태 갱신에만 집중한다.
+
+---
+
+## 7. Hook 사용 규칙
+
+```typescript
+// src/store/hooks.ts
+import { useDispatch, useSelector } from 'react-redux';
+import type { RootState, AppDispatch } from './index';
+
+export const useAppDispatch = useDispatch.withTypes<AppDispatch>();
+export const useAppSelector = useSelector.withTypes<RootState>();
+```
+
+`useDispatch`, `useSelector` 대신 타입이 적용된 `useAppDispatch`, `useAppSelector`를 사용한다.
+
+---
+
+## 8. 직렬화 검증 규칙
+
+- Redux Toolkit의 serializable check 미들웨어는 기본적으로 유지한다.
+- 예외(비직렬화 값 허용)가 필요하면 slice/액션 단위로 최소 범위만 허용하고 사유를 주석으로 남긴다.
+- class 인스턴스가 state/payload에 들어가지 않도록 개발 단계에서 경고/오류를 확인한다.
+
+---
+
+## 금지 사항
+
+- Domain 로직을 Redux에 넣지 말 것
+- Entity를 store에 직접 저장하지 말 것
+- Redux state/action payload에 class 인스턴스를 직접 저장하지 말 것
+- Slice 내부에 API 호출 로직을 넣지 말 것
+- `useDispatch`, `useSelector`를 직접 사용하지 말 것 (타입 적용 훅 사용)

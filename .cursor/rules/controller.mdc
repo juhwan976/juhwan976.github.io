@@ -1,0 +1,137 @@
+---
+description: 이 규칙은 앱 내 Controller 훅 관련 파일을 작성할 때 필요한 규칙을 정의합니다.
+glob:
+alwaysApply: false
+---
+
+# Controller 훅 생성 규칙
+
+---
+
+## 1. 생성 위치
+
+`src/views/{페이지명}/hooks/`
+
+해당 View 내부에 로컬로 선언한다.
+
+---
+
+## 2. 네이밍
+
+`use{페이지명}Controller`
+
+---
+
+## 3. 기본 구조
+
+```typescript
+import { useEffect, useState, useCallback } from 'react';
+import { useResourceApi } from '@/api';
+import { LOAD_STATES, type LoadState } from '@/types/load_state';
+import type ResourceViewModel from '@/view_models/resource/ResourceViewModel';
+import { createResourceViewModel } from '@/view_models/resource/ResourceViewModel';
+
+interface UseResourceControllerReturn {
+  items: ResourceViewModel[];
+  loadState: LoadState;
+  isInitialLoading: boolean;
+  isActionLoading: boolean;
+  errorMessage: string | null;
+  onRetry: () => void;
+}
+
+export default function useResourceController(): UseResourceControllerReturn {
+  const api = useResourceApi();
+  const [items, setItems] = useState<ResourceViewModel[]>([]);
+  const [loadState, setLoadState] = useState<LoadState>(LOAD_STATES.INITIAL_LOADING);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const fetchItems = useCallback(async (nextState: LoadState): Promise<void> => {
+    setLoadState(nextState);
+    if (nextState !== LOAD_STATES.IDLE) {
+      setErrorMessage(null);
+    }
+
+    try {
+      const result = await api.getList();
+      if (result.success) {
+        setItems(result.data.map(createResourceViewModel));
+      } else {
+        setErrorMessage(result.message ?? '요청 처리 중 오류가 발생했습니다.');
+      }
+    } finally {
+      setLoadState(LOAD_STATES.IDLE);
+    }
+  }, [api]);
+
+  useEffect(() => {
+    void fetchItems(LOAD_STATES.INITIAL_LOADING);
+  }, [fetchItems]);
+
+  const onRetry = useCallback(() => {
+    void fetchItems(LOAD_STATES.INITIAL_LOADING);
+  }, [fetchItems]);
+
+  return {
+    items,
+    loadState,
+    isInitialLoading: loadState === LOAD_STATES.INITIAL_LOADING,
+    isActionLoading: loadState === LOAD_STATES.ACTION_LOADING,
+    errorMessage,
+    onRetry,
+  };
+}
+```
+
+---
+
+## 4. 필수 규칙
+
+- API 훅은 `@/api` barrel에서만 import 한다.
+- Entity → ViewModel 변환을 이 훅에서 수행한다.
+- 현재는 API 호출을 Controller 훅에서 수행한다. (복잡한 유스케이스/공유 비동기 로직이 커지면 서비스 레이어 분리를 고려한다.)
+- Service 분리 기준은 `.cursor/rules/service_boundary.mdc`를 따른다.
+- **로딩/에러 상태**(`isLoading`, `errorMessage`)는 Controller 훅에서 보관하고, View에 함께 반환한다.
+- 비동기 콜백(`onCreate`, `onUpdate`, `onDelete`, `onSave` 등)은 `try/catch/finally` 패턴으로 작성하고, `finally`에서 `setIsLoading(false)`를 보장한다.
+- 액션 시작 시 `setIsLoading(true)`와 `setErrorMessage(null)`를 기본으로 적용한다.
+- 초기 로딩/재시도 로직에서 `setTimeout`/`setInterval` 우회 패턴을 사용하지 않는다.
+- `loadState` 승격 시 공통 타입/상수(`@/types/load_state`)를 재사용한다.
+- `loadState` 사용 시 초기 조회(`INITIAL_LOADING`)와 사용자 액션 처리(`ACTION_LOADING`)를 분리한다.
+- View 컴포넌트에는 ViewModel·상태·콜백만 반환한다.
+- 반환 타입 인터페이스를 명시적으로 선언한다.
+- 로딩/에러 상태의 표준 필드 및 매핑 패턴은 `.cursor/rules/error_state.mdc`를 따른다.
+- 비즈니스 결과(성공/실패)에 따라 분기되는 콜백(상태 전이, 후속 이동 포함)은 Controller 훅에서 처리한다.
+- 단순 UI 이벤트 위임(예: 뒤로가기 버튼)은 View에서 처리할 수 있다.
+
+---
+
+## 5. View 컴포넌트에서의 사용
+
+```typescript
+export default function ResourcePage(): React.ReactNode {
+  const { items, isInitialLoading, errorMessage, onRetry } = useResourceController();
+
+  if (isInitialLoading) {
+    return <Loading />;
+  }
+
+  if (errorMessage) {
+    return <ErrorBox message={errorMessage} onRetry={onRetry} />;
+  }
+
+  return <ResourceList items={items} />;
+}
+```
+
+View 컴포넌트는 Controller 훅이 반환한 ViewModel과 콜백만 사용한다.
+
+- 전체 데이터 흐름(API → Entity → ViewModel → Controller → View → Component)은 AGENTS.md **4-6. 전체 흐름 예시**를 참고한다.
+
+---
+
+## 금지 사항
+
+- JSX를 반환하지 말 것 (훅은 데이터와 콜백만 반환)
+- Entity나 API 응답 객체를 View에 노출하지 말 것
+- View 컴포넌트에서 API 훅을 직접 호출하지 말 것
+- `@/api` barrel이 아닌 경로로 API를 import 하지 말 것

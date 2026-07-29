@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" font-family="'Pretendard Variable', Pretendard, -apple-system, 'Apple SD Gothic Neo', sans-serif">
+  <defs>
+    <pattern id="grid" width="80" height="80" patternUnits="userSpaceOnUse">
+      <path d="M80 0 H0 V80" fill="none" stroke="#1a1d21" stroke-width="1.5"/>
+    </pattern>
+  </defs>
+  <rect width="1600" height="1000" fill="#0e0f11"/>
+  <rect width="1600" height="1000" fill="url(#grid)"/>
+  <g stroke="#26292e" stroke-width="4" fill="none">
+    <path d="M120 240 H760"/>
+    <path d="M760 240 V760"/>
+    <path d="M760 760 H1480"/>
+    <path d="M400 240 V520 H1120 V760"/>
+    <path d="M120 520 H400"/>
+    <path d="M1120 520 H1480 V240 H1120"/>
+    <path d="M1120 240 V520"/>
+    <path d="M400 520 V880 H1120"/>
+  </g>
+  <path d="M240 240 H760 V520 H1120 V760 H1360" stroke="#ff5c1f" stroke-width="18" fill="none" opacity="0.12" stroke-linejoin="round"/>
+  <path d="M240 240 H760 V520 H1120 V760 H1360" stroke="#ff5c1f" stroke-width="6" fill="none" stroke-linejoin="round"/>
+  <g fill="#3a3e45">
+    <circle cx="120" cy="240" r="9"/>
+    <circle cx="400" cy="240" r="9"/>
+    <circle cx="120" cy="520" r="9"/>
+    <circle cx="1480" cy="240" r="9"/>
+    <circle cx="1480" cy="520" r="9"/>
+    <circle cx="1480" cy="760" r="9"/>
+    <circle cx="400" cy="880" r="9"/>
+    <circle cx="1120" cy="880" r="9"/>
+  </g>
+  <g fill="#0e0f11" stroke="#ff5c1f" stroke-width="4">
+    <circle cx="760" cy="240" r="13"/>
+    <circle cx="760" cy="520" r="13"/>
+    <circle cx="1120" cy="520" r="13"/>
+    <circle cx="1120" cy="760" r="13"/>
+  </g>
+  <g fill="#0e0f11" stroke="#686d74" stroke-width="3">
+    <circle cx="400" cy="520" r="11"/>
+    <circle cx="760" cy="760" r="11"/>
+  </g>
+  <rect x="150" y="150" width="180" height="130" rx="10" fill="#15171a" stroke="#3a3e45" stroke-width="3"/>
+  <g fill="#26292e">
+    <rect x="176" y="176" width="36" height="30" rx="4"/>
+    <rect x="222" y="176" width="36" height="30" rx="4"/>
+    <rect x="268" y="176" width="36" height="30" rx="4"/>
+    <rect x="176" y="218" width="36" height="30" rx="4"/>
+    <rect x="222" y="218" width="36" height="30" rx="4"/>
+  </g>
+  <circle cx="240" cy="240" r="10" fill="#ff5c1f"/>
+  <rect x="1300" y="700" width="120" height="120" rx="10" fill="#15171a" stroke="#3a3e45" stroke-width="3"/>
+  <circle cx="1360" cy="760" r="10" fill="#ff5c1f"/>
+  <rect x="536" y="220" width="44" height="40" rx="8" fill="#ff5c1f"/>
+  <rect x="736" y="360" width="44" height="40" rx="8" fill="#ff5c1f" opacity="0.65"/>
+  <rect x="936" y="500" width="44" height="40" rx="8" fill="#ff5c1f" opacity="0.4"/>
+  <rect x="378" y="858" width="40" height="36" rx="8" fill="#3a3e45"/>
+  <rect x="430" y="858" width="40" height="36" rx="8" fill="#3a3e45"/>
+  <text x="80" y="80" font-family="'SF Mono', ui-monospace, Menlo, monospace" font-size="24" letter-spacing="5" fill="#686d74">AGV ROUTE NETWORK</text>
+  <text x="1520" y="80" text-anchor="end" font-size="22" fill="#686d74">Abstract Visualization</text>
+</svg>

@@ -1,0 +1,82 @@
+---
+description: 이 규칙은 앱 내 Entity 관련 파일을 작성할 때 필요한 규칙을 정의합니다.
+glob:
+alwaysApply: false
+---
+
+# Entity 생성 규칙
+
+---
+
+## 1. 생성위치
+
+`src/entities/`
+
+---
+
+## 2. 기본 구조
+
+```typescript
+import { z } from 'zod';
+import BaseEntity from './BaseEntity';
+
+export const UserJsonSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+});
+
+interface UserEntityProps {
+  id: number;
+  name: string;
+};
+
+export default class UserEntity extends BaseEntity {
+  readonly id: number;
+  readonly name: string;
+
+  constructor(props: UserEntityProps) {
+    super();
+
+    this.id = props.id;
+    this.name = props.name;
+  }
+
+  static fromJson(json: unknown): UserEntity {
+    const parsed = UserJsonSchema.parse(json);
+
+    return new UserEntity({
+      id: parsed.id,
+      name: parsed.name,
+    });
+  }
+
+  toJson(): Record<string, unknown> {
+    return {
+      id: this.id,
+      name: this.name,
+    };
+  }
+}
+```
+
+---
+
+## 3. 필수 규칙
+
+- 반드시 `BaseEntity`를 상속한다.
+- 모든 속성은 `readonly`로 선언한다.
+- `fromJson`, `toJson` 외의 메서드는 만들지 않는다.
+- 네이밍 변환(snake -> camel)은 여기서 처리한다.
+- `fromJson`에서는 zod 스키마(`z.object(...)`)로 검증한다. 파라미터는 `unknown`으로 받는다.
+- `toJson`의 반환 타입은 `Record<string, unknown>`으로 선언한다.
+- 스키마는 `{Entity이름}JsonSchema`로 이름 짓고, Entity 파일 내부에 선언하며 `export`한다.
+- 관계가 포함된 경우 해당 Entity의 스키마와 `fromJson`을 사용해서 즉시 변환한다.
+
+---
+
+## 금지 사항
+
+- React import 금지
+- ViewModel import 금지
+- View / Component 의존 금지
+- 비즈니스 로직 추가 금지

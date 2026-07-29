@@ -1,0 +1,118 @@
+---
+description: 이 규칙은 앱 내 테스트 전략과 최소 검증 범위를 정의합니다.
+glob:
+alwaysApply: false
+---
+
+# 테스트 전략 규칙
+
+---
+
+## 1. 기본 원칙
+
+- 테스트는 아키텍처 경계(Entity/Controller/Store/Guard/Route)를 중심으로 작성한다.
+- 구현 디테일보다 동작 계약(입력/출력/상태 전이)을 검증한다.
+- 최소 단위 테스트를 우선하고, 경계가 많은 흐름은 통합 테스트로 보완한다.
+
+---
+
+## 2. Entity 테스트 최소 기준
+
+- `fromJson` 성공 케이스: 정상 입력을 Entity로 올바르게 변환하는지 검증한다.
+- `fromJson` 실패 케이스: 필수 필드 누락/타입 불일치 시 예외를 검증한다.
+- `toJson`이 있는 경우: key 변환(camelCase <-> snake_case)과 값 보존을 검증한다.
+
+---
+
+## 3. Controller 훅 테스트 최소 기준
+
+- 초기 상태: `isLoading`, `errorMessage`, 기본 데이터 값 검증
+- 성공 흐름: API 성공 시 ViewModel(또는 UI 모델) 변환 및 상태 반영 검증
+- 실패 흐름: API 실패 시 `errorMessage` 반영 검증
+- 재시도 흐름: `onRetry` 호출 시 재요청/상태 초기화 검증
+- 로딩 전이: 요청 시작/종료 시 `isLoading` 전환 검증
+
+---
+
+## 4. Store/Adapter 테스트 최소 기준
+
+- Store에는 serializable plain object만 저장되는지 검증한다.
+- adapter의 양방향 변환을 검증한다.
+  - `ViewModel -> Plain`
+  - `Plain -> ViewModel` (필요한 경우)
+- reducer는 입력 action에 대해 예상 state로만 갱신되는지 검증한다.
+
+---
+
+## 5. Guard 테스트 최소 기준
+
+- 인증 안됨: 보호 라우트 접근 시 로그인 경로로 리다이렉트 검증
+- 권한 부족: 권한 부족 경로로 리다이렉트 검증
+- 인증/권한 통과: children 렌더링 검증
+- `redirectTo` query가 내부 경로만 허용되는지 검증
+
+---
+
+## 6. Route / Query 테스트 최소 기준
+
+- 잘못된 query(`page=abc` 등) 보정 규칙 검증
+- fallback route(`*`)가 `ROUTE_PATHS.NOT_FOUND`로 이동하는지 검증
+- search params 변경 시 규칙(`검색어 변경 시 page=1`) 검증
+
+---
+
+## 7. 테스트 데이터 및 목 전략
+
+- API/네트워크는 mock 또는 Fake API로 대체한다.
+- 더미 데이터는 규칙에 맞는 fixture로 관리한다.
+- 시나리오별 fixture는 성공/실패/경계값으로 분리한다.
+- 테스트에서 사용하는 데이터 fixture는 앱 런타임 Fake API와 동일한 JSON 파일을 재사용하는 것을 원칙으로 한다.
+  - 기본 경로: `src/assets/dummies/`
+  - 도메인별 디렉터리: `src/assets/dummies/{domain}/`
+- fixture JSON은 각 Entity의 `fromJson`이 기대하는 서버 응답 형태 그대로를 저장하며, snake_case/camelCase 변환은 Entity 내부에서 처리한다.
+- 목록/상세/에러 등 시나리오가 다른 경우, 파일명을 통해 시나리오를 구분한다.
+  - 예: `todos_list_default.json`, `todos_list_empty.json`, `todo_detail_not_found.json`
+- 테스트 코드에서는 Fake API 또는 JSON fixture를 통해 데이터를 주입하며, 실제 네트워크 호출을 통한 테스트는 기본 전략에서 제외한다.
+
+---
+
+## 8. 테스트 파일 위치 / 네이밍 규칙
+
+- 테스트 파일은 대상 파일과 같은 디렉터리에 `__tests__/` 폴더를 두고 관리한다.
+- 파일명은 `{대상파일명}.test.ts` 또는 `{대상파일명}.test.tsx`를 사용한다.
+- 통합 테스트는 `integration/` 하위에 분리한다.
+
+```text
+src/
+├── entities/
+│   ├── ResourceEntity.ts
+│   └── __tests__/
+│       └── ResourceEntity.test.ts
+├── views/
+│   └── resource/
+│       └── hooks/
+│           ├── useResourceController.ts
+│           └── __tests__/
+│               └── useResourceController.test.ts
+├── store/
+│   └── slices/
+│       └── resource/
+│           ├── slice.ts
+│           ├── adapters.ts
+│           └── __tests__/
+│               ├── slice.test.ts
+│               └── adapters.test.ts
+└── routes/
+    └── guards/
+        ├── RequireAuth.tsx
+        └── __tests__/
+            └── RequireAuth.test.tsx
+```
+
+---
+
+## 금지 사항
+
+- UI 스냅샷만으로 핵심 로직 검증을 대체하지 말 것
+- 네트워크 실호출에 의존하는 불안정 테스트를 기본 테스트로 두지 말 것
+- 아키텍처 경계 변환 로직(Entity/adapter/guard)을 테스트 없이 병합하지 말 것

@@ -1,67 +1,42 @@
-import { useInViewOnce } from '@/hooks/useInViewOnce';
 import type { DiagramSpec } from '@/content/types';
-import styles from './DiagramView.module.scss';
+import { useInViewOnce } from '@/hooks/useInViewOnce';
+import S from '@/views/ProjectDetail/components/DiagramView.styles';
 
-interface DiagramViewProps {
-  diagram: DiagramSpec;
-}
-
-/** 아키텍처 다이어그램. viewport 진입 시 단계가 순차적으로 강조된다. */
+// 아키텍처 다이어그램 — 스크롤 진입 시 흐름이 순차적으로 표시된다.
+// 모션 감소 환경에서는 전역 transition 무효화로 즉시 최종 상태가 된다.
 export default function DiagramView({
   diagram,
-}: DiagramViewProps): React.ReactNode {
-  const { ref, inView } = useInViewOnce<HTMLDivElement>(0.4);
-  const rootClassName = inView ? `${styles.root} ${styles.active}` : styles.root;
-
-  if (diagram.type === 'flow') {
-    return (
-      <div ref={ref} className={rootClassName}>
-        <p className={styles.title}>{diagram.title}</p>
-        <ol className={styles.flow}>
-          {diagram.steps.map((step, index) => (
-            <li
-              key={step.title}
-              className={styles.flowStep}
-              style={{ transitionDelay: `${index * 220}ms` }}
-            >
-              <span className={styles.flowIndex}>
-                {String(index + 1).padStart(2, '0')}
-              </span>
-              <span className={styles.flowTitle}>{step.title}</span>
-              {step.detail ? (
-                <span className={styles.flowDetail}>{step.detail}</span>
-              ) : null}
-            </li>
-          ))}
-        </ol>
-      </div>
-    );
-  }
+}: {
+  readonly diagram: DiagramSpec;
+}): React.ReactNode {
+  const { ref, inView } = useInViewOnce<HTMLDivElement>(0.3);
 
   return (
-    <div ref={ref} className={rootClassName}>
-      <p className={styles.title}>{diagram.title}</p>
-      <div className={styles.split}>
-        <div
-          className={`${styles.splitPanel} ${styles.splitPanelAccent}`}
-          style={{ transitionDelay: '0ms' }}
-        >
-          <p className={styles.splitTitle}>{diagram.left.title}</p>
-          <ul className={styles.splitList}>
-            {diagram.left.items.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-        </div>
-        <div className={styles.splitPanel} style={{ transitionDelay: '260ms' }}>
-          <p className={styles.splitTitle}>{diagram.right.title}</p>
-          <ul className={styles.splitList}>
-            {diagram.right.items.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-        </div>
-      </div>
-    </div>
+    <S.Wrap ref={ref}>
+      <S.Title>{diagram.title}</S.Title>
+      {diagram.type === 'flow' ? (
+        <S.FlowList>
+          {diagram.steps.map((step, index) => (
+            <S.FlowStep key={step.title} $visible={inView} $index={index}>
+              <h4>{step.title}</h4>
+              {step.detail && <p>{step.detail}</p>}
+            </S.FlowStep>
+          ))}
+        </S.FlowList>
+      ) : (
+        <S.SplitGrid>
+          {[diagram.left, diagram.right].map((panel, index) => (
+            <S.SplitPanel key={panel.title} $visible={inView} $index={index}>
+              <h4>{panel.title}</h4>
+              <ul>
+                {panel.items.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </S.SplitPanel>
+          ))}
+        </S.SplitGrid>
+      )}
+    </S.Wrap>
   );
 }

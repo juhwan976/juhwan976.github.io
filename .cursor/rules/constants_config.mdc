@@ -1,0 +1,84 @@
+---
+description: 이 규칙은 앱 내 상수 및 설정(config) 파일 작성 기준을 정의합니다.
+glob:
+alwaysApply: false
+---
+
+# 상수 / 설정 규칙
+
+---
+
+## 1. 생성 위치
+
+- 공통 상수/설정 파일은 `src/constants/` 하위에 생성한다.
+- 도메인 전용 상수는 해당 도메인 하위에 두되, 여러 레이어에서 공유되면 `src/constants/`로 승격한다.
+
+---
+
+## 2. 파일 분리 기준
+
+- 파일은 책임별로 분리한다.
+  - 경로: `route_paths.ts`
+  - 인증 리다이렉트: `auth_redirect_paths.ts`
+  - API 플래그: `api_config.ts`
+  - 환경변수 매핑: `env.ts`
+- 하나의 파일에 무관한 상수를 섞지 않는다.
+
+---
+
+## 3. 네이밍 규칙
+
+- 파일명은 `snake_case.ts`를 사용한다.
+- export 상수 객체명은 `UPPER_SNAKE_CASE`를 사용한다.
+- 상수 객체의 key도 `UPPER_SNAKE_CASE`를 사용한다.
+- 값 집합은 `as const`로 고정한다.
+
+```typescript
+// src/constants/route_paths.ts
+export const ROUTE_PATHS = {
+  ROOT: '/',
+  NOT_FOUND: '/404',
+  PROTECTED: '/protected',
+  RESOURCE_LIST: '/resources',
+  RESOURCE_DETAIL: '/resources/:resourceId',
+} as const;
+```
+
+---
+
+## 4. export 규칙
+
+- 신규 상수 파일은 named export를 기본으로 사용한다.
+- 상수 파일은 default export를 사용하지 않는다.
+
+---
+
+## 5. 환경변수 규칙
+
+- `import.meta.env` 접근은 `src/constants/env.ts` 한 곳으로 제한한다.
+- 다른 파일/레이어에서는 `env.ts`에서 노출한 값만 사용한다.
+
+```typescript
+// src/constants/env.ts
+export const ENV = {
+  mode: import.meta.env.MODE,
+  apiBaseUrl: import.meta.env.VITE_API_BASE_URL ?? '',
+} as const;
+```
+
+---
+
+## 6. 사용 규칙
+
+- 문자열 하드코딩 대신 상수를 import해 사용한다.
+- 라우팅/가드에서 사용하는 경로는 `ROUTE_PATHS`, `AUTH_REDIRECT_PATHS`로 통일한다.
+- 불리언 플래그는 `USE_FAKE`처럼 `UPPER_SNAKE_CASE`로 선언한다.
+- API Fake/Real 전환은 `API_CONFIG.USE_FAKE`로 통일한다.
+
+---
+
+## 금지 사항
+
+- 화면/훅 내부에 경로 문자열 하드코딩 금지
+- 파일마다 임의 상수명을 다르게 정의하지 말 것
+- `import.meta.env`를 여러 파일에서 직접 읽지 말 것

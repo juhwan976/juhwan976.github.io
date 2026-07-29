@@ -1,0 +1,138 @@
+---
+description: 이 규칙은 앱 내 스타일 및 테마 관련 파일을 작성할 때 필요한 규칙을 정의합니다.
+glob:
+alwaysApply: false
+---
+
+# 스타일 / 테마 규칙
+
+---
+
+## 1. 테마 파일
+
+`src/styles/theme.ts`
+
+color, font-size, z-index 등은 반드시 theme에 정의된 값만 사용한다.
+
+z-index는 선언된 토큰 리스트를 기준으로 자동 생성해 사용한다.
+
+```typescript
+// src/styles/theme.ts
+export const zIndexes = [
+  'normal',
+  'header',
+  'gnb',
+  'city_detail_card',
+  'city_detail_header',
+  'skeleton',
+  'popup',
+  'spinner',
+] as const;
+
+type ZIndexToken = (typeof zIndexes)[number];
+
+const zIndexMap = Object.fromEntries(
+  zIndexes.map((token, index) => [token, index]),
+) as Record<ZIndexToken, number>;
+
+export const theme = {
+  // ...
+  zIndexes: zIndexMap,
+} as const;
+```
+
+```typescript
+// 사용 예시
+z-index: ${({ theme }) => theme.zIndexes.normal};
+```
+
+---
+
+## 2. Styled Components 기본 구조
+
+스타일 파일은 컴포넌트와 같은 디렉토리에 `{컴포넌트명}.styles.ts`로 생성한다.
+
+```typescript
+import styled from 'styled-components';
+
+export const Container = styled.div`
+  padding: ${({ theme }) => theme.spacing.md};
+  color: ${({ theme }) => theme.colors.text};
+  font-size: ${({ theme }) => theme.fontSizes.body};
+`;
+```
+
+### 2-1. 페이지 스타일 export 규칙
+
+- 특정 View 전용 `.styles.ts`는 기본적으로 개별 named import를 길게 나열하지 않는다.
+- 페이지 단위 스타일은 기본적으로 `const S = { ... } as const` 형태로 묶어 `default export` 한다.
+- View에서는 `import S from './{PageName}.styles'` 형태로 가져오고, JSX에서는 `S.Container`, `S.Header`, `S.ButtonPrimary`처럼 사용한다.
+- 기존 호환이 필요하면 named export는 유지할 수 있지만, 새 코드/수정 코드는 `S` 네임스페이스 사용을 우선한다.
+
+```typescript
+// {PageName}.styles.ts
+export const Page = styled.main``;
+export const Header = styled.header``;
+export const Title = styled.h1``;
+
+const S = {
+  Page,
+  Header,
+  Title,
+} as const;
+
+export default S;
+```
+
+```typescript
+// {PageName}.tsx
+import S from './{PageName}.styles';
+
+export default function Page(): React.ReactNode {
+  return (
+    <S.Page>
+      <S.Header>
+        <S.Title>Title</S.Title>
+      </S.Header>
+    </S.Page>
+  );
+}
+```
+
+---
+
+## 3. 상태 제어 규칙
+
+상태에 따른 스타일 변경은 transient props(`$` prefix)로 전달한다. `$` prefix가 붙은 props는 DOM으로 전달되지 않고 스타일 계산에만 사용된다.
+
+```typescript
+// 올바른 방법: transient props로 제어
+export const Button = styled.button<{ $isDisabled: boolean; $variant?: 'primary' | 'secondary' }>`
+  background: ${({ $isDisabled, $variant, theme }) =>
+    $isDisabled ? theme.colors.gray : ($variant === 'secondary' ? theme.colors.secondary : theme.colors.primary)};
+  cursor: ${({ $isDisabled }) => ($isDisabled ? 'not-allowed' : 'pointer')};
+`;
+
+// 사용
+<Button $isDisabled={isDisabled} $variant="primary" />
+```
+
+---
+
+## 4. 필수 규칙
+
+- color, font-size, spacing, z-index 등은 theme 값만 사용한다.
+- 매직 넘버(하드코딩된 px, color 등)를 직접 사용하지 않는다.
+- 상태 제어는 transient props(`$` prefix)로 한다.
+- 스타일 파일은 `{컴포넌트명}.styles.ts`로 분리한다.
+- 페이지 전용 `.styles.ts`는 `default export S` 네임스페이스 패턴을 기본으로 사용한다.
+- z-index는 숫자 하드코딩 대신 `theme.zIndexes.{token}`으로 사용한다.
+
+---
+
+## 금지 사항
+
+- 인라인 스타일(`style` prop) 사용 금지
+- theme에 없는 값을 직접 하드코딩하지 말 것
+- 스타일용 상태를 `className` 문자열로 제어하지 말 것 (transient props 사용)
+- 전역 스타일을 컴포넌트 파일에 선언하지 말 것 (`src/styles/`에서 관리)

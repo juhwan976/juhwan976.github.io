@@ -23,6 +23,3 @@ dist-ssr
 *.sln
 *.sw?
 .playwright-shots
-
-.cursor/
-_templates/

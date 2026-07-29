@@ -1,0 +1,22 @@
+---
+description : 이 규칙은 앱 내에서 항상 적용되는 규칙을 정의합니다.
+glob:
+alwaysApply: true
+---
+
+# 기본 규칙
+
+---
+
+## 임포트
+
+- vite를 사용하므로 alias를 사용해서 import를 진행
+- `tsconfig.json` 파일을 읽어서 린트 룰에 맞게 작성
+
+---
+
+## 완료하기 전 할 것
+
+- 린트 오류 확인
+- `yarn lint` 명령어를 통해서 오류 확인
+- `yarn typecheck` 명령어를 통해서 오류 확인

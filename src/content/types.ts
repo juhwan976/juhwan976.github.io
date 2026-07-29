@@ -2,21 +2,22 @@
 // 모든 화면 문구/수치/에셋 경로는 이 타입을 따르는 데이터 파일에서 관리한다.
 
 export const MediaKinds = {
-  IMAGE: 'image',
-  VIDEO: 'video',
+  IMAGE: "image",
+  VIDEO: "video",
 } as const;
 
 export type MediaKind = (typeof MediaKinds)[keyof typeof MediaKinds];
 
-/** 에셋이 아직 없을 때 사용하는 예약 경로 값 */
-export const IMAGE_PLACEHOLDER = 'IMAGE_PLACEHOLDER';
-export const VIDEO_PLACEHOLDER = 'VIDEO_PLACEHOLDER';
+/** 에셋·정보가 아직 없을 때 사용하는 예약 값 */
+export const IMAGE_PLACEHOLDER = "IMAGE_PLACEHOLDER";
+export const VIDEO_PLACEHOLDER = "VIDEO_PLACEHOLDER";
+export const TEXT_PLACEHOLDER = "TEXT_PLACEHOLDER";
 
 export interface MediaItem {
   readonly kind: MediaKind;
   /** 실제 파일 경로 또는 IMAGE_PLACEHOLDER / VIDEO_PLACEHOLDER */
   readonly src: string;
-  /** 영상일 때 poster 이미지 경로 (없으면 placeholder 렌더) */
+  /** 영상일 때 poster 이미지 경로 */
   readonly poster?: string;
   readonly alt: string;
   readonly caption?: string;
@@ -28,10 +29,6 @@ export interface ProjectStat {
   readonly label: string;
   /** 표시용 값 (예: "약 1개월", "7,000명") */
   readonly value: string;
-  /** 카운트업 대상 수치 (없으면 정적 표시) */
-  readonly numericValue?: number;
-  readonly prefix?: string;
-  readonly suffix?: string;
   /** 측정 기준 주석 (예: "내부 측정 기준") */
   readonly note?: string;
 }
@@ -48,7 +45,7 @@ export interface ProjectChallenge {
 }
 
 export interface FlowDiagramSpec {
-  readonly type: 'flow';
+  readonly type: "flow";
   readonly title: string;
   readonly steps: ReadonlyArray<{
     readonly title: string;
@@ -57,7 +54,7 @@ export interface FlowDiagramSpec {
 }
 
 export interface SplitDiagramSpec {
-  readonly type: 'split';
+  readonly type: "split";
   readonly title: string;
   readonly left: { readonly title: string; readonly items: readonly string[] };
   readonly right: { readonly title: string; readonly items: readonly string[] };
@@ -78,46 +75,26 @@ export interface ReflectionItem {
   readonly points: readonly string[];
 }
 
-export const SceneThemes = {
-  BLUEPRINT: 'blueprint',
-  APPLIANCE: 'appliance',
-  TV: 'tv',
-} as const;
-
-export type SceneTheme = (typeof SceneThemes)[keyof typeof SceneThemes];
-
-/** 메인 페이지 Work 장면에 노출하는 최소 정보 */
-export interface ProjectScene {
-  /** 큰 제목. '\n'으로 줄바꿈 */
-  readonly title: string;
-  /** 한 줄(최대 2줄) 설명. '\n'으로 줄바꿈 */
-  readonly summary: string;
-  /** 핵심 수치 2~3개 (표시 문자열) */
-  readonly stats: readonly string[];
-  /** 핵심 기술 최대 5개 */
-  readonly coreTech: readonly string[];
-  /** 장면 배경 틴트/그래픽 테마 */
-  readonly theme: SceneTheme;
-}
-
 export interface ProjectContent {
   readonly slug: string;
   /** 프로젝트 번호 (예: '01') */
   readonly number: string;
   readonly name: string;
-  /** 표시 제목. '\n'으로 줄바꿈 */
+  /** 상세 페이지 표시 제목. '\n'으로 줄바꿈 */
   readonly title: string;
+  /** 한 줄 설명 */
   readonly summary: string;
   readonly period: string;
   readonly team: string;
-  readonly tags: readonly string[];
+  /** 메인 Work 밴드에 노출하는 역할 요약 한 줄 (Career와 중복 금지 — 이 프로젝트 안에서의 담당 구성만) */
+  readonly roleLine: string;
   readonly tech: readonly string[];
   readonly users: readonly string[];
   readonly myRole: readonly string[];
   /** 문제 배경 */
   readonly background: readonly string[];
-  /** 카드/At a Glance에 노출하는 핵심 성과 */
-  readonly highlights: ProjectStat[];
+  /** 메인 Work 밴드와 상세 Outcome에 노출하는 핵심 성과 (메인은 최대 3개) */
+  readonly highlights: readonly ProjectStat[];
   readonly challenges: readonly ProjectChallenge[];
   readonly decisions: readonly ProjectDecision[];
   readonly results: readonly string[];
@@ -127,53 +104,60 @@ export interface ProjectContent {
     readonly items: readonly ReflectionItem[];
   };
   readonly gallery: readonly MediaItem[];
-  /** 목록 카드에 사용하는 대표 미디어 */
+  /** 메인 Work 밴드에 사용하는 대표 미디어 */
   readonly cardMedia: MediaItem;
-  /** 메인 페이지 Work 장면 정보 */
-  readonly scene: ProjectScene;
 }
 
-export interface ScrollStoryScene {
+export interface CareerRole {
   readonly id: string;
-  readonly label: string;
-  /** 장면 그래픽 종류 (ScrollStory 렌더러가 해석) */
-  readonly graphic: 'blocks' | 'branches' | 'paths' | 'system';
-  /** 큰 제목. '\n'으로 줄바꿈 */
+  /** 표시용 기간 (예: "2026.02 — 현재") */
+  readonly period: string;
+  /** 직급 (예: "팀장") */
   readonly title: string;
-  /** 2줄 이내 설명. '\n'으로 줄바꿈 */
-  readonly description: string;
+  /** 소속 팀 (예: "인터랙션레이어") */
+  readonly team: string;
+  /** 담당 범위 한 줄 (프로젝트 서사는 Work 담당 — 역할 관점만) */
+  readonly summary: string;
+  /** 현재 역할 여부 */
+  readonly current?: boolean;
 }
 
-export interface Principle {
+export interface CareerCompany {
   readonly id: string;
-  readonly label: string;
-  readonly title: string;
-  readonly description: string;
+  readonly name: string;
+  /** 로고 경로. 아직 없으면 IMAGE_PLACEHOLDER (이니셜 박스로 대체 렌더링) */
+  readonly logo: string;
+  /** 입사 시점 "YYYY.MM" — 재직 기간 계산에 사용 */
+  readonly start: string;
+  /** 퇴사 시점 "YYYY.MM". 없으면 재직 중 */
+  readonly end?: string;
+  /** 역임한 역할. 최신순 */
+  readonly roles: readonly CareerRole[];
 }
 
 export interface SiteConfig {
+  readonly pageTitle: string;
+
   readonly name: string;
+  readonly nameEn: string;
   readonly role: string;
   /** 미확정이면 EMAIL_PLACEHOLDER */
   readonly email: string;
   /** 미확정이면 RESUME_URL_PLACEHOLDER */
   readonly resumeUrl: string;
+  /** 미확정이면 GITHUB_URL_PLACEHOLDER — placeholder면 노출하지 않음 */
+  readonly githubUrl: string;
   readonly nav: ReadonlyArray<{ readonly id: string; readonly label: string }>;
   readonly hero: {
-    /** 큰 제목. '\n'으로 줄바꿈 */
+    /** 메인 문장. '\n'으로 줄바꿈 */
     readonly headline: string;
-    readonly roles: readonly string[];
-    /** 핵심 기술 한 줄 (예: 'React · Flutter · Electron') */
-    readonly techLine: string;
+    /** 짧은 설명. '\n'으로 줄바꿈 */
+    readonly description: string;
     readonly cta: string;
   };
-  readonly scrollStory: readonly ScrollStoryScene[];
-  readonly principlesTitle: string;
-  readonly principles: readonly Principle[];
-  /** Principles 하단에 한 줄로 표시하는 역량 키워드 */
-  readonly principlesFootnote: string;
-  readonly contact: {
-    /** 큰 문장. '\n'으로 줄바꿈 */
+  readonly about: {
+    /** '\n'으로 줄바꿈 */
     readonly title: string;
+    readonly body: readonly string[];
   };
 }
