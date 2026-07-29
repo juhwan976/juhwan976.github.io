@@ -55,5 +55,4 @@
   <rect x="378" y="858" width="40" height="36" rx="8" fill="#3a3e45"/>
   <rect x="430" y="858" width="40" height="36" rx="8" fill="#3a3e45"/>
   <text x="80" y="80" font-family="'SF Mono', ui-monospace, Menlo, monospace" font-size="24" letter-spacing="5" fill="#686d74">AGV ROUTE NETWORK</text>
-  <text x="1520" y="80" text-anchor="end" font-size="22" fill="#686d74">Abstract Visualization</text>
 </svg>

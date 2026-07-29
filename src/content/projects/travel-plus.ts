@@ -9,7 +9,7 @@ export const travelPlus: ProjectContent = {
     "LG webOS TV에서 특정 여행지와 관련된 정보를 제공하는 TV 애플리케이션",
   period: "2025.07 ~ 2026.01",
   team: "4인 개발",
-  roleLine: "프로젝트 리드 (4인) — 핵심 구조 재구성과 성능 최적화 주도",
+  roleLine: "프로젝트 리드 (4인) - 핵심 구조 재구성과 성능 최적화 주도",
   tech: [
     "React",
     "TypeScript",
@@ -116,11 +116,9 @@ export const travelPlus: ProjectContent = {
       },
     },
   ],
+  // 수치 성과는 highlights(Outcome 스탯)에서 보여주므로 여기서는 반복하지 않는다.
   results: [
-    "일부 화면 로딩 시간이 약 3분에서 약 10초 수준으로 단축됐습니다. (개발 당시 측정)",
-    "기존 버전이 약 3개월 동안 구현한 범위를 리뉴얼 버전에서 약 1개월 만에 확보했습니다.",
-    "성능 문제로 QA가 어려웠던 프로젝트를 사용 가능한 수준으로 안정화했습니다.",
-    "디자인 요구와 TV 하드웨어 제약 사이의 대안을 제시했습니다.",
+    "디자인 요구와 TV 하드웨어 제약 사이의 대안을 제시해 합의를 이끌었습니다.",
   ],
   reflection: {
     items: [

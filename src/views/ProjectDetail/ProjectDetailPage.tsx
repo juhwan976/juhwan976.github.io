@@ -10,14 +10,37 @@ import { Navigate, useParams } from "react-router-dom";
 
 const ROLE_SUMMARY_LIMIT = 4;
 
+// 좌측 sticky 레이블 + 우측 본문의 공통 블록 골격.
+// featured 블록(Key Challenge)만 패널로 승격한다.
+function DetailBlock({
+  label,
+  featured = false,
+  children,
+}: {
+  readonly label: string;
+  readonly featured?: boolean;
+  readonly children: React.ReactNode;
+}): React.ReactNode {
+  return (
+    <S.Block>
+      <S.BlockAside>
+        <S.BlockLabel as="p">{label}</S.BlockLabel>
+      </S.BlockAside>
+      <S.BlockBody $featured={featured}>{children}</S.BlockBody>
+    </S.Block>
+  );
+}
+
 function ChallengeBlock({
   challenge,
 }: {
   readonly challenge: ProjectChallenge;
 }): React.ReactNode {
   return (
-    <S.Block>
-      <S.BlockLabel as="p">{challenge.label}</S.BlockLabel>
+    <DetailBlock
+      label={challenge.label}
+      featured={challenge.label === 'Key Challenge'}
+    >
       <S.BlockTitle>{challenge.title}</S.BlockTitle>
       <S.SubLabel>문제</S.SubLabel>
       <S.Paragraphs>
@@ -44,7 +67,7 @@ function ChallengeBlock({
       {challenge.results.map((result) => (
         <S.ResultCallout key={result}>{result}</S.ResultCallout>
       ))}
-    </S.Block>
+    </DetailBlock>
   );
 }
 
@@ -54,8 +77,7 @@ function DecisionBlock({
   readonly decision: ProjectDecision;
 }): React.ReactNode {
   return (
-    <S.Block>
-      <S.BlockLabel as="p">{decision.label}</S.BlockLabel>
+    <DetailBlock label={decision.label}>
       <S.BlockTitle>{decision.title}</S.BlockTitle>
       <S.Paragraphs>
         {decision.body.map((paragraph) => (
@@ -63,7 +85,7 @@ function DecisionBlock({
         ))}
       </S.Paragraphs>
       {decision.diagram && <DiagramView diagram={decision.diagram} />}
-    </S.Block>
+    </DetailBlock>
   );
 }
 
@@ -75,8 +97,8 @@ export default function ProjectDetailPage(): React.ReactNode {
 
   useDocumentTitle(
     project
-      ? `${project.name} — ${siteConfig.pageTitle}`
-      : `${siteConfig.name} — ${siteConfig.role}`,
+      ? `${project.name} · ${siteConfig.pageTitle}`
+      : `${siteConfig.name} · ${siteConfig.role}`,
   );
 
   if (!project) {
@@ -106,7 +128,7 @@ export default function ProjectDetailPage(): React.ReactNode {
       <S.Page>
         <S.Hero>
           <S.Eyebrow>
-            {project.number} — {project.name}
+            {project.number} · {project.name}
           </S.Eyebrow>
           <S.Title>{project.title}</S.Title>
           <S.Summary>{project.summary}</S.Summary>
@@ -135,25 +157,23 @@ export default function ProjectDetailPage(): React.ReactNode {
         </S.LeadMedia>
 
         <S.Body>
-          <S.Block>
-            <S.BlockLabel as="p">Background</S.BlockLabel>
+          <DetailBlock label="Background">
             <S.BulletList>
               {project.background.map((item) => (
                 <li key={item}>{item}</li>
               ))}
             </S.BulletList>
-          </S.Block>
+          </DetailBlock>
 
-          <S.Block>
-            <S.BlockLabel as="p">Role &amp; Users</S.BlockLabel>
+          <DetailBlock label="Role & Users">
             <S.RoleColumns>
               <div>
                 <S.SubLabel>담당 범위</S.SubLabel>
-                <S.BulletList>
+                <S.ChipList>
                   {project.myRole.map((role) => (
                     <li key={role}>{role}</li>
                   ))}
-                </S.BulletList>
+                </S.ChipList>
               </div>
               <div>
                 <S.SubLabel>사용자</S.SubLabel>
@@ -164,7 +184,7 @@ export default function ProjectDetailPage(): React.ReactNode {
                 </S.BulletList>
               </div>
             </S.RoleColumns>
-          </S.Block>
+          </DetailBlock>
 
           {project.challenges.map((challenge) => (
             <ChallengeBlock key={challenge.id} challenge={challenge} />
@@ -174,16 +194,15 @@ export default function ProjectDetailPage(): React.ReactNode {
             <DecisionBlock key={decision.id} decision={decision} />
           ))}
 
-          <S.Block>
-            <S.BlockLabel as="p">Outcome</S.BlockLabel>
+          <DetailBlock label="Outcome">
             <S.StatTable>
               {project.highlights.map((stat) => (
                 <div key={stat.label}>
-                  <dt>
-                    {stat.label}
+                  <dt>{stat.label}</dt>
+                  <dd>
+                    {stat.value}
                     {stat.note && <small>{stat.note}</small>}
-                  </dt>
-                  <dd>{stat.value}</dd>
+                  </dd>
                 </div>
               ))}
             </S.StatTable>
@@ -193,10 +212,9 @@ export default function ProjectDetailPage(): React.ReactNode {
                 <li key={result}>{result}</li>
               ))}
             </S.BulletList>
-          </S.Block>
+          </DetailBlock>
 
-          <S.Block>
-            <S.BlockLabel as="p">Reflection</S.BlockLabel>
+          <DetailBlock label="Reflection">
             {project.reflection.items.length === 0 ? (
               <S.Paragraphs>
                 <p>{project.reflection.note}</p>
@@ -213,7 +231,7 @@ export default function ProjectDetailPage(): React.ReactNode {
                 </div>
               ))
             )}
-          </S.Block>
+          </DetailBlock>
         </S.Body>
 
         {restGallery.length > 0 && (

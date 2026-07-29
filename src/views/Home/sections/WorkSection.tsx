@@ -11,16 +11,19 @@ const MAIN_TECH_LIMIT = 5;
 function WorkBand({
   project,
   tintOnView,
+  flip,
 }: {
   readonly project: ProjectContent;
   /** 3D 프로젝트 밴드 — 진입 시 배경 톤이 전환된다 */
   readonly tintOnView: boolean;
+  /** 텍스트·미디어 좌우 교차 여부 */
+  readonly flip: boolean;
 }): React.ReactNode {
   const { ref, inView } = useInViewOnce<HTMLElement>(0.2);
 
   return (
     <S.Band ref={ref} $tinted={tintOnView && inView}>
-      <S.BandInner>
+      <S.BandInner $flip={flip}>
         <div>
           <S.Number>{project.number}</S.Number>
           <S.Name>{project.name}</S.Name>
@@ -51,6 +54,7 @@ export default function WorkSection(): React.ReactNode {
           key={project.slug}
           project={project}
           tintOnView={index === 0}
+          flip={index % 2 === 1}
         />
       ))}
     </S.Section>

@@ -1,9 +1,10 @@
 import styled from 'styled-components';
 
+// 미디어 프레임과 같은 재질(media) — 패널(핵심 블록 승격)과 구분한다.
 export const Wrap = styled.div`
   margin-top: ${({ theme }) => theme.spacing.lg};
   border: 1px solid ${({ theme }) => theme.colors.line};
-  background: ${({ theme }) => theme.colors.panel};
+  background: ${({ theme }) => theme.colors.media};
   padding: ${({ theme }) => theme.spacing.lg};
 `;
 

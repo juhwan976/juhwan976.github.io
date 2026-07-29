@@ -13,7 +13,7 @@ export default function ContactSection(): React.ReactNode {
     <S.Section id="contact" aria-label="Contact">
       <SectionLabel>Contact</SectionLabel>
       <S.Identity>
-        {siteConfig.name} <span>— {siteConfig.role}</span>
+        {siteConfig.name} <span>{siteConfig.role}</span>
       </S.Identity>
       <S.Links>
         <li>

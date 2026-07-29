@@ -11,7 +11,7 @@ export const careerCompanies: readonly CareerCompany[] = [
     roles: [
       {
         id: "interaction-layer-lead",
-        period: "2026.02 — 현재",
+        period: "2026.02 - 현재",
         title: "팀장",
         team: "인터랙션레이어",
         summary:
@@ -20,7 +20,7 @@ export const careerCompanies: readonly CareerCompany[] = [
       },
       {
         id: "advanced-control-lead",
-        period: "2024.01 — 2026.01",
+        period: "2024.01 - 2026.01",
         title: "팀장",
         team: "선행제어기술연구팀",
         summary:
@@ -28,7 +28,7 @@ export const careerCompanies: readonly CareerCompany[] = [
       },
       {
         id: "developer",
-        period: "2022.11 — 2023.12",
+        period: "2022.11 - 2023.12",
         title: "개발자",
         team: "개발팀",
         summary: "Android 앱 유지보수와 Flutter 모바일 앱 신규 개발",

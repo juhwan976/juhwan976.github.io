@@ -51,6 +51,8 @@ export const theme = {
   fontSizes: {
     /** Hero 헤드라인 */
     display: 'clamp(2.5rem, 5.2vw, 4.375rem)',
+    /** 상세 페이지 제목 — display와 h2 사이 */
+    h1: 'clamp(2.1rem, 3.8vw, 3.2rem)',
     /** 섹션 대제목 */
     h2: 'clamp(1.75rem, 3vw, 2.625rem)',
     /** 프로젝트명, 원칙 선언 */

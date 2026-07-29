@@ -51,7 +51,7 @@ export default function CareerSection(): React.ReactNode {
             )}
             <S.CompanyName>{company.name}</S.CompanyName>
             <S.CompanyPeriod>
-              {company.start} — {company.end ?? '현재'} ·{' '}
+              {company.start} - {company.end ?? '현재'} ·{' '}
               {formatTenure(company.start, company.end)}
             </S.CompanyPeriod>
           </S.CompanyHeader>

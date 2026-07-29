@@ -11,7 +11,7 @@ export const logisticsSimulator: ProjectContent = {
     "공장 도면 위에서 AGV 이동 경로를 설계하고 운행 결과를 검증하는 3D 시뮬레이션 애플리케이션",
   period: "2026.07 ~ 현재",
   team: "1인 개발",
-  roleLine: "1인 개발 — 요구사항 분석부터 UX 설계, 구현, 성능 최적화까지",
+  roleLine: "1인 개발 - 요구사항 분석부터 UX 설계, 구현, 성능 최적화까지",
   tech: ["Electron", "React", "Three.js", "Redux Toolkit", "TypeScript"],
   users: ["자재 담당자", "AGV 설비 담당자"],
   myRole: [
@@ -26,7 +26,7 @@ export const logisticsSimulator: ProjectContent = {
     "고객사 커뮤니케이션",
   ],
   background: [
-    "AGV를 도입하기 전에는 \"이 레이아웃에 몇 대가 필요한가, 동선이 겹쳐 정체가 생기지는 않는가\"를 실물 없이 검증할 방법이 필요했습니다.",
+    'AGV를 도입하기 전에는 "이 레이아웃에 몇 대가 필요한가, 동선이 겹쳐 정체가 생기지는 않는가"를 실물 없이 검증할 방법이 필요했습니다.',
     "기존 도구는 시뮬레이션 결과의 정확성이 부족했고, 사용자가 설정할 수 있는 범위가 제한적이었습니다.",
     "사용법이 복잡해 경로 설계에 많은 시간이 필요했습니다.",
     "향후 실시간 AGV 위치 모니터링으로 확장할 수 있는 구조가 필요했습니다.",
@@ -60,7 +60,7 @@ export const logisticsSimulator: ProjectContent = {
         "선로 조각을 이어 붙이는 방식 대신, 지점을 클릭하면 직전 지점과 자동으로 선로가 연결되도록 바꿨습니다.",
         "분기·합류·교차는 별도 부품이 아니라 교차로 지정 한 번으로 처리해 편집 개념 자체를 줄였습니다.",
       ],
-      results: ["배치 과정 약 50% 단축했습니다."],
+      results: ["배치 과정의 약 50%를 단축했습니다."],
     },
     {
       id: "camera-ux",
@@ -77,7 +77,7 @@ export const logisticsSimulator: ProjectContent = {
         "하나의 카메라 방식만 제공하면 특정 작업이 불편해집니다.",
         "숨겨진 단축키만 제공할 경우 사용자가 기능을 발견하기 어렵습니다.",
       ],
-      results: ["편집과 확인 목적에 맞는 카메라를 사용할 수 있게 됐습니다."],
+      results: ["편집과 확인 목적에 맞는 시점을 선택할 수 있게 개선했습니다."],
     },
     {
       id: "scale-performance",
@@ -117,7 +117,7 @@ export const logisticsSimulator: ProjectContent = {
         type: "split",
         title: "State Architecture",
         left: {
-          title: "Redux — 문서 상태",
+          title: "Redux - 문서 상태",
           items: [
             "도로망 (노드·선로)",
             "지점·바인딩",
@@ -126,7 +126,7 @@ export const logisticsSimulator: ProjectContent = {
           ],
         },
         right: {
-          title: "Redux 외부 — 런타임 상태",
+          title: "Redux 외부 - 런타임 상태",
           items: [
             "실시간 AGV 좌표",
             "시뮬레이션 결과 타임라인",
@@ -153,7 +153,7 @@ export const logisticsSimulator: ProjectContent = {
             title: "Result Timeline",
             detail: "AGV별 궤적 세그먼트 + 이벤트",
           },
-          { title: "Playback", detail: "이진탐색 + 보간 — 재계산 없음" },
+          { title: "Playback", detail: "이진탐색 + 보간, 재계산 없음" },
         ],
       },
     },
@@ -177,10 +177,10 @@ export const logisticsSimulator: ProjectContent = {
       },
     },
   ],
+  // 수치 성과는 highlights(Outcome 스탯)에서 보여주므로 여기서는 반복하지 않는다.
   results: [
     "1인 개발로 진행했습니다.",
     "AI 기반 개발 방식을 구현 속도를 높이는 도구로 활용했습니다.",
-    "약 1개월 만에 주요 기능 프로토타입을 구현했습니다. 직접 개발 예상 기간은 약 5개월이었습니다.",
     "동일한 입력이면 항상 같은 결과를 재현하는 결정론적 엔진으로 설계해, 시뮬레이션 결과를 신뢰할 수 있게 했습니다.",
   ],
   reflection: {
@@ -194,21 +194,21 @@ export const logisticsSimulator: ProjectContent = {
       src: "/images/projects/logistics-simulator/system-architecture.svg",
       alt: "Electron 프로세스 구성과 데이터 흐름을 재구성한 시스템 구성도",
       caption:
-        "시스템 구성도 — 사내 프로젝트 특성상 실제 화면 대신 재구성한 자료입니다",
+        "시스템 구성도 - 사내 프로젝트 특성상 실제 화면 대신 재구성한 자료입니다",
       placeholderLabel: "System Architecture",
     },
     {
       kind: MediaKinds.IMAGE,
       src: "/images/projects/logistics-simulator/editing-flow.svg",
       alt: "지점 배치, 선로 설치, 시뮬레이션으로 이어지는 편집 3단계 플로우",
-      caption: "편집 플로우 — 지점 배치 → 선로 설치 → 시뮬레이션",
+      caption: "편집 플로우 - 지점 배치 → 선로 설치 → 시뮬레이션",
       placeholderLabel: "Editing Flow",
     },
     {
       kind: MediaKinds.IMAGE,
       src: "/images/projects/logistics-simulator/simulation-pipeline.svg",
       alt: "계산 1회 후 결과를 재생하는 시뮬레이션 파이프라인 다이어그램",
-      caption: "시뮬레이션 파이프라인 — 계산은 한 번, 재생은 조회만",
+      caption: "시뮬레이션 파이프라인 - 계산은 한 번, 재생은 조회만",
       placeholderLabel: "Simulation Pipeline",
     },
   ],

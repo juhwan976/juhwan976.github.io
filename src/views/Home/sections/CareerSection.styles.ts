@@ -79,12 +79,12 @@ export const CompanyPeriod = styled.p`
   }
 `;
 
+/* 행 구분은 헤어라인 대신 여백으로 만든다 (상세 페이지와 동일한 언어) */
 export const RoleRow = styled.div<{ $current: boolean }>`
   display: grid;
   grid-template-columns: 180px 1fr;
   gap: ${({ theme }) => theme.spacing.xl};
   padding: ${({ theme }) => `${theme.spacing.lg} 0`};
-  border-top: 1px solid ${({ theme }) => theme.colors.line};
 
   ${({ $current, theme }) =>
     $current &&

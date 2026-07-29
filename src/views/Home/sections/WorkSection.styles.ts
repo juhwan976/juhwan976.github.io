@@ -21,15 +21,25 @@ export const Band = styled.article<{ $tinted: boolean }>`
   transition: background 0.9s ease;
 `;
 
-export const BandInner = styled.div`
+/** 밴드마다 텍스트·미디어 좌우를 교차해 단조로운 반복을 깬다 */
+export const BandInner = styled.div<{ $flip: boolean }>`
   max-width: ${({ theme }) => theme.layout.maxWidth};
   margin: 0 auto;
   padding: ${({ theme }) => `${theme.spacing.xxl} ${theme.spacing.gutter}`};
   display: grid;
-  grid-template-columns: minmax(340px, 5fr) 7fr;
+  grid-template-columns: ${({ $flip }) =>
+    $flip ? '7fr minmax(340px, 5fr)' : 'minmax(340px, 5fr) 7fr'};
   gap: ${({ theme }) => theme.spacing.xxl};
   align-items: center;
   border-top: 1px solid ${({ theme }) => theme.colors.line};
+
+  ${({ $flip }) =>
+    $flip &&
+    `
+    & > figure {
+      order: -1;
+    }
+  `}
 
   ${({ theme }) => theme.media.tablet} {
     grid-template-columns: 1fr;

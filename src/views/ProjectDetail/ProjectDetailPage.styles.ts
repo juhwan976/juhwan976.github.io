@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
 import { SectionLabel } from '@/components/ui/primitives';
 
@@ -79,7 +79,7 @@ export const Eyebrow = styled.p`
 
 export const Title = styled.h1`
   margin-top: ${({ theme }) => theme.spacing.md};
-  font-size: ${({ theme }) => theme.fontSizes.h2};
+  font-size: ${({ theme }) => theme.fontSizes.h1};
   font-weight: 700;
   line-height: 1.3;
   letter-spacing: -0.015em;
@@ -125,36 +125,76 @@ export const LeadMedia = styled.div`
   padding: 0 ${({ theme }) => theme.spacing.gutter};
 `;
 
-/** 본문 620px 컬럼 */
+/** 본문 — 좌측 sticky 레이블(220px) + 620px 콘텐츠 컬럼 */
 export const Body = styled.div`
   max-width: calc(
-    ${({ theme }) => theme.layout.proseWidth} + 2 *
+    220px + ${({ theme }) => theme.spacing.xl} +
+      ${({ theme }) => theme.layout.proseWidth} + 2 *
       ${({ theme }) => theme.spacing.gutter}
   );
   margin: 0 auto;
   padding: ${({ theme }) => `${theme.spacing.xxl} ${theme.spacing.gutter}`};
 `;
 
+// 섹션 구분은 헤어라인 대신 여백으로 만든다.
 export const Block = styled.section`
+  display: grid;
+  grid-template-columns: 220px minmax(0, ${({ theme }) => theme.layout.proseWidth});
+  column-gap: ${({ theme }) => theme.spacing.xl};
+  align-items: start;
+
   & + & {
-    margin-top: ${({ theme }) => theme.spacing.xxl};
-    padding-top: ${({ theme }) => theme.spacing.xl};
-    border-top: 1px solid ${({ theme }) => theme.colors.line};
+    margin-top: clamp(88px, 11vh, 128px);
+  }
+
+  ${({ theme }) => theme.media.tablet} {
+    grid-template-columns: 1fr;
+    row-gap: ${({ theme }) => theme.spacing.md};
+
+    & + & {
+      margin-top: ${({ theme }) => theme.spacing.xxl};
+    }
   }
 `;
 
-export const BlockLabel = styled(SectionLabel)`
-  margin-bottom: ${({ theme }) => theme.spacing.lg};
+/** 스크롤하는 동안 현재 섹션 레이블이 좌측에 고정된다 */
+export const BlockAside = styled.div`
+  position: sticky;
+  top: calc(
+    ${({ theme }) => theme.layout.headerHeight} +
+      ${({ theme }) => theme.spacing.lg}
+  );
+
+  ${({ theme }) => theme.media.tablet} {
+    position: static;
+  }
 `;
 
+/** 핵심 블록(Key Challenge)만 패널로 승격한다 */
+export const BlockBody = styled.div<{ $featured: boolean }>`
+  ${({ $featured, theme }) =>
+    $featured &&
+    css`
+      background: ${theme.colors.panel};
+      border: 1px solid ${theme.colors.line};
+      padding: ${theme.spacing.xl};
+
+      ${theme.media.mobile} {
+        padding: ${theme.spacing.lg};
+      }
+    `}
+`;
+
+export const BlockLabel = styled(SectionLabel)``;
+
 export const BlockTitle = styled.h2`
-  font-size: ${({ theme }) => theme.fontSizes.h3};
+  font-size: ${({ theme }) => theme.fontSizes.h2};
   font-weight: 700;
-  line-height: 1.4;
-  letter-spacing: -0.01em;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
   white-space: pre-line;
   color: ${({ theme }) => theme.colors.text};
-  margin-bottom: ${({ theme }) => theme.spacing.md};
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
 `;
 
 export const Paragraphs = styled.div`
@@ -209,32 +249,51 @@ export const ResultCallout = styled.p`
   color: ${({ theme }) => theme.colors.text};
 `;
 
+/** 헤어라인 없는 2컬럼 스탯 그리드 — 라벨 위, 수치 아래 */
 export const StatTable = styled.dl`
-  div {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: ${({ theme }) => theme.spacing.lg};
-    padding: ${({ theme }) => `${theme.spacing.md} 0`};
-    border-top: 1px solid ${({ theme }) => theme.colors.line};
-  }
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: ${({ theme }) => `${theme.spacing.xl} ${theme.spacing.lg}`};
 
   dt {
     font-size: ${({ theme }) => theme.fontSizes.small};
     color: ${({ theme }) => theme.colors.textDim};
+    margin-bottom: ${({ theme }) => theme.spacing.xs};
+  }
+
+  dd {
+    font-size: ${({ theme }) => theme.fontSizes.h3};
+    font-weight: 700;
+    line-height: 1.3;
+    color: ${({ theme }) => theme.colors.text};
 
     small {
       display: block;
+      margin-top: ${({ theme }) => theme.spacing.xs};
       font-size: ${({ theme }) => theme.fontSizes.tiny};
+      font-weight: 400;
       color: ${({ theme }) => theme.colors.textFaint};
     }
   }
 
-  dd {
-    font-size: ${({ theme }) => theme.fontSizes.bodyLg};
-    font-weight: 700;
-    text-align: right;
-    color: ${({ theme }) => theme.colors.text};
+  ${({ theme }) => theme.media.mobile} {
+    grid-template-columns: 1fr;
+  }
+`;
+
+/** 담당 범위 칩 — 긴 나열을 불릿 벽 대신 칩으로 흘린다 */
+export const ChipList = styled.ul`
+  display: flex;
+  flex-wrap: wrap;
+  gap: ${({ theme }) => theme.spacing.xs};
+
+  li {
+    padding: 5px 12px;
+    border: 1px solid ${({ theme }) => theme.colors.line};
+    font-size: ${({ theme }) => theme.fontSizes.small};
+    line-height: 1.5;
+    color: ${({ theme }) => theme.colors.textDim};
+    white-space: nowrap;
   }
 `;
 
@@ -311,8 +370,11 @@ const S = {
   LeadMedia,
   Body,
   Block,
+  BlockAside,
+  BlockBody,
   BlockLabel,
   BlockTitle,
+  ChipList,
   Paragraphs,
   SubLabel,
   BulletList,
