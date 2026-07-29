@@ -257,10 +257,15 @@ const FerrofluidBackdrop: React.FC<FerrofluidProps> = ({
     const container = containerRef.current;
     if (!container) return;
 
+    // 유체 배경은 저주파 그라데이션이라 고해상도의 시각적 이득이 거의 없다.
+    // 레티나(dpr 2)에서 픽셀 연산량이 4배가 되는 것을 막기 위해 1.5로 캡한다.
     const renderer = new Renderer({
       dpr:
         dpr ??
-        (typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1),
+        Math.min(
+          typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1,
+          1.5,
+        ),
       alpha: true,
       antialias: true,
     });
@@ -344,7 +349,10 @@ const FerrofluidBackdrop: React.FC<FerrofluidProps> = ({
       window.addEventListener("pointermove", onPointerMove);
     }
 
+    let running = false;
+
     const loop = (t: number) => {
+      if (!running) return;
       rafRef.current = requestAnimationFrame(loop);
       uniforms.iTime.value = t * 0.001;
       if (mouseDampening > 0) {
@@ -373,10 +381,43 @@ const FerrofluidBackdrop: React.FC<FerrofluidProps> = ({
         }
       }
     };
-    rafRef.current = requestAnimationFrame(loop);
+
+    const startLoop = () => {
+      if (running) return;
+      running = true;
+      // 정지 중 흐른 시간으로 dt가 튀지 않도록 초기화한다.
+      lastTimeRef.current = 0;
+      rafRef.current = requestAnimationFrame(loop);
+    };
+    const stopLoop = () => {
+      running = false;
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
+    };
+
+    // 화면 밖이거나 탭이 숨겨지면 렌더링을 멈춰
+    // 스크롤 합성과의 GPU 경쟁을 없앤다.
+    let inView = true;
+    const syncRunning = () => {
+      if (inView && !document.hidden) startLoop();
+      else stopLoop();
+    };
+    const io = new IntersectionObserver((entries) => {
+      inView = entries[0]?.isIntersecting ?? true;
+      syncRunning();
+    });
+    io.observe(container);
+    const onVisibilityChange = () => syncRunning();
+    document.addEventListener("visibilitychange", onVisibilityChange);
+
+    startLoop();
 
     return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      stopLoop();
+      io.disconnect();
+      document.removeEventListener("visibilitychange", onVisibilityChange);
       if (mouseInteraction)
         window.removeEventListener("pointermove", onPointerMove);
       ro.disconnect();

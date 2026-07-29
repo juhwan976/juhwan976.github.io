@@ -1,6 +1,6 @@
 # Portfolio Plan
 
-장주환 — Frontend Engineer / UX Engineer 개인 포트폴리오 설계 문서.
+장주환 — Frontend Engineer 개인 포트폴리오 설계 문서.
 
 ---
 
@@ -88,16 +88,16 @@
 
 색상 (다크 단일 테마):
 
-| 토큰 | 값 |
-| --- | --- |
-| `--color-bg` | `#09090B` |
-| `--color-surface` | `#111114` |
-| `--color-surface-elevated` | `#18181C` |
-| `--color-text` | `#F5F5F3` |
-| `--color-text-secondary` | `#99999F` |
-| `--color-border` | `rgba(255, 255, 255, 0.1)` |
-| `--color-accent` | `#FF6A00` |
-| `--color-accent-light` | `#FF8A34` |
+| 토큰                       | 값                         |
+| -------------------------- | -------------------------- |
+| `--color-bg`               | `#09090B`                  |
+| `--color-surface`          | `#111114`                  |
+| `--color-surface-elevated` | `#18181C`                  |
+| `--color-text`             | `#F5F5F3`                  |
+| `--color-text-secondary`   | `#99999F`                  |
+| `--color-border`           | `rgba(255, 255, 255, 0.1)` |
+| `--color-accent`           | `#FF6A00`                  |
+| `--color-accent-light`     | `#FF8A34`                  |
 
 오렌지 사용처 제한: 활성 내비게이션, 핵심 키워드, 프로젝트 번호, 인터랙션 상태, 중요 수치, 버튼 hover/focus.
 
@@ -152,11 +152,11 @@ public/videos/travel-plus/                   # 성능 개선 데모 (muted)
 
 ## 11. 미확정 정보 목록
 
-| 항목 | 현재 값 | 위치 |
-| --- | --- | --- |
-| 이메일 | `EMAIL_PLACEHOLDER` | `src/content/site.ts` |
-| 이력서 URL | `RESUME_URL_PLACEHOLDER` | `src/content/site.ts` |
-| 커리어 단계별 연도 | `TODO_VERIFY_DATE` | `src/content/site.ts` |
+| 항목                 | 현재 값                                   | 위치                        |
+| -------------------- | ----------------------------------------- | --------------------------- |
+| 이메일               | `EMAIL_PLACEHOLDER`                       | `src/content/site.ts`       |
+| 이력서 URL           | `RESUME_URL_PLACEHOLDER`                  | `src/content/site.ts`       |
+| 커리어 단계별 연도   | `TODO_VERIFY_DATE`                        | `src/content/site.ts`       |
 | 프로젝트 이미지/영상 | `IMAGE_PLACEHOLDER` / `VIDEO_PLACEHOLDER` | `src/content/projects/*.ts` |
 
 성과 수치는 제공된 값만 사용하고, 측정 기준이 불명확한 값은 "약", "내부 측정 기준" 표기를 유지한다. 임의의 경력·성과·수치를 추가하지 않는다.
