@@ -2,7 +2,7 @@
 
 Frontend Engineer 개인 포트폴리오 웹사이트입니다.
 
-React + TypeScript + Vite 기반이며, 스크롤 기반 메인 페이지와 프로젝트별 Case Study 상세 페이지로 구성됩니다. 설계 문서는 `docs/portfolio-plan.md`를 참고하세요.
+React + TypeScript + Vite 기반이며, 스크롤 기반 메인 페이지와 프로젝트별 Case Study 상세 페이지로 구성됩니다. 설계 문서는 [docs/portfolio-plan.md](docs/portfolio-plan.md), 디자인 시스템은 [docs/DESIGN.md](docs/DESIGN.md)를 참고하세요.
 
 ## 페이지 구성
 
