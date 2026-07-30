@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import S from "@/components/Header/Header.styles";
 import { siteConfig } from "@/content/site";
 
@@ -9,22 +9,32 @@ const MENU_ID = "header-mobile-menu";
 // 모바일은 햄버거 메뉴로 접되 Resume 링크는 항상 보여준다.
 export default function Header(): React.ReactNode {
   const [menuOpen, setMenuOpen] = useState(false);
+  const barRef = useRef<HTMLElement | null>(null);
 
   const toggleMenu = useCallback(() => setMenuOpen((open) => !open), []);
   const closeMenu = useCallback(() => setMenuOpen(false), []);
 
-  // 메뉴가 열린 동안 Escape로 닫을 수 있게 한다.
+  // 메뉴가 열린 동안 Escape 또는 헤더 바깥 클릭으로 닫을 수 있게 한다.
   useEffect(() => {
     if (!menuOpen) return;
     const onKeyDown = (e: KeyboardEvent): void => {
       if (e.key === "Escape") setMenuOpen(false);
     };
+    const onPointerDown = (e: PointerEvent): void => {
+      if (e.target instanceof Node && !barRef.current?.contains(e.target)) {
+        setMenuOpen(false);
+      }
+    };
     window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      document.removeEventListener("pointerdown", onPointerDown);
+    };
   }, [menuOpen]);
 
   return (
-    <S.Bar>
+    <S.Bar ref={barRef}>
       <S.Inner>
         <S.Brand href="#top" aria-label="맨 위로 이동" onClick={closeMenu}>
           {siteConfig.pageTitle}

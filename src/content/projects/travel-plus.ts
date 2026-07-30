@@ -141,26 +141,26 @@ export const travelPlus: ProjectContent = {
   gallery: [
     {
       kind: MediaKinds.IMAGE,
-      src: "/images/projects/travel-plus/app-screens.png",
+      src: "/images/projects/travel-plus/app-screens.webp",
       alt: "여행지 홈 화면·장소 카드 목록·목적지 탐색 지도를 나열한 실제 서비스 화면",
       caption: "실제 서비스 화면",
     },
     {
       kind: MediaKinds.IMAGE,
-      src: "/images/projects/travel-plus/places.png",
+      src: "/images/projects/travel-plus/places.webp",
       alt: "여행지 카드 목록 화면 - 도시별 지도와 방문 추천 시기 정보",
       caption: "여행지 카드 탐색",
     },
     {
       kind: MediaKinds.IMAGE,
-      src: "/images/projects/travel-plus/destinations.png",
+      src: "/images/projects/travel-plus/destinations.webp",
       alt: "대륙별 목적지 탐색 화면 - 세계 지도 기반 단계형 탐색",
       caption: "대륙별 목적지 탐색",
     },
   ],
   cardMedia: {
     kind: MediaKinds.IMAGE,
-    src: "/images/projects/travel-plus/card.png",
+    src: "/images/projects/travel-plus/card.webp",
     alt: "Travel+ TV 앱의 여행지 홈 화면과 목적지 탐색 화면",
   },
 };
