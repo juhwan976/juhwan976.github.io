@@ -16,14 +16,23 @@ export const Frame = styled.div<{ $revealed: boolean; $ratio: string }>`
     $revealed ? 'inset(0 0 0 0)' : 'inset(0 100% 0 0)'};
   transition: clip-path 0.9s cubic-bezier(0.65, 0, 0.35, 1);
 
-  & > img,
-  & > video {
+  img,
+  video {
     width: 100%;
     height: 100%;
     object-fit: cover;
     transform: ${({ $revealed }) => ($revealed ? 'scale(1)' : 'scale(1.05)')};
     transition: transform 1.1s cubic-bezier(0.65, 0, 0.35, 1);
   }
+`;
+
+/** 클릭하면 확대 뷰어가 열리는 이미지 래퍼 */
+export const ZoomTrigger = styled.button`
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  cursor: zoom-in;
 `;
 
 export const Placeholder = styled.div`
@@ -73,6 +82,7 @@ export const Caption = styled.figcaption`
 const S = {
   Figure,
   Frame,
+  ZoomTrigger,
   Placeholder,
   PlaceholderLabel,
   Caption,

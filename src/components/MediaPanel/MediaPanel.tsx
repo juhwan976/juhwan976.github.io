@@ -1,3 +1,4 @@
+import { useCallback, useState } from 'react';
 import {
   IMAGE_PLACEHOLDER,
   MediaKinds,
@@ -6,6 +7,7 @@ import {
 } from '@/content/types';
 import { useInViewOnce } from '@/hooks/useInViewOnce';
 import S from '@/components/MediaPanel/MediaPanel.styles';
+import MediaViewer from '@/components/MediaPanel/MediaViewer';
 
 interface MediaPanelProps {
   readonly media: MediaItem;
@@ -13,6 +15,8 @@ interface MediaPanelProps {
   readonly ratio?: string;
   /** 캡션 노출 여부 */
   readonly showCaption?: boolean;
+  /** 클릭 시 확대 뷰어 열기 (이미지에만 적용) */
+  readonly zoomable?: boolean;
 }
 
 const isPlaceholder = (src: string): boolean =>
@@ -24,9 +28,17 @@ export default function MediaPanel({
   media,
   ratio = '16 / 10',
   showCaption = false,
+  zoomable = false,
 }: MediaPanelProps): React.ReactNode {
   // clip-path로 가려진 Frame은 교차 면적이 0이므로, 클리핑되지 않는 Figure를 관찰한다.
   const { ref, inView } = useInViewOnce<HTMLElement>(0.25);
+  const [viewerOpen, setViewerOpen] = useState(false);
+
+  const openViewer = useCallback(() => setViewerOpen(true), []);
+  const closeViewer = useCallback(() => setViewerOpen(false), []);
+
+  const canZoom =
+    zoomable && media.kind === MediaKinds.IMAGE && !isPlaceholder(media.src);
 
   return (
     <S.Figure ref={ref}>
@@ -47,6 +59,14 @@ export default function MediaPanel({
             playsInline
             aria-label={media.alt}
           />
+        ) : canZoom ? (
+          <S.ZoomTrigger
+            type="button"
+            aria-label={`크게 보기: ${media.alt}`}
+            onClick={openViewer}
+          >
+            <img src={media.src} alt={media.alt} loading="lazy" />
+          </S.ZoomTrigger>
         ) : (
           <img src={media.src} alt={media.alt} loading="lazy" />
         )}
@@ -54,6 +74,14 @@ export default function MediaPanel({
       {showCaption && media.caption ? (
         <S.Caption>{media.caption}</S.Caption>
       ) : null}
+      {viewerOpen && (
+        <MediaViewer
+          src={media.src}
+          alt={media.alt}
+          caption={media.caption}
+          onClose={closeViewer}
+        />
+      )}
     </S.Figure>
   );
 }

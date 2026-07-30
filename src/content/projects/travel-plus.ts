@@ -148,13 +148,13 @@ export const travelPlus: ProjectContent = {
     {
       kind: MediaKinds.IMAGE,
       src: "/images/projects/travel-plus/places.png",
-      alt: "여행지 카드 목록 화면 — 도시별 지도와 방문 추천 시기 정보",
+      alt: "여행지 카드 목록 화면 - 도시별 지도와 방문 추천 시기 정보",
       caption: "여행지 카드 탐색",
     },
     {
       kind: MediaKinds.IMAGE,
       src: "/images/projects/travel-plus/destinations.png",
-      alt: "대륙별 목적지 탐색 화면 — 세계 지도 기반 단계형 탐색",
+      alt: "대륙별 목적지 탐색 화면 - 세계 지도 기반 단계형 탐색",
       caption: "대륙별 목적지 탐색",
     },
   ],

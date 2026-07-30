@@ -173,7 +173,7 @@ export default function ProjectDetailPage(): React.ReactNode {
         </S.Hero>
 
         <S.LeadMedia>
-          <MediaPanel media={leadMedia} ratio="21 / 9" showCaption />
+          <MediaPanel media={leadMedia} ratio="21 / 9" showCaption zoomable />
         </S.LeadMedia>
 
         <S.Body>
@@ -257,7 +257,7 @@ export default function ProjectDetailPage(): React.ReactNode {
         {restGallery.length > 0 && (
           <S.GalleryGrid>
             {restGallery.map((media) => (
-              <MediaPanel key={media.alt} media={media} showCaption />
+              <MediaPanel key={media.alt} media={media} showCaption zoomable />
             ))}
           </S.GalleryGrid>
         )}
