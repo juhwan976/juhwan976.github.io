@@ -33,7 +33,15 @@ export default function MediaViewer({
     closeRef.current?.focus();
 
     const onKeyDown = (e: KeyboardEvent): void => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') {
+        onClose();
+        return;
+      }
+      // 포커스 트랩 — 뷰어 안의 포커스 가능한 요소는 닫기 버튼 하나뿐이다.
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        closeRef.current?.focus();
+      }
     };
     window.addEventListener('keydown', onKeyDown);
 
