@@ -14,6 +14,18 @@ export const Backdrop = styled.div`
   inset: 0;
   z-index: ${({ theme }) => theme.zIndexes.backdrop};
   pointer-events: none;
+
+  /* 텍스트 가독성 스크림 — 헤드라인 영역 뒤로만 은은하게 어두워진다 */
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      ellipse 52% 62% at 27% 54%,
+      color-mix(in srgb, ${({ theme }) => theme.colors.bg} 68%, transparent),
+      transparent 72%
+    );
+  }
 `;
 
 export const Inner = styled.div`

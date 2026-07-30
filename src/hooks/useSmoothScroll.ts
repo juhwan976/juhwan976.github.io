@@ -6,6 +6,14 @@ import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
 
 gsap.registerPlugin(ScrollTrigger);
 
+// 라우트 전환 등 외부에서 즉시 스크롤이 필요할 때 참조하는 활성 인스턴스.
+// window.scrollTo만 호출하면 Lenis 내부 목표값이 남아 이전 위치로 되돌아간다.
+let activeLenis: Lenis | null = null;
+
+export function getActiveLenis(): Lenis | null {
+  return activeLenis;
+}
+
 // Lenis 스무스 스크롤을 GSAP ScrollTrigger와 동기화한다.
 // 모션 감소 환경에서는 활성화하지 않는다.
 export function useSmoothScroll(): void {
@@ -18,6 +26,7 @@ export function useSmoothScroll(): void {
 
     const lenis = new Lenis({ anchors: true });
     lenis.on('scroll', ScrollTrigger.update);
+    activeLenis = lenis;
 
     const tick = (time: number): void => {
       lenis.raf(time * 1000);
@@ -28,6 +37,7 @@ export function useSmoothScroll(): void {
     return () => {
       gsap.ticker.remove(tick);
       lenis.destroy();
+      activeLenis = null;
     };
   }, [prefersReducedMotion]);
 }

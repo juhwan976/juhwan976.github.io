@@ -32,9 +32,9 @@ export default function HeroSection({
         <S.Backdrop aria-hidden>
           <Suspense fallback={null}>
             <HeroBackdrop
-              speed={0.05}
+              speed={0.025}
               shimmer={1.0}
-              sharpness={3.0}
+              sharpness={3.5}
               mouseRadius={0.2}
               turbulence={0.2}
               colors={[theme.colors.accent]}

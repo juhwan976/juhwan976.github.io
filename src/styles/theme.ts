@@ -46,7 +46,8 @@ export const theme = {
   },
   fonts: {
     body: "'Pretendard Variable', 'Pretendard', -apple-system, 'Apple SD Gothic Neo', sans-serif",
-    mono: "'SF Mono', ui-monospace, 'JetBrains Mono', Menlo, monospace",
+    // 웹폰트를 우선해 OS와 무관하게 동일하게 렌더링한다.
+    mono: "'JetBrains Mono Variable', 'JetBrains Mono', 'SF Mono', ui-monospace, Menlo, monospace",
   },
   fontSizes: {
     /** Hero 헤드라인 */

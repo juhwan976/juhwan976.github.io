@@ -7,8 +7,9 @@ export const SectionShell = styled.section`
   padding: ${({ theme }) => `${theme.spacing.sectionY} ${theme.spacing.gutter}`};
 `;
 
-/** 소형 대문자 섹션 라벨 */
+/** 소형 대문자 섹션 라벨 — 다른 소형 라벨(Eyebrow 등)과 같은 mono 언어를 쓴다 */
 export const SectionLabel = styled.p`
+  font-family: ${({ theme }) => theme.fonts.mono};
   font-size: ${({ theme }) => theme.fontSizes.label};
   font-weight: 600;
   letter-spacing: 0.22em;
