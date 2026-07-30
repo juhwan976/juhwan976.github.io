@@ -135,38 +135,38 @@ export const lgsc: ProjectContent = {
   gallery: [
     {
       kind: MediaKinds.IMAGE,
-      src: "/images/projects/lgsc/app-screens.png",
+      src: "/images/projects/lgsc/app-screens.webp",
       alt: "제품 연결·기능 대시보드·실시간 모니터링·단품 제어 화면을 나열한 실제 앱 화면",
       caption: "실제 화면 (일부 데이터 블러 처리)",
     },
     {
       kind: MediaKinds.IMAGE,
-      src: "/images/projects/lgsc/connect-control.png",
+      src: "/images/projects/lgsc/connect-control.webp",
       alt: "Wi-Fi 기반 제품 연결 화면과 원격 단품 제어 화면",
       caption: "제품 연결 · 원격 단품 제어",
     },
     {
       kind: MediaKinds.IMAGE,
-      src: "/images/projects/lgsc/monitoring-history.png",
+      src: "/images/projects/lgsc/monitoring-history.webp",
       alt: "실시간 모니터링 화면과 사용 이력 데이터 조회 화면",
       caption: "실시간 모니터링 · 사용 이력 데이터 조회",
     },
     {
       kind: MediaKinds.IMAGE,
-      src: "/images/projects/lgsc/guide-detail.png",
+      src: "/images/projects/lgsc/guide-detail.webp",
       alt: "실시간 모니터링 중 표시되는 점검 및 조치 가이드 화면과 확대 상세",
       caption: "실시간 오류 확인 · 조치 가이드",
     },
     {
       kind: MediaKinds.IMAGE,
-      src: "/images/projects/lgsc/dashboard-detail.png",
+      src: "/images/projects/lgsc/dashboard-detail.webp",
       alt: "Quick Check와 에러코드·실시간 모니터링 등 기능 대시보드 화면과 확대 상세",
       caption: "제품 기능 대시보드 · Quick Check",
     },
   ],
   cardMedia: {
     kind: MediaKinds.IMAGE,
-    src: "/images/projects/lgsc/card.png",
+    src: "/images/projects/lgsc/card.webp",
     alt: "LGSC 앱의 제품 연결·기능 대시보드·실시간 모니터링 화면",
   },
 };
