@@ -58,7 +58,7 @@ yarn typecheck # 타입 검사
 아직 제공되지 않은 정보는 아래 placeholder로 표시되어 있으며, 값을 채우면 UI가 자동으로 전환됩니다.
 
 - `RESUME_URL_PLACEHOLDER` — `src/content/site.ts`의 `resumeUrl`. URL을 넣으면 이력서 링크가 활성화됩니다.
-- `GITHUB_URL_PLACEHOLDER` — `src/content/site.ts`의 `githubUrl`. placeholder 상태에서는 노출되지 않습니다.
+- `LINKEDIN_URL_PLACEHOLDER` / `REMEMBER_URL_PLACEHOLDER` — `src/content/site.ts`의 `socials`. url을 채우면 Contact 하단 바로가기로 노출됩니다.
 - `IMAGE_PLACEHOLDER` / `VIDEO_PLACEHOLDER` — 프로젝트 이미지·영상. 경로를 넣기 전까지 라벨이 있는 placeholder 패널이 렌더됩니다.
 
 ### 에셋 구성

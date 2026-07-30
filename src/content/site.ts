@@ -9,7 +9,21 @@ export const siteConfig: SiteConfig = {
   role: "Frontend Engineer",
   email: "juhwan976@gmail.com",
   resumeUrl: "RESUME_URL_PLACEHOLDER",
-  githubUrl: "GITHUB_URL_PLACEHOLDER",
+
+  // 소셜 바로가기 — url을 채우면 Contact 하단에 노출된다.
+  socials: [
+    { id: "github", label: "GitHub", url: "https://github.com/juhwan976" },
+    {
+      id: "linkedin",
+      label: "LinkedIn",
+      url: "https://www.linkedin.com/in/주환-장-3abbb9424",
+    },
+    // {
+    //   id: "remember",
+    //   label: "Remember",
+    //   url: "https://connect.rememberapp.co.kr/profile/2027501?internal_path=rc_connect_search_list",
+    // },
+  ],
 
   nav: [
     { id: "about", label: "About" },

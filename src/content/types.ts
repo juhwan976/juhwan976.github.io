@@ -145,8 +145,12 @@ export interface SiteConfig {
   readonly email: string;
   /** 미확정이면 RESUME_URL_PLACEHOLDER */
   readonly resumeUrl: string;
-  /** 미확정이면 GITHUB_URL_PLACEHOLDER — placeholder면 노출하지 않음 */
-  readonly githubUrl: string;
+  /** 소셜/외부 프로필 바로가기. url이 '_PLACEHOLDER'로 끝나면 노출하지 않음 */
+  readonly socials: ReadonlyArray<{
+    readonly id: string;
+    readonly label: string;
+    readonly url: string;
+  }>;
   readonly nav: ReadonlyArray<{ readonly id: string; readonly label: string }>;
   readonly hero: {
     /** 메인 문장. '\n'으로 줄바꿈 */
