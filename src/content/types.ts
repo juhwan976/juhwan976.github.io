@@ -35,6 +35,7 @@ export interface ProjectStat {
 
 export interface ProjectChallenge {
   readonly id: string;
+  /** 첫 항목은 'Key Challenge', 이후는 'Challenge 2'부터 순번을 잇는다 */
   readonly label: string;
   readonly title: string;
   readonly problem: readonly string[];
@@ -64,6 +65,7 @@ export type DiagramSpec = FlowDiagramSpec | SplitDiagramSpec;
 
 export interface ProjectDecision {
   readonly id: string;
+  /** 첫 항목은 'Key Decision', 이후는 'Decision 2'부터 순번을 잇는다 */
   readonly label: string;
   readonly title: string;
   readonly body: readonly string[];

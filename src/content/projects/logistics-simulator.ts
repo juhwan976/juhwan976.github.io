@@ -97,17 +97,30 @@ export const logisticsSimulator: ProjectContent = {
   ],
   decisions: [
     {
-      id: "electron-vs-unity",
-      label: "Key Decision 1",
-      title: "Electron과 Unity 비교",
+      id: "compute-playback",
+      label: "Key Decision",
+      title: "계산은 한 번,\n재생은 조회만.",
       body: [
-        "프로젝트의 핵심은 고사양 게임 렌더링보다 선로와 지점 편집, 데이터 입력, 시뮬레이션 조작이었습니다.",
-        "웹 기반 UI 개발 경험과 복잡한 편집 화면 구현 효율을 고려해 Electron을 선택했습니다.",
+        "시뮬레이션은 정해진 운영 구간을 다루므로, 전 구간을 한 번 계산해 결과 타임라인을 만들고 재생은 그 결과만 읽도록 설계했습니다.",
+        "배속을 올리거나 시간을 건너뛰어도 재계산이 없고, 동일한 입력은 항상 동일한 결과를 재현하는 결정론적 구조라 검증에도 유리합니다.",
       ],
+      diagram: {
+        type: "flow",
+        title: "Simulation Pipeline",
+        steps: [
+          { title: "Document Snapshot", detail: "도면·도로망·지점·시나리오" },
+          { title: "Compute", detail: "Web Worker에서 전 구간 1회 계산" },
+          {
+            title: "Result Timeline",
+            detail: "AGV별 궤적 세그먼트 + 이벤트",
+          },
+          { title: "Playback", detail: "이진탐색 + 보간, 재계산 없음" },
+        ],
+      },
     },
     {
       id: "state-separation",
-      label: "Key Decision 2",
+      label: "Decision 2",
       title: "문서 상태와 런타임 상태 분리",
       body: [
         "저장과 실행 취소의 대상이 되는 문서 상태는 Redux에 두고, 프레임 단위로 변경되는 런타임 상태는 Redux 외부에서 관리하도록 분리했습니다.",
@@ -136,30 +149,17 @@ export const logisticsSimulator: ProjectContent = {
       },
     },
     {
-      id: "compute-playback",
-      label: "Key Decision 3",
-      title: "계산은 한 번,\n재생은 조회만.",
+      id: "electron-vs-unity",
+      label: "Decision 3",
+      title: "Electron과 Unity 비교",
       body: [
-        "시뮬레이션은 정해진 운영 구간을 다루므로, 전 구간을 한 번 계산해 결과 타임라인을 만들고 재생은 그 결과만 읽도록 설계했습니다.",
-        "배속을 올리거나 시간을 건너뛰어도 재계산이 없고, 동일한 입력은 항상 동일한 결과를 재현하는 결정론적 구조라 검증에도 유리합니다.",
+        "프로젝트의 핵심은 고사양 게임 렌더링보다 선로와 지점 편집, 데이터 입력, 시뮬레이션 조작이었습니다.",
+        "웹 기반 UI 개발 경험과 복잡한 편집 화면 구현 효율을 고려해 Electron을 선택했습니다.",
       ],
-      diagram: {
-        type: "flow",
-        title: "Simulation Pipeline",
-        steps: [
-          { title: "Document Snapshot", detail: "도면·도로망·지점·시나리오" },
-          { title: "Compute", detail: "Web Worker에서 전 구간 1회 계산" },
-          {
-            title: "Result Timeline",
-            detail: "AGV별 궤적 세그먼트 + 이벤트",
-          },
-          { title: "Playback", detail: "이진탐색 + 보간, 재계산 없음" },
-        ],
-      },
     },
     {
       id: "override-layer",
-      label: "Key Decision 4",
+      label: "Decision 4",
       title: "Override Layer",
       body: [
         "Excel 원본 데이터는 변경하지 않고 유지합니다.",
