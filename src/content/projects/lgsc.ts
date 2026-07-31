@@ -67,7 +67,7 @@ export const lgsc: ProjectContent = {
     },
     {
       id: "common-components",
-      label: "Challenge",
+      label: "Challenge 2",
       title: "공통 컴포넌트",
       problem: [
         "전체 제품군 스펙이 확정되지 않은 상태에서 팀이 쓸 공통 UI가 필요했습니다.",
@@ -82,7 +82,7 @@ export const lgsc: ProjectContent = {
   decisions: [
     {
       id: "mptcp",
-      label: "Important Decision 1",
+      label: "Key Decision",
       title: "MPTCP 기술 검증 및 도입",
       body: [
         "Android / iOS MPTCP 기술을 검증하고 도입했습니다.",
@@ -91,7 +91,7 @@ export const lgsc: ProjectContent = {
     },
     {
       id: "parsing-db",
-      label: "Important Decision 2",
+      label: "Decision 2",
       title: "파싱 룰 저장 DB 설계",
       body: [
         "사업부와 제품군마다 다른 파싱 룰을 저장할 수 있는 데이터베이스를 설계했습니다.",

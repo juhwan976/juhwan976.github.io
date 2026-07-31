@@ -85,17 +85,8 @@ export const travelPlus: ProjectContent = {
   ],
   decisions: [
     {
-      id: "scss",
-      label: "Important Decision 1",
-      title: "성능 병목 컴포넌트에 SCSS 적용",
-      body: [
-        "성능 병목이 큰 컴포넌트에 styled-components 대신 SCSS를 적용했습니다.",
-        "런타임 스타일 생성 비용을 줄이는 것이 목적이었습니다.",
-      ],
-    },
-    {
       id: "focus-system",
-      label: "Important Decision 2",
+      label: "Key Decision",
       title: "포커스 시스템 재구성",
       body: [
         "기존 TV 포커스 라이브러리를 Enact 기반 방식으로 변경했습니다.",
@@ -114,6 +105,15 @@ export const travelPlus: ProjectContent = {
           { title: "핵심 구조 재구성", detail: "부분 수정 대신 안정성 우선" },
         ],
       },
+    },
+    {
+      id: "scss",
+      label: "Decision 2",
+      title: "성능 병목 컴포넌트에 SCSS 적용",
+      body: [
+        "성능 병목이 큰 컴포넌트에 styled-components 대신 SCSS를 적용했습니다.",
+        "런타임 스타일 생성 비용을 줄이는 것이 목적이었습니다.",
+      ],
     },
   ],
   // 수치 성과는 highlights(Outcome 스탯)에서 보여주므로 여기서는 반복하지 않는다.

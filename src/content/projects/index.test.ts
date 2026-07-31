@@ -30,6 +30,23 @@ describe('projects content', () => {
     }
   });
 
+  // 첫 블록은 'Key {Challenge|Decision}', 이후는 순번을 이어받아 2번부터 시작한다.
+  it('Challenge와 Decision 라벨이 동일한 넘버링 규칙을 따른다', () => {
+    const expectedLabels = (kind: string, count: number): string[] => [
+      `Key ${kind}`,
+      ...Array.from({ length: count - 1 }, (_, index) => `${kind} ${index + 2}`),
+    ];
+
+    for (const project of projects) {
+      expect(project.challenges.map((challenge) => challenge.label)).toEqual(
+        expectedLabels('Challenge', project.challenges.length),
+      );
+      expect(project.decisions.map((decision) => decision.label)).toEqual(
+        expectedLabels('Decision', project.decisions.length),
+      );
+    }
+  });
+
   it('slug로 프로젝트를 조회할 수 있다', () => {
     for (const project of projects) {
       expect(getProjectBySlug(project.slug)?.name).toBe(project.name);
