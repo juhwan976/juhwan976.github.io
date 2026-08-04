@@ -1,0 +1,14 @@
+{
+  "/projects/logistics-simulator": {
+    "title": "물류 시뮬레이터 · juhwan976",
+    "description": "공장 도면 위에서 AGV 이동 경로를 설계하고 운행 결과를 검증하는 3D 시뮬레이션 애플리케이션"
+  },
+  "/projects/lgsc": {
+    "title": "LGSC · juhwan976",
+    "description": "LG 가전제품을 휴대폰과 연결해 실시간 데이터 확인과 제품 제어를 제공하는 애플리케이션"
+  },
+  "/projects/travel-plus": {
+    "title": "LG Travel+ · juhwan976",
+    "description": "LG webOS TV에서 특정 여행지와 관련된 정보를 제공하는 TV 애플리케이션"
+  }
+}
