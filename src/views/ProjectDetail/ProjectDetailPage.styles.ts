@@ -124,6 +124,34 @@ export const MetaRow = styled.dl`
   }
 `;
 
+/** 실서비스 증빙 외부 링크 (스토어 등) — links가 있을 때만 노출 */
+export const LinkRow = styled.div`
+  margin-top: ${({ theme }) => theme.spacing.lg};
+  display: flex;
+  flex-wrap: wrap;
+  gap: ${({ theme }) => theme.spacing.sm};
+`;
+
+export const ExternalLink = styled.a`
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: 1px solid ${({ theme }) => theme.colors.line};
+  font-size: ${({ theme }) => theme.fontSizes.small};
+  color: ${({ theme }) => theme.colors.text};
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease;
+
+  ${({ theme }) => theme.media.hover} {
+    &:hover {
+      border-color: ${({ theme }) => theme.colors.accent};
+      color: ${({ theme }) => theme.colors.accent};
+    }
+  }
+`;
+
 export const LeadMedia = styled.div`
   max-width: ${({ theme }) => theme.layout.maxWidth};
   margin: 0 auto;
@@ -372,6 +400,8 @@ const S = {
   Title,
   Summary,
   MetaRow,
+  LinkRow,
+  ExternalLink,
   LeadMedia,
   Body,
   Block,

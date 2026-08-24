@@ -2,14 +2,15 @@ import { MediaKinds, type ProjectContent } from "@/content/types";
 
 export const travelPlus: ProjectContent = {
   slug: "travel-plus",
-  number: "03",
+  number: "04",
   name: "LG Travel+",
   title: "3분이 걸리던 TV 앱을\n10초 수준으로 개선하다.",
   summary:
     "LG webOS TV에서 특정 여행지와 관련된 정보를 제공하는 TV 애플리케이션",
   period: "2025.07 ~ 2026.01",
   team: "4인 개발",
-  roleLine: "프로젝트 리드 (4인) - 핵심 구조 재구성과 성능 최적화 주도",
+  roleLine:
+    "프로젝트 리드 (4인) — 기존 백엔드 인수·완성, 프론트엔드 v2 재구축과 성능 최적화 주도",
   tech: [
     "React",
     "TypeScript",
@@ -39,6 +40,7 @@ export const travelPlus: ProjectContent = {
     "결합도가 높은 코드로 인해 하나의 수정이 다른 오류를 발생시켰습니다.",
     "디자인 요구와 TV 하드웨어 성능 사이의 충돌이 있었습니다.",
     "촉박한 일정 내에 성능이 개선된 리뉴얼 버전 개발이 필요했습니다.",
+    "백엔드는 타 개발자가 진행하던 것을 인수받아 API와 데이터 모델을 완성해야 했습니다.",
   ],
   highlights: [
     {
@@ -57,7 +59,7 @@ export const travelPlus: ProjectContent = {
     {
       id: "performance",
       label: "Key Challenge",
-      title: "고치는 대신,\n다시 세웠다.",
+      title: "부분 수정 대신\n핵심 구조 재구성",
       problem: [
         "기존 버전은 성능 문제로 QA 검증조차 어려웠고,\nTV 하드웨어와 일정 모두 여유가 없었습니다.",
       ],
@@ -114,6 +116,25 @@ export const travelPlus: ProjectContent = {
         "성능 병목이 큰 컴포넌트에 styled-components 대신 SCSS를 적용했습니다.",
         "런타임 스타일 생성 비용을 줄이는 것이 목적이었습니다.",
       ],
+    },
+    {
+      id: "backend-takeover",
+      label: "Decision 3",
+      title: "인수한 백엔드의 완성 전략",
+      body: [
+        "기존 코드의 구조를 먼저 분석하고, 결손된 API를 목록화해 우선순위를 정했습니다.",
+        "외부 API 연동과 MySQL 데이터 모델을 완성한 뒤, Jenkins 기반 CI/CD를 구축해 배포를 안정화했습니다.",
+      ],
+      diagram: {
+        type: "flow",
+        title: "Backend Takeover",
+        steps: [
+          { title: "구조 분석", detail: "기존 코드·데이터 흐름 파악" },
+          { title: "결손 API 목록화", detail: "우선순위 결정" },
+          { title: "연동·모델 완성", detail: "외부 API + MySQL 모델" },
+          { title: "CI/CD 구축", detail: "Jenkins 배포 자동화" },
+        ],
+      },
     },
   ],
   // 수치 성과는 highlights(Outcome 스탯)에서 보여주므로 여기서는 반복하지 않는다.

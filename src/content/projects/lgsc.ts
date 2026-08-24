@@ -2,7 +2,7 @@ import { MediaKinds, type ProjectContent } from "@/content/types";
 
 export const lgsc: ProjectContent = {
   slug: "lgsc",
-  number: "02",
+  number: "03",
   name: "LGSC",
   title: "약 200개 제품군과 오프라인 환경을\n하나의 앱에서 다루다.",
   summary:
@@ -128,6 +128,13 @@ export const lgsc: ProjectContent = {
           "최초에는 모바일 앱만 고려했습니다.",
           "이후 웹 지원 요구가 발생했습니다.",
           "다시 설계한다면 통신 로직을 독립 라이브러리로 분리하고 싶습니다.",
+        ],
+      },
+      {
+        title: "테스트 문화",
+        points: [
+          "이 프로젝트는 자동화 테스트 없이 운영했습니다.",
+          "그 아쉬움이 이후 ReadON(459건)·물류 시뮬레이터(746건)의 테스트 체계로 이어졌습니다.",
         ],
       },
     ],

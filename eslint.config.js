@@ -208,6 +208,18 @@ export default tseslint.config(
 
   /**
    * =========================
+   * 빌드 스크립트 (Node 환경)
+   * =========================
+   */
+  {
+    files: ["scripts/**/*.mjs"],
+    languageOptions: {
+      globals: globals.node,
+    },
+  },
+
+  /**
+   * =========================
    * ignores
    * =========================
    */

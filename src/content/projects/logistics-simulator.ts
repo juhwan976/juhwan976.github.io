@@ -47,12 +47,17 @@ export const logisticsSimulator: ProjectContent = {
       value: "배속·구간 이동 재계산 0회",
       note: "계산 1회 → 결과 재생 구조",
     },
+    {
+      label: "자동화 테스트",
+      value: "746건",
+      note: "디자인 토큰·접근성·커밋 컨벤션까지 CI로 검증",
+    },
   ],
   challenges: [
     {
       id: "rail-ux",
       label: "Key Challenge",
-      title: "선로 설치,\n두 번의 클릭으로.",
+      title: "선로 설치를\n두 번의 클릭으로 줄이기",
       problem: [
         "조각 단위 선로 배치는 시간이 오래 걸렸고,\n사용자는 정밀함보다 빠른 설계와 테스트를 원했습니다.",
       ],
@@ -82,7 +87,7 @@ export const logisticsSimulator: ProjectContent = {
     {
       id: "scale-performance",
       label: "Challenge 3",
-      title: "수만 행 데이터와\n다중 AGV를 한 화면에서.",
+      title: "수만 행 데이터와\n다중 AGV 처리",
       problem: [
         "수만 행 규모의 공급계획 Excel을 읽어야 했고,\n다중 AGV 시뮬레이션과 대규모 3D 씬이 함께 돌아가야 했습니다.",
       ],
@@ -99,7 +104,7 @@ export const logisticsSimulator: ProjectContent = {
     {
       id: "compute-playback",
       label: "Key Decision",
-      title: "계산은 한 번,\n재생은 조회만.",
+      title: "전 구간 1회 계산 후\n결과만 재생하는 구조",
       body: [
         "시뮬레이션은 정해진 운영 구간을 다루므로, 전 구간을 한 번 계산해 결과 타임라인을 만들고 재생은 그 결과만 읽도록 설계했습니다.",
         "배속을 올리거나 시간을 건너뛰어도 재계산이 없고, 동일한 입력은 항상 동일한 결과를 재현하는 결정론적 구조라 검증에도 유리합니다.",
@@ -176,6 +181,15 @@ export const logisticsSimulator: ProjectContent = {
         ],
       },
     },
+    {
+      id: "rules-as-ci",
+      label: "Decision 5",
+      title: "규칙은 문서가 아니라 CI로",
+      body: [
+        "색 토큰, 접근성, 커밋 제목, 컴포넌트 규약을 문서로 남기는 대신 테스트로 강제했습니다. 규칙을 어긴 코드는 CI에서 바로 실패합니다.",
+        "성능은 측정 → 수정 → 재측정 원장으로 관리합니다. 채택한 변경(keep)과 되돌린 변경(revert)을 모두 기록해 같은 시도를 반복하지 않게 했습니다.",
+      ],
+    },
   ],
   // 수치 성과는 highlights(Outcome 스탯)에서 보여주므로 여기서는 반복하지 않는다.
   results: [
@@ -184,8 +198,29 @@ export const logisticsSimulator: ProjectContent = {
     "동일한 입력이면 항상 같은 결과를 재현하는 결정론적 엔진으로 설계해, 시뮬레이션 결과를 신뢰할 수 있게 했습니다.",
   ],
   reflection: {
-    note: "프로젝트 완료 후 성능, 사용성, 유지보수성 관점에서 최종 회고를 추가할 예정입니다.",
-    items: [],
+    items: [
+      {
+        title: "UI 레이어 구조",
+        points: [
+          "편집 화면의 UI 레이어 파일이 기능이 늘며 비대해졌습니다.",
+          "섹션 단위로 분리해 파일 크기와 책임을 줄일 필요가 있습니다.",
+        ],
+      },
+      {
+        title: "main 프로세스 테스트",
+        points: [
+          "DXF·Excel 파싱을 담당하는 main 프로세스의 테스트가 renderer 대비 얇습니다.",
+          "파싱 경계 케이스 중심으로 테스트를 보강하려 합니다.",
+        ],
+      },
+      {
+        title: "Electron 통합 E2E",
+        points: [
+          "프로세스 간 경계를 관통하는 통합 E2E 테스트가 없습니다.",
+          "핵심 시나리오에 한해 도입을 검토하고 있습니다.",
+        ],
+      },
+    ],
   },
   // 사내망 전용이라 실제 화면·영상 대신 재구성한 다이어그램으로 구성한다.
   gallery: [

@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { ROUTE_PATHS } from '@/constants/route_paths';
 import { useSmoothScroll } from '@/hooks/useSmoothScroll';
 import ScrollToTop from '@/routes/ScrollToTop';
@@ -6,11 +6,12 @@ import NotFoundPage from '@/views/common/NotFoundPage';
 import HomePage from '@/views/Home/HomePage';
 import ProjectDetailPage from '@/views/ProjectDetail/ProjectDetailPage';
 
+// Router(BrowserRouter/StaticRouter)는 진입점(main/entry-server)에서 감싼다.
 export default function AppRouter(): React.ReactNode {
   useSmoothScroll();
 
   return (
-    <BrowserRouter>
+    <>
       <ScrollToTop />
       <Routes>
         <Route path={ROUTE_PATHS.ROOT} element={<HomePage />} />
@@ -20,6 +21,6 @@ export default function AppRouter(): React.ReactNode {
         />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
-    </BrowserRouter>
+    </>
   );
 }

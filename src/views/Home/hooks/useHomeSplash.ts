@@ -20,8 +20,9 @@ export function useHomeSplash(): HomeSplashState {
   const [visible, setVisible] = useState(() => !hasShownSplash);
   const [backdropReady, setBackdropReady] = useState(false);
   const [fontsReady, setFontsReady] = useState(false);
+  // 프리렌더(SSR)에서는 document가 없으므로 로드 전 상태로 시작한다.
   const [pageLoaded, setPageLoaded] = useState(
-    () => document.readyState === 'complete',
+    () => typeof document !== 'undefined' && document.readyState === 'complete',
   );
   const [timedOut, setTimedOut] = useState(false);
 
