@@ -243,7 +243,7 @@ export const logisticsSimulator: ProjectContent = {
       kind: MediaKinds.IMAGE,
       src: "/images/projects/logistics-simulator/simulation-pipeline.svg",
       alt: "계산 1회 후 결과를 재생하는 시뮬레이션 파이프라인 다이어그램",
-      caption: "시뮬레이션 파이프라인 - 계산은 한 번, 재생은 조회만",
+      caption: "시뮬레이션 파이프라인 - 전 구간 1회 계산 후 결과만 재생",
       placeholderLabel: "Simulation Pipeline",
     },
   ],
