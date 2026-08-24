@@ -59,7 +59,7 @@ export const travelPlus: ProjectContent = {
     {
       id: "performance",
       label: "Key Challenge",
-      title: "고치는 대신,\n다시 세웠다.",
+      title: "부분 수정 대신\n핵심 구조 재구성",
       problem: [
         "기존 버전은 성능 문제로 QA 검증조차 어려웠고,\nTV 하드웨어와 일정 모두 여유가 없었습니다.",
       ],

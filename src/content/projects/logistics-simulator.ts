@@ -57,7 +57,7 @@ export const logisticsSimulator: ProjectContent = {
     {
       id: "rail-ux",
       label: "Key Challenge",
-      title: "선로 설치,\n두 번의 클릭으로.",
+      title: "선로 설치를\n두 번의 클릭으로 줄이기",
       problem: [
         "조각 단위 선로 배치는 시간이 오래 걸렸고,\n사용자는 정밀함보다 빠른 설계와 테스트를 원했습니다.",
       ],
@@ -87,7 +87,7 @@ export const logisticsSimulator: ProjectContent = {
     {
       id: "scale-performance",
       label: "Challenge 3",
-      title: "수만 행 데이터와\n다중 AGV를 한 화면에서.",
+      title: "수만 행 데이터와\n다중 AGV 처리",
       problem: [
         "수만 행 규모의 공급계획 Excel을 읽어야 했고,\n다중 AGV 시뮬레이션과 대규모 3D 씬이 함께 돌아가야 했습니다.",
       ],
@@ -104,7 +104,7 @@ export const logisticsSimulator: ProjectContent = {
     {
       id: "compute-playback",
       label: "Key Decision",
-      title: "계산은 한 번,\n재생은 조회만.",
+      title: "전 구간 1회 계산 후\n결과만 재생하는 구조",
       body: [
         "시뮬레이션은 정해진 운영 구간을 다루므로, 전 구간을 한 번 계산해 결과 타임라인을 만들고 재생은 그 결과만 읽도록 설계했습니다.",
         "배속을 올리거나 시간을 건너뛰어도 재계산이 없고, 동일한 입력은 항상 동일한 결과를 재현하는 결정론적 구조라 검증에도 유리합니다.",

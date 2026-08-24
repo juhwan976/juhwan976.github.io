@@ -1,10 +1,10 @@
-import { IMAGE_PLACEHOLDER, MediaKinds, type ProjectContent } from "@/content/types";
+import { MediaKinds, type ProjectContent } from "@/content/types";
 
 export const readon: ProjectContent = {
   slug: "readon",
   number: "02",
   name: "ReadON",
-  title: "QA 조직 없이,\n스토어 품질을 만들다.",
+  title: "QA 조직 없이 출시 품질을 만든\n테스트 자동화 체계",
   summary:
     "AI가 생성한 동화를 부모의 합성 목소리로 읽어주는 Android·iOS 애플리케이션",
   period: "2026.04 ~ 현재",
@@ -139,6 +139,7 @@ export const readon: ProjectContent = {
     "3.5개월 만에 결제·소셜 로그인 3종·녹음·오디오 플레이어를 갖춘 앱을 양대 스토어에 출시했습니다.",
     "AI 기반 개발 방식을 활용하되, 산출물은 테스트와 CI로 검증하는 체계를 함께 구축했습니다.",
   ],
+  links: [],
   reflection: {
     items: [
       {
@@ -158,31 +159,29 @@ export const readon: ProjectContent = {
       },
     ],
   },
-  // 스토어 스크린샷이 준비될 때까지 placeholder로 유지한다.
   gallery: [
     {
       kind: MediaKinds.IMAGE,
-      src: IMAGE_PLACEHOLDER,
-      alt: "홈·동화 생성·책장 화면을 나열한 앱 화면",
-      placeholderLabel: "App Screens",
+      src: "/images/projects/readon/app-screens.webp",
+      alt: "홈·동화 생성·내 책장·목소리 녹음 화면을 나열한 실제 앱 화면",
+      caption: "실제 서비스 화면",
     },
     {
       kind: MediaKinds.IMAGE,
-      src: IMAGE_PLACEHOLDER,
-      alt: "합성 목소리로 동화를 읽어주는 플레이어 화면",
-      placeholderLabel: "Story Player",
+      src: "/images/projects/readon/story-player.webp",
+      alt: "합성 목소리를 선택해 동화를 읽어주는 플레이어 화면과 페이지 탐색",
+      caption: "동화 재생 · 목소리 선택",
     },
     {
       kind: MediaKinds.IMAGE,
-      src: IMAGE_PLACEHOLDER,
+      src: "/images/projects/readon/voice-recording.webp",
       alt: "부모 목소리를 녹음해 합성 음성을 만드는 화면",
-      placeholderLabel: "Voice Recording",
+      caption: "목소리 녹음 · AI 음성 학습",
     },
   ],
   cardMedia: {
     kind: MediaKinds.IMAGE,
-    src: IMAGE_PLACEHOLDER,
-    alt: "ReadON 앱의 동화 생성과 플레이어 화면",
-    placeholderLabel: "ReadON",
+    src: "/images/projects/readon/card.webp",
+    alt: "ReadON 앱의 홈·동화 생성·내 책장 화면",
   },
 };

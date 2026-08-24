@@ -47,6 +47,15 @@ describe('projects content', () => {
     }
   });
 
+  it('links가 있으면 라벨과 https URL을 갖는다', () => {
+    for (const project of projects) {
+      for (const link of project.links ?? []) {
+        expect(link.label.length).toBeGreaterThan(0);
+        expect(link.url).toMatch(/^https:\/\//);
+      }
+    }
+  });
+
   it('slug로 프로젝트를 조회할 수 있다', () => {
     for (const project of projects) {
       expect(getProjectBySlug(project.slug)?.name).toBe(project.name);

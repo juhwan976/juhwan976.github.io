@@ -170,6 +170,20 @@ export default function ProjectDetailPage(): React.ReactNode {
               <dd>{project.tech.join(" · ")}</dd>
             </div>
           </S.MetaRow>
+          {project.links && project.links.length > 0 && (
+            <S.LinkRow>
+              {project.links.map((link) => (
+                <S.ExternalLink
+                  key={link.url}
+                  href={link.url}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {link.label} ↗
+                </S.ExternalLink>
+              ))}
+            </S.LinkRow>
+          )}
         </S.Hero>
 
         <S.LeadMedia>

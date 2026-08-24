@@ -100,6 +100,11 @@ export interface ProjectContent {
   readonly challenges: readonly ProjectChallenge[];
   readonly decisions: readonly ProjectDecision[];
   readonly results: readonly string[];
+  /** 실서비스 증빙용 외부 링크 (스토어 등). 있을 때만 상세 페이지에 노출 */
+  readonly links?: ReadonlyArray<{
+    readonly label: string;
+    readonly url: string;
+  }>;
   /** 회고. items가 비어 있으면 note만 표시 */
   readonly reflection: {
     readonly note?: string;
