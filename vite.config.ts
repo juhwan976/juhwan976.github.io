@@ -165,8 +165,14 @@ function prerenderSitemapRoutes(): Plugin {
   };
 }
 
-export default defineConfig({
-  plugins: [react(), prerenderSitemapRoutes()],
+export default defineConfig(({ isSsrBuild }) => ({
+  // SSR 빌드는 프리렌더용 entry-server 번들만 만들므로
+  // 사이트맵 HTML emit 플러그인과 public 복사를 제외한다.
+  plugins: isSsrBuild ? [react()] : [react(), prerenderSitemapRoutes()],
+  build: isSsrBuild ? { outDir: "dist-server", copyPublicDir: false } : {},
+  // styled-components는 CJS/ESM 이중 패키지라 Node에서 default export가 어긋난다.
+  // SSR 번들에 포함시켜 interop 문제를 피한다.
+  ssr: { noExternal: ["styled-components"] },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
@@ -175,4 +181,4 @@ export default defineConfig({
   test: {
     environment: "jsdom",
   },
-});
+}));

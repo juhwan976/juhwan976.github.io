@@ -15,5 +15,6 @@ export function useMediaQuery(query: string): boolean {
     [query],
   );
 
-  return useSyncExternalStore(subscribe, getSnapshot);
+  // 프리렌더(SSR)에서는 매칭 여부를 알 수 없으므로 false로 고정한다.
+  return useSyncExternalStore(subscribe, getSnapshot, () => false);
 }

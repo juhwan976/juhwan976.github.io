@@ -2,12 +2,31 @@ import { siteConfig } from "@/content/site";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { theme } from "@/styles/theme";
 import S from "@/views/Home/sections/HeroSection.styles";
-import { Suspense, lazy, useEffect } from "react";
+import { Suspense, lazy, useEffect, useState } from "react";
 
 // three.js 번들을 초기 로드에서 분리한다.
 const HeroBackdrop = lazy(
   () => import("@/components/Backdrop/FerrofluidBackdrop"),
 );
+
+// 콘텐츠 첫 페인트가 끝난 뒤에만 배경 청크 로드를 시작한다.
+// (프리렌더된 텍스트가 3D 번들 다운로드에 밀리지 않도록)
+function useAfterFirstPaint(): boolean {
+  const [painted, setPainted] = useState(false);
+
+  useEffect(() => {
+    let secondFrame = 0;
+    const firstFrame = requestAnimationFrame(() => {
+      secondFrame = requestAnimationFrame(() => setPainted(true));
+    });
+    return () => {
+      cancelAnimationFrame(firstFrame);
+      cancelAnimationFrame(secondFrame);
+    };
+  }, []);
+
+  return painted;
+}
 
 interface HeroSectionProps {
   /** 배경 셰이더 첫 프레임(모바일은 즉시) 시점에 호출 — 스플래시 해제용 */
@@ -20,6 +39,7 @@ export default function HeroSection({
   onBackdropReady,
 }: HeroSectionProps): React.ReactNode {
   const isMobile = useMediaQuery("(max-width: 767px)");
+  const canLoadBackdrop = useAfterFirstPaint();
 
   // 모바일은 배경을 렌더링하지 않으므로 즉시 준비 완료로 간주한다.
   useEffect(() => {
@@ -28,7 +48,7 @@ export default function HeroSection({
 
   return (
     <S.Section id="top" aria-label="소개">
-      {!isMobile && (
+      {!isMobile && canLoadBackdrop && (
         <S.Backdrop aria-hidden>
           <Suspense fallback={null}>
             <HeroBackdrop
