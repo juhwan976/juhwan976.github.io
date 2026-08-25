@@ -175,7 +175,6 @@ export default function ProjectDetailPage(): React.ReactNode {
           <S.BackLink type="button" onClick={goBack}>
             ← Back
           </S.BackLink>
-          {/* 이력서 다운로드 기능은 당분간 사용하지 않는다.
           <S.ResumeLink
             href={siteConfig.resumeUrl}
             target="_blank"
@@ -183,7 +182,6 @@ export default function ProjectDetailPage(): React.ReactNode {
           >
             Resume ↗
           </S.ResumeLink>
-          */}
         </S.TopBarInner>
       </S.TopBar>
 

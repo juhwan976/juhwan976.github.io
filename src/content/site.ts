@@ -8,7 +8,8 @@ export const siteConfig: SiteConfig = {
   nameEn: "JUHWAN JANG",
   role: "Product Engineer",
   email: "juhwan976@gmail.com",
-  resumeUrl: "RESUME_URL_PLACEHOLDER",
+  // 개인정보(전화번호·사진)를 제외한 웹 공개용 — 원본은 별도 resume 저장소에서 빌드한다.
+  resumeUrl: "/resume.pdf",
 
   // 소셜 바로가기 — url을 채우면 Contact 하단에 노출된다.
   socials: [

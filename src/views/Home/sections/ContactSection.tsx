@@ -24,7 +24,6 @@ export default function ContactSection(): React.ReactNode {
             {siteConfig.email}
           </S.ContactLink>
         </li>
-        {/* 이력서 다운로드 기능은 당분간 사용하지 않는다.
         <li>
           <S.ContactLink
             href={siteConfig.resumeUrl}
@@ -35,7 +34,6 @@ export default function ContactSection(): React.ReactNode {
             이력서 보기 (PDF) ↗
           </S.ContactLink>
         </li>
-        */}
         {socials.map((social) => (
           <li key={social.id}>
             <S.ContactLink href={social.url} target="_blank" rel="noreferrer">
