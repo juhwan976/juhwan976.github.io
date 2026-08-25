@@ -1,4 +1,8 @@
-import { MediaKinds, type ProjectContent } from "@/content/types";
+import {
+  MediaKinds,
+  ProjectLinkKinds,
+  type ProjectContent,
+} from "@/content/types";
 
 export const readon: ProjectContent = {
   slug: "readon",
@@ -139,7 +143,18 @@ export const readon: ProjectContent = {
     "3.5개월 만에 결제·소셜 로그인 3종·녹음·오디오 플레이어를 갖춘 앱을 양대 스토어에 출시했습니다.",
     "AI 기반 개발 방식을 활용하되, 산출물은 테스트와 CI로 검증하는 체계를 함께 구축했습니다.",
   ],
-  links: [],
+  links: [
+    {
+      label: "Google Play",
+      url: "https://play.google.com/store/apps/details?id=com.readonai.readonai&hl=ko",
+      kind: ProjectLinkKinds.GOOGLE_PLAY,
+    },
+    {
+      label: "App Store",
+      url: "https://apps.apple.com/kr/app/%EB%A6%AC%EB%93%9C%EC%98%A8-readon/id6756404876",
+      kind: ProjectLinkKinds.APP_STORE,
+    },
+  ],
   reflection: {
     items: [
       {

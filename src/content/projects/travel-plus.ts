@@ -1,4 +1,8 @@
-import { MediaKinds, type ProjectContent } from "@/content/types";
+import {
+  MediaKinds,
+  ProjectLinkKinds,
+  type ProjectContent,
+} from "@/content/types";
 
 export const travelPlus: ProjectContent = {
   slug: "travel-plus",
@@ -140,6 +144,14 @@ export const travelPlus: ProjectContent = {
   // 수치 성과는 highlights(Outcome 스탯)에서 보여주므로 여기서는 반복하지 않는다.
   results: [
     "디자인 요구와 TV 하드웨어 제약 사이의 대안을 제시해 합의를 이끌었습니다.",
+  ],
+  // LG Apps(TV 스토어)는 공개 웹 상세 페이지가 없어 LG 공식 서비스 소개로 연결한다.
+  links: [
+    {
+      label: "LG Apps",
+      url: "https://kr.lgappstv.com/main/tvapp/detail?appId=1276878&catCode1=&moreYn=N&cateYn=N&orderType=0&headerName=&appRankCode=&sellrUsrNo=",
+      kind: ProjectLinkKinds.LG_APPS,
+    },
   ],
   reflection: {
     items: [

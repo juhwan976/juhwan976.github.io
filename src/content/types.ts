@@ -77,6 +77,23 @@ export interface ReflectionItem {
   readonly points: readonly string[];
 }
 
+export const ProjectLinkKinds = {
+  GOOGLE_PLAY: "google-play",
+  APP_STORE: "app-store",
+  LG_APPS: "lg-apps",
+  WEB: "web",
+} as const;
+
+export type ProjectLinkKind =
+  (typeof ProjectLinkKinds)[keyof typeof ProjectLinkKinds];
+
+export interface ProjectLink {
+  readonly label: string;
+  readonly url: string;
+  /** 스토어 배지 아이콘 선택용. 없으면 일반 외부 링크로 렌더링 */
+  readonly kind?: ProjectLinkKind;
+}
+
 export interface ProjectContent {
   readonly slug: string;
   /** 프로젝트 번호 (예: '01') */
@@ -101,10 +118,7 @@ export interface ProjectContent {
   readonly decisions: readonly ProjectDecision[];
   readonly results: readonly string[];
   /** 실서비스 증빙용 외부 링크 (스토어 등). 있을 때만 상세 페이지에 노출 */
-  readonly links?: ReadonlyArray<{
-    readonly label: string;
-    readonly url: string;
-  }>;
+  readonly links?: ReadonlyArray<ProjectLink>;
   /** 회고. items가 비어 있으면 note만 표시 */
   readonly reflection: {
     readonly note?: string;

@@ -1,4 +1,8 @@
-import { MediaKinds, type ProjectContent } from "@/content/types";
+import {
+  MediaKinds,
+  ProjectLinkKinds,
+  type ProjectContent,
+} from "@/content/types";
 
 export const lgsc: ProjectContent = {
   slug: "lgsc",
@@ -112,6 +116,13 @@ export const lgsc: ProjectContent = {
   ],
   // 수치 성과는 highlights(Outcome 스탯)에서 보여주므로 여기서는 반복하지 않는다.
   results: ["실제 서비스로 배포되어 운영 중입니다."],
+  links: [
+    {
+      label: "Google Play",
+      url: "https://play.google.com/store/apps/details?id=com.lge.smartcheck&hl=ko",
+      kind: ProjectLinkKinds.GOOGLE_PLAY,
+    },
+  ],
   reflection: {
     items: [
       {
