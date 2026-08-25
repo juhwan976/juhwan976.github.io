@@ -39,8 +39,8 @@ export const readon: ProjectContent = {
   highlights: [
     {
       label: "자동화 테스트",
-      value: "459건",
-      note: "앱 306 + 서버 153 — QA 조직 없이 스토어 출시",
+      value: "486건",
+      note: "앱 322 + 서버 164 — QA 조직 없이 스토어 출시",
     },
     {
       label: "출시 전 차단한 크래시성 버그",
@@ -66,7 +66,7 @@ export const readon: ProjectContent = {
         "골든 테스트 12장으로 핵심 화면의 시각 회귀를 감지했습니다.",
         "가짜 서버와 실서버 응답의 괴리는 야간 CI의 실서버 계약 테스트가 자동으로 감지하는 3층 구조를 만들었습니다.",
       ],
-      results: ["테스트 459건, 출시 전 크래시성 버그 8건 차단"],
+      results: ["테스트 486건, 출시 전 크래시성 버그 8건 차단"],
     },
     {
       id: "async-ai-ux",

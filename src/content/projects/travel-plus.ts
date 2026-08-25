@@ -4,7 +4,7 @@ export const travelPlus: ProjectContent = {
   slug: "travel-plus",
   number: "04",
   name: "LG Travel+",
-  title: "3분이 걸리던 TV 앱을\n10초 수준으로 개선하다.",
+  title: "로딩 3분을 10초로 줄인\n핵심 구조 재구축",
   summary:
     "LG webOS TV에서 특정 여행지와 관련된 정보를 제공하는 TV 애플리케이션",
   period: "2025.07 ~ 2026.01",

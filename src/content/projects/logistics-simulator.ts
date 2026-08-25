@@ -6,7 +6,7 @@ export const logisticsSimulator: ProjectContent = {
   slug: "logistics-simulator",
   number: "01",
   name: "물류 시뮬레이터",
-  title: "제약이 많은 선로 편집기를\n빠른 설계 도구로 바꾸다.",
+  title: "클릭 두 번으로 선로를 잇는\n빠른 3D 설계 도구",
   summary:
     "공장 도면 위에서 AGV 이동 경로를 설계하고 운행 결과를 검증하는 3D 시뮬레이션 애플리케이션",
   period: "2026.07 ~ 현재",
@@ -49,7 +49,7 @@ export const logisticsSimulator: ProjectContent = {
     },
     {
       label: "자동화 테스트",
-      value: "746건",
+      value: "1,281건",
       note: "디자인 토큰·접근성·커밋 컨벤션까지 CI로 검증",
     },
   ],
