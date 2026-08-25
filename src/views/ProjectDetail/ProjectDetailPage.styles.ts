@@ -132,22 +132,44 @@ export const LinkRow = styled.div`
   gap: ${({ theme }) => theme.spacing.sm};
 `;
 
+/** 스토어 배지 — 브랜드 아이콘 + 라벨, 호버 시 액센트로 물든다 */
 export const ExternalLink = styled.a`
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
+  gap: 10px;
+  padding: 12px 20px;
   border: 1px solid ${({ theme }) => theme.colors.line};
+  background: ${({ theme }) => theme.colors.panel};
   font-size: ${({ theme }) => theme.fontSizes.small};
+  font-weight: 600;
+  letter-spacing: 0.01em;
   color: ${({ theme }) => theme.colors.text};
   transition:
     border-color 0.2s ease,
-    color 0.2s ease;
+    color 0.2s ease,
+    background 0.2s ease;
+
+  svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+
+  span {
+    font-size: ${({ theme }) => theme.fontSizes.tiny};
+    color: ${({ theme }) => theme.colors.textFaint};
+    transition: color 0.2s ease;
+  }
 
   ${({ theme }) => theme.media.hover} {
     &:hover {
       border-color: ${({ theme }) => theme.colors.accent};
+      background: ${({ theme }) => theme.colors.accentTint};
       color: ${({ theme }) => theme.colors.accent};
+
+      span {
+        color: ${({ theme }) => theme.colors.accent};
+      }
     }
   }
 `;

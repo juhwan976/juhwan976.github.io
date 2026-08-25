@@ -1,10 +1,14 @@
-import { MediaKinds, type ProjectContent } from "@/content/types";
+import {
+  MediaKinds,
+  ProjectLinkKinds,
+  type ProjectContent,
+} from "@/content/types";
 
 export const lgsc: ProjectContent = {
   slug: "lgsc",
   number: "03",
   name: "LGSC",
-  title: "약 200개 제품군과 오프라인 환경을\n하나의 앱에서 다루다.",
+  title: "약 200개 제품군과 오프라인 환경을 감당하는\n하나의 공통 구조",
   summary:
     "LG 가전제품을 휴대폰과 연결해 실시간 데이터 확인과 제품 제어를 제공하는 애플리케이션",
   period: "2023.11 ~ 2025.12",
@@ -15,8 +19,8 @@ export const lgsc: ProjectContent = {
     "Dart",
     "RxDart",
     "Drift",
-    "Wi-Fi Direct",
-    "Socket",
+    "Wi-Fi (SoftAP)",
+    "TCP·TLS Socket",
     "Laravel",
     "AWS",
   ],
@@ -83,9 +87,9 @@ export const lgsc: ProjectContent = {
     {
       id: "mptcp",
       label: "Key Decision",
-      title: "MPTCP 기술 검증 및 도입",
+      title: "MPTCP 검증과 iOS 적용",
       body: [
-        "Android / iOS MPTCP 기술을 검증하고 도입했습니다.",
+        "Android·iOS의 MPTCP 지원을 검증하고, iOS에 네이티브 URLSession 옵션으로 적용했습니다.",
         "외부 솔루션을 그대로 채택하지 않고 내부 동작 원리를 검토했습니다.",
       ],
     },
@@ -112,6 +116,13 @@ export const lgsc: ProjectContent = {
   ],
   // 수치 성과는 highlights(Outcome 스탯)에서 보여주므로 여기서는 반복하지 않는다.
   results: ["실제 서비스로 배포되어 운영 중입니다."],
+  links: [
+    {
+      label: "Google Play",
+      url: "https://play.google.com/store/apps/details?id=com.lge.smartcheck&hl=ko",
+      kind: ProjectLinkKinds.GOOGLE_PLAY,
+    },
+  ],
   reflection: {
     items: [
       {
@@ -134,7 +145,7 @@ export const lgsc: ProjectContent = {
         title: "테스트 문화",
         points: [
           "이 프로젝트는 자동화 테스트 없이 운영했습니다.",
-          "그 아쉬움이 이후 ReadON(459건)·물류 시뮬레이터(746건)의 테스트 체계로 이어졌습니다.",
+          "그 아쉬움이 이후 ReadON(486건)·물류 시뮬레이터(1,281건)의 테스트 체계로 이어졌습니다.",
         ],
       },
     ],

@@ -1,10 +1,14 @@
-import { MediaKinds, type ProjectContent } from "@/content/types";
+import {
+  MediaKinds,
+  ProjectLinkKinds,
+  type ProjectContent,
+} from "@/content/types";
 
 export const travelPlus: ProjectContent = {
   slug: "travel-plus",
   number: "04",
   name: "LG Travel+",
-  title: "3분이 걸리던 TV 앱을\n10초 수준으로 개선하다.",
+  title: "로딩 3분을 10초로 줄인\n핵심 구조 재구축",
   summary:
     "LG webOS TV에서 특정 여행지와 관련된 정보를 제공하는 TV 애플리케이션",
   period: "2025.07 ~ 2026.01",
@@ -140,6 +144,14 @@ export const travelPlus: ProjectContent = {
   // 수치 성과는 highlights(Outcome 스탯)에서 보여주므로 여기서는 반복하지 않는다.
   results: [
     "디자인 요구와 TV 하드웨어 제약 사이의 대안을 제시해 합의를 이끌었습니다.",
+  ],
+  // LG Apps(TV 스토어)는 공개 웹 상세 페이지가 없어 LG 공식 서비스 소개로 연결한다.
+  links: [
+    {
+      label: "LG Apps",
+      url: "https://kr.lgappstv.com/main/tvapp/detail?appId=1276878&catCode1=&moreYn=N&cateYn=N&orderType=0&headerName=&appRankCode=&sellrUsrNo=",
+      kind: ProjectLinkKinds.LG_APPS,
+    },
   ],
   reflection: {
     items: [

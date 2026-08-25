@@ -1,4 +1,8 @@
-import { MediaKinds, type ProjectContent } from "@/content/types";
+import {
+  MediaKinds,
+  ProjectLinkKinds,
+  type ProjectContent,
+} from "@/content/types";
 
 export const readon: ProjectContent = {
   slug: "readon",
@@ -39,8 +43,8 @@ export const readon: ProjectContent = {
   highlights: [
     {
       label: "자동화 테스트",
-      value: "459건",
-      note: "앱 306 + 서버 153 — QA 조직 없이 스토어 출시",
+      value: "486건",
+      note: "앱 322 + 서버 164 — QA 조직 없이 스토어 출시",
     },
     {
       label: "출시 전 차단한 크래시성 버그",
@@ -66,7 +70,7 @@ export const readon: ProjectContent = {
         "골든 테스트 12장으로 핵심 화면의 시각 회귀를 감지했습니다.",
         "가짜 서버와 실서버 응답의 괴리는 야간 CI의 실서버 계약 테스트가 자동으로 감지하는 3층 구조를 만들었습니다.",
       ],
-      results: ["테스트 459건, 출시 전 크래시성 버그 8건 차단"],
+      results: ["테스트 486건, 출시 전 크래시성 버그 8건 차단"],
     },
     {
       id: "async-ai-ux",
@@ -139,7 +143,18 @@ export const readon: ProjectContent = {
     "3.5개월 만에 결제·소셜 로그인 3종·녹음·오디오 플레이어를 갖춘 앱을 양대 스토어에 출시했습니다.",
     "AI 기반 개발 방식을 활용하되, 산출물은 테스트와 CI로 검증하는 체계를 함께 구축했습니다.",
   ],
-  links: [],
+  links: [
+    {
+      label: "Google Play",
+      url: "https://play.google.com/store/apps/details?id=com.readonai.readonai&hl=ko",
+      kind: ProjectLinkKinds.GOOGLE_PLAY,
+    },
+    {
+      label: "App Store",
+      url: "https://apps.apple.com/kr/app/%EB%A6%AC%EB%93%9C%EC%98%A8-readon/id6756404876",
+      kind: ProjectLinkKinds.APP_STORE,
+    },
+  ],
   reflection: {
     items: [
       {
