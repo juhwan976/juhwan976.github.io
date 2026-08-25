@@ -45,7 +45,6 @@ export default function Header(): React.ReactNode {
               {item.label}
             </S.NavLink>
           ))}
-          {/* 이력서 다운로드 기능은 당분간 사용하지 않는다.
           <S.ResumeLink
             href={siteConfig.resumeUrl}
             target="_blank"
@@ -53,7 +52,6 @@ export default function Header(): React.ReactNode {
           >
             Resume ↗
           </S.ResumeLink>
-          */}
           <S.MenuButton
             type="button"
             $open={menuOpen}

@@ -1,7 +1,6 @@
 import { SectionLabel } from '@/components/ui/primitives';
 import { careerCompanies } from '@/content/career';
-// 이력서 링크 복원 시 함께 되살린다.
-// import { siteConfig } from '@/content/site';
+import { siteConfig } from '@/content/site';
 import { IMAGE_PLACEHOLDER } from '@/content/types';
 import S from '@/views/Home/sections/CareerSection.styles';
 
@@ -68,15 +67,9 @@ export default function CareerSection(): React.ReactNode {
           ))}
         </S.Company>
       ))}
-      {/* 이력서 다운로드 기능은 당분간 사용하지 않는다.
-      <S.ResumeLink
-        href={siteConfig.resumeUrl}
-        target="_blank"
-        rel="noreferrer"
-      >
+      <S.ResumeLink href={siteConfig.resumeUrl} target="_blank" rel="noreferrer">
         View Full Résumé ↗
       </S.ResumeLink>
-      */}
     </S.Section>
   );
 }
