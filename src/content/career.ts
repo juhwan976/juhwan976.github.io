@@ -14,8 +14,7 @@ export const careerCompanies: readonly CareerCompany[] = [
         period: "2026.02 ~ 현재",
         title: "팀장",
         team: "인터랙션레이어",
-        summary:
-          "다니몽 개발을 총괄했고, 현재는 물류 시뮬레이터 개발을 이끌며 디자인 구현 가능성을 검토합니다.",
+        summary: "다니몽 개발을 총괄했습니다.",
         current: true,
       },
       {
