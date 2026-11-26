@@ -1,5 +1,5 @@
-import { Route, Routes } from 'react-router-dom';
-import { ROUTE_PATHS } from '@/constants/route_paths';
+import { Navigate, Route, Routes } from 'react-router-dom';
+import { buildProjectPath, ROUTE_PATHS } from '@/constants/route_paths';
 import { useSmoothScroll } from '@/hooks/useSmoothScroll';
 import ScrollToTop from '@/routes/ScrollToTop';
 import NotFoundPage from '@/views/common/NotFoundPage';
@@ -15,6 +15,10 @@ export default function AppRouter(): React.ReactNode {
       <ScrollToTop />
       <Routes>
         <Route path={ROUTE_PATHS.ROOT} element={<HomePage />} />
+        <Route
+          path="/projects/readon"
+          element={<Navigate to={buildProjectPath('danimong')} replace />}
+        />
         <Route
           path={ROUTE_PATHS.PROJECT_DETAIL}
           element={<ProjectDetailPage />}

@@ -148,7 +148,7 @@ export default function ProjectDetailPage(): React.ReactNode {
   useDocumentTitle(
     project
       ? `${project.name} · ${siteConfig.pageTitle}`
-      : `${siteConfig.name} · ${siteConfig.role}`,
+      : siteConfig.documentTitle,
   );
 
   // 브라우저 뒤로가기와 동일하게 동작한다.
@@ -201,7 +201,7 @@ export default function ProjectDetailPage(): React.ReactNode {
           )}
           <S.MetaRow>
             <div>
-              <dt>기간</dt>
+              <dt>참여 기간</dt>
               <dd>{project.period}</dd>
             </div>
             <div>

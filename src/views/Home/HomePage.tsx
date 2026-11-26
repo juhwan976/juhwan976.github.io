@@ -10,7 +10,7 @@ import HeroSection from "@/views/Home/sections/HeroSection";
 import WorkSection from "@/views/Home/sections/WorkSection";
 
 export default function HomePage(): React.ReactNode {
-  useDocumentTitle(siteConfig.pageTitle + "'s Portfolio");
+  useDocumentTitle(siteConfig.documentTitle);
   const { splashVisible, splashReady, markBackdropReady, hideSplash } =
     useHomeSplash();
 

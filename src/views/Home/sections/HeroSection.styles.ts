@@ -15,6 +15,11 @@ export const Backdrop = styled.div`
   z-index: ${({ theme }) => theme.zIndexes.backdrop};
   pointer-events: none;
 
+  // 한 번 만든 캔버스는 작은 창에서 숨기고, 다시 넓어지면 그대로 사용한다.
+  @media ${({ theme }) => theme.mediaQueries.mobile}, ${({ theme }) => theme.mediaQueries.reducedMotion} {
+    display: none;
+  }
+
   /* 텍스트 가독성 스크림 — 헤드라인 영역 뒤로만 은은하게 어두워진다 */
   &::after {
     content: '';
@@ -44,16 +49,13 @@ export const RoleLabel = styled(SectionLabel)`
 `;
 
 export const Headline = styled.h1`
+  max-inline-size: 15em;
   font-size: ${({ theme }) => theme.fontSizes.display};
   font-weight: 700;
   line-height: 1.22;
   letter-spacing: -0.015em;
-  white-space: pre-line;
+  text-wrap: balance;
   color: ${({ theme }) => theme.colors.text};
-
-  ${({ theme }) => theme.media.mobile} {
-    white-space: normal;
-  }
 `;
 
 export const Description = styled.p`
@@ -61,12 +63,8 @@ export const Description = styled.p`
   max-width: ${({ theme }) => theme.layout.proseWidth};
   font-size: ${({ theme }) => theme.fontSizes.bodyLg};
   line-height: 1.8;
-  white-space: pre-line;
+  text-wrap: pretty;
   color: ${({ theme }) => theme.colors.textDim};
-
-  ${({ theme }) => theme.media.mobile} {
-    white-space: normal;
-  }
 `;
 
 export const Cta = styled(ThinLink)`

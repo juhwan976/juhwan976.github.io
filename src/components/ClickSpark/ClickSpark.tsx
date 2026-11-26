@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import S from '@/components/ClickSpark/ClickSpark.styles';
+import { theme } from '@/styles/theme';
 
 // reactbits의 Click Spark를 프로젝트 컨벤션에 맞게 이식한 컴포넌트.
 // 원본은 부모 크기의 캔버스를 사용하지만, 문서 전체 높이만큼 캔버스가
@@ -75,7 +76,7 @@ export default function ClickSpark({
     ro.observe(canvas);
 
     const onClick = (e: MouseEvent): void => {
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      if (window.matchMedia(theme.mediaQueries.reducedMotion).matches) {
         return;
       }
       const now = performance.now();

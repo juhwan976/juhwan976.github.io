@@ -3,6 +3,7 @@ import { createRoot, hydrateRoot } from 'react-dom/client';
 import App from '@/App';
 import 'pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css';
 import '@fontsource-variable/jetbrains-mono';
+import 'lenis/dist/lenis.css';
 import '@/styles/global.scss';
 
 const container = document.getElementById('root')!;

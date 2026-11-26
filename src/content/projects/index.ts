@@ -1,13 +1,13 @@
+import { danimong } from '@/content/projects/danimong';
 import { lgsc } from '@/content/projects/lgsc';
 import { logisticsSimulator } from '@/content/projects/logistics-simulator';
-import { readon } from '@/content/projects/readon';
 import { travelPlus } from '@/content/projects/travel-plus';
 import type { ProjectContent } from '@/content/types';
 
 /** 메인 페이지 노출 순서 */
 export const projects: readonly ProjectContent[] = [
   logisticsSimulator,
-  readon,
+  danimong,
   lgsc,
   travelPlus,
 ];

@@ -30,12 +30,16 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
+      - name: Lint
+        run: yarn lint
+
+      # route_seo.json 등 프리렌더 메타가 콘텐츠와 어긋나면 여기서 막는다.
+      - name: Test
+        run: yarn test
+
+      # typecheck(tsc -b) + 클라이언트 빌드 + 프리렌더(SSG) + 404.html 생성
       - name: Build
         run: yarn build
-
-      # SPA 딥링크(/projects/*) 새로고침 대응 — Pages는 404 시 404.html을 서빙한다.
-      - name: Create SPA fallback
-        run: cp dist/index.html dist/404.html
 
       - uses: actions/upload-pages-artifact@v3
         with:

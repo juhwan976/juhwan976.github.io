@@ -72,6 +72,7 @@ export const Summary = styled.p`
   max-width: 460px;
   font-size: ${({ theme }) => theme.fontSizes.body};
   line-height: 1.75;
+  text-wrap: pretty;
   color: ${({ theme }) => theme.colors.textDim};
 `;
 
@@ -82,6 +83,7 @@ export const RoleLine = styled.p`
   font-size: ${({ theme }) => theme.fontSizes.small};
   font-weight: 600;
   line-height: 1.7;
+  text-wrap: pretty;
   color: ${({ theme }) => theme.colors.text};
 `;
 

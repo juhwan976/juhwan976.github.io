@@ -1,18 +1,18 @@
 {
   "/projects/logistics-simulator": {
     "title": "물류 시뮬레이터 · juhwan976",
-    "description": "공장 도면 위에서 AGV 이동 경로를 설계하고 운행 결과를 검증하는 3D 시뮬레이션 애플리케이션"
+    "description": "공장 도면에서 무인운반차(AGV)의 이동 경로를 짜고 필요한 차량 대수와 정체 구간을 확인하는 데스크톱 앱"
   },
-  "/projects/readon": {
-    "title": "ReadON · juhwan976",
-    "description": "AI가 생성한 동화를 부모의 합성 목소리로 읽어주는 Android·iOS 애플리케이션"
+  "/projects/danimong": {
+    "title": "다니몽 · juhwan976",
+    "description": "아이를 위한 맞춤 동화를 만들고 부모의 합성 목소리로 읽어주는 모바일 앱"
   },
   "/projects/lgsc": {
     "title": "LGSC · juhwan976",
-    "description": "LG 가전제품을 휴대폰과 연결해 실시간 데이터 확인과 제품 제어를 제공하는 애플리케이션"
+    "description": "수리기사가 휴대폰을 LG 가전에 연결해 실시간 데이터를 확인하고 제품을 제어하는 앱"
   },
   "/projects/travel-plus": {
     "title": "LG Travel+ · juhwan976",
-    "description": "LG webOS TV에서 특정 여행지와 관련된 정보를 제공하는 TV 애플리케이션"
+    "description": "LG webOS TV에서 지도와 여행지 정보를 살펴보고 여행 상품을 탐색하는 앱"
   }
 }

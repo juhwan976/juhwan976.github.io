@@ -18,7 +18,8 @@ export const Title = styled.h2`
   font-weight: 700;
   line-height: 1.35;
   letter-spacing: -0.01em;
-  white-space: pre-line;
+  max-inline-size: 18em;
+  text-wrap: balance;
   color: ${({ theme }) => theme.colors.text};
 `;
 
@@ -29,17 +30,11 @@ export const Body = styled.div`
   p {
     font-size: ${({ theme }) => theme.fontSizes.bodyLg};
     line-height: 1.85;
-    white-space: pre-line;
+    text-wrap: pretty;
     color: ${({ theme }) => theme.colors.textDim};
 
     & + p {
       margin-top: ${({ theme }) => theme.spacing.md};
-    }
-  }
-
-  ${({ theme }) => theme.media.mobile} {
-    p {
-      white-space: normal;
     }
   }
 `;

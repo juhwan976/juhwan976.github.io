@@ -1,21 +1,20 @@
 import { SectionLabel } from '@/components/ui/primitives';
 import { careerCompanies } from '@/content/career';
 import { siteConfig } from '@/content/site';
-import { IMAGE_PLACEHOLDER } from '@/content/types';
+import { IMAGE_PLACEHOLDER, type CareerCompany } from '@/content/types';
+import {
+  useClientYearMonth,
+  type YearMonth,
+} from '@/views/Home/hooks/useClientYearMonth';
 import S from '@/views/Home/sections/CareerSection.styles';
 
-const parseYearMonth = (value: string): { year: number; month: number } => {
+const parseYearMonth = (value: string): YearMonth => {
   const [year = 0, month = 0] = value.split('.').map(Number);
   return { year, month };
 };
 
-// 재직 기간을 "N년 M개월"로 계산한다. end가 없으면 현재 시점 기준.
-const formatTenure = (start: string, end?: string): string => {
-  const from = parseYearMonth(start);
-  const now = new Date();
-  const to = end
-    ? parseYearMonth(end)
-    : { year: now.getFullYear(), month: now.getMonth() + 1 };
+// 재직 기간을 "N년 M개월"로 계산한다.
+const formatTenure = (from: YearMonth, to: YearMonth): string => {
   const months = (to.year - from.year) * 12 + (to.month - from.month);
   const years = Math.floor(months / 12);
   const rest = months % 12;
@@ -28,13 +27,27 @@ const formatTenure = (start: string, end?: string): string => {
 const companyInitial = (name: string): string =>
   name.split(' ').at(-1)?.charAt(0) ?? name.charAt(0);
 
+// 퇴사한 회사는 정적으로 계산하고, 재직 중인 회사는 마운트 이후(현재 시각 확보 후)에만 표시한다.
+const resolveTenure = (
+  company: CareerCompany,
+  now: YearMonth | null,
+): string | null => {
+  const from = parseYearMonth(company.start);
+  if (company.end) return formatTenure(from, parseYearMonth(company.end));
+  return now ? formatTenure(from, now) : null;
+};
+
 // Career — 회사 단위 블록. 재직 기간과 역임한 역할만 보여준다.
 // 프로젝트별 문제 해결 서사는 Work에 있으므로 여기서는 다루지 않는다.
 export default function CareerSection(): React.ReactNode {
+  const now = useClientYearMonth();
+
   return (
     <S.Section id="career" aria-label="Career">
       <SectionLabel>Career</SectionLabel>
-      {careerCompanies.map((company) => (
+      {careerCompanies.map((company) => {
+        const tenure = resolveTenure(company, now);
+        return (
         <S.Company key={company.id}>
           <S.CompanyHeader>
             {company.logo === IMAGE_PLACEHOLDER ? (
@@ -50,8 +63,8 @@ export default function CareerSection(): React.ReactNode {
             )}
             <S.CompanyName>{company.name}</S.CompanyName>
             <S.CompanyPeriod>
-              {company.start} - {company.end ?? '현재'} ·{' '}
-              {formatTenure(company.start, company.end)}
+              {company.start} ~ {company.end ?? '재직 중'}
+              {tenure ? ` · ${tenure}` : null}
             </S.CompanyPeriod>
           </S.CompanyHeader>
           {company.roles.map((role) => (
@@ -66,7 +79,8 @@ export default function CareerSection(): React.ReactNode {
             </S.RoleRow>
           ))}
         </S.Company>
-      ))}
+        );
+      })}
       <S.ResumeLink href={siteConfig.resumeUrl} target="_blank" rel="noreferrer">
         View Full Résumé ↗
       </S.ResumeLink>
