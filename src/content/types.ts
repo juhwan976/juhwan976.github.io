@@ -99,7 +99,7 @@ export interface ProjectContent {
   /** 프로젝트 번호 (예: '01') */
   readonly number: string;
   readonly name: string;
-  /** 상세 페이지 표시 제목. '\n'으로 줄바꿈 */
+  /** 상세 페이지 제목 */
   readonly title: string;
   /** 한 줄 설명 */
   readonly summary: string;
@@ -131,7 +131,7 @@ export interface ProjectContent {
 
 export interface CareerRole {
   readonly id: string;
-  /** 표시용 기간 (예: "2026.02 — 현재") */
+  /** 표시용 기간 (예: "2026.02 ~ 현재") */
   readonly period: string;
   /** 직급 (예: "팀장") */
   readonly title: string;
@@ -157,7 +157,13 @@ export interface CareerCompany {
 }
 
 export interface SiteConfig {
+  /** 헤더 브랜드·상세 페이지 제목 접미(`{프로젝트} · {pageTitle}`)에 쓰는 짧은 식별자 */
   readonly pageTitle: string;
+  /**
+   * 홈·404 등 기본 문서 제목. index.html의 <title>·og:title과 동일하게 유지한다.
+   * (tests/route_seo.test.ts가 검증)
+   */
+  readonly documentTitle: string;
 
   readonly name: string;
   readonly nameEn: string;
@@ -174,14 +180,14 @@ export interface SiteConfig {
   }>;
   readonly nav: ReadonlyArray<{ readonly id: string; readonly label: string }>;
   readonly hero: {
-    /** 메인 문장. '\n'으로 줄바꿈 */
+    /** 메인 문장 */
     readonly headline: string;
-    /** 짧은 설명. '\n'으로 줄바꿈 */
+    /** 짧은 설명 */
     readonly description: string;
     readonly cta: string;
   };
   readonly about: {
-    /** '\n'으로 줄바꿈 */
+    /** 소개 제목 */
     readonly title: string;
     readonly body: readonly string[];
   };

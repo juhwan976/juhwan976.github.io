@@ -18,6 +18,13 @@ html:focus-within {
   scroll-behavior: smooth;
 }
 
+// Lenis(useSmoothScroll)가 활성일 때는 네이티브 스무스 스크롤을 끈다.
+// Lenis는 매 프레임 window.scrollTo로 위치를 쓰는데, 여기에 CSS smooth가 겹치면
+// 브라우저가 한 번 더 보간해 스크롤이 늘어지고 앵커 이동이 어긋난다.
+html.lenis:focus-within {
+  scroll-behavior: auto;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html:focus-within {
     scroll-behavior: auto;

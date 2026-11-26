@@ -11,27 +11,27 @@ export const careerCompanies: readonly CareerCompany[] = [
     roles: [
       {
         id: "interaction-layer-lead",
-        period: "2026.02 - 현재",
+        period: "2026.02 ~ 현재",
         title: "팀장",
         team: "인터랙션레이어",
         summary:
-          "물류 시뮬레이터 등 신규 프로젝트 리드와 개발 병행, 디자인 구현 가능 여부 선행 검증",
+          "다니몽 개발을 총괄했고, 현재는 물류 시뮬레이터 개발을 이끌며 디자인 구현 가능성을 검토합니다.",
         current: true,
       },
       {
         id: "advanced-control-lead",
-        period: "2024.01 - 2026.01",
+        period: "2024.01 ~ 2026.01",
         title: "팀장",
         team: "선행제어기술연구팀",
         summary:
-          "LGSC·LG Travel+ 프로젝트 리드와 개발 병행, 백엔드·AWS 운영 겸임",
+          "LGSC와 LG Travel+ 개발을 이끌며 백엔드 개발과 AWS 운영을 맡았습니다.",
       },
       {
         id: "developer",
-        period: "2022.11 - 2023.12",
+        period: "2022.11 ~ 2023.12",
         title: "개발자",
         team: "개발팀",
-        summary: "Android 앱 유지보수와 Flutter 모바일 앱 신규 개발",
+        summary: "기존 Android 앱을 유지보수하고 Flutter로 새 모바일 앱을 개발했습니다.",
       },
     ],
   },

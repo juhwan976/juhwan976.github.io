@@ -89,12 +89,19 @@ export const theme = {
     /** 헤더 높이 */
     headerHeight: '64px',
   },
-  media: {
+  /** JS(matchMedia)에서 쓰는 순수 미디어 조건 — media.*는 이 값에 @media를 붙인 것이다 */
+  mediaQueries: {
     /** 768px 미만 */
-    mobile: '@media (max-width: 767px)',
+    mobile: '(max-width: 767px)',
     /** 1024px 미만 */
-    tablet: '@media (max-width: 1023px)',
+    tablet: '(max-width: 1023px)',
     /** hover 가능한 포인터 장치 */
+    hover: '(hover: hover)',
+    reducedMotion: '(prefers-reduced-motion: reduce)',
+  },
+  media: {
+    mobile: '@media (max-width: 767px)',
+    tablet: '@media (max-width: 1023px)',
     hover: '@media (hover: hover)',
     reducedMotion: '@media (prefers-reduced-motion: reduce)',
   },

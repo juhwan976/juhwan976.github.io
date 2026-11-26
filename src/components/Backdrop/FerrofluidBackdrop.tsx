@@ -29,6 +29,11 @@ export interface FerrofluidProps {
 type RGB = [number, number, number];
 
 const MAX_COLORS = 8;
+const DEFAULT_COLORS = ["#ffffff", "#ffffff", "#ffffff"];
+const RESIZE_SETTLE_MS = 120;
+const CANVAS_MARGIN_PX = 32;
+const CANVAS_GROWTH_PX = 128;
+const MAX_FRAME_STEP_MS = 50;
 
 const hexToRGB = (hex: string): RGB => {
   const c = hex.replace("#", "").padEnd(6, "0");
@@ -76,9 +81,12 @@ const flowVec = (d?: string): [number, number] => {
 const vertex = `
 attribute vec2 position;
 attribute vec2 uv;
-varying vec2 vUv;
+uniform vec2 uCanvasSize;
+uniform float uReferenceHeight;
+varying vec2 vCoord;
 void main() {
-  vUv = uv;
+  // Keep the field anchored to the top-left when the viewport changes.
+  vCoord = vec2(uv.x * uCanvasSize.x, uReferenceHeight + (uv.y - 1.0) * uCanvasSize.y);
   gl_Position = vec4(position, 0.0, 1.0);
 }
 `;
@@ -86,7 +94,7 @@ void main() {
 const fragment = `
 precision highp float;
 
-uniform vec3  iResolution;
+uniform float uReferenceHeight;
 uniform vec2  iMouse;
 uniform float iTime;
 
@@ -115,7 +123,7 @@ uniform float uMouseEnabled;
 uniform float uMouseStrength;
 uniform float uMouseRadius;
 
-varying vec2 vUv;
+varying vec2 vCoord;
 
 #define PI 3.14159265
 
@@ -172,7 +180,7 @@ float dbn(vec2 p, float s, float seed) {
 
 void mainImage(out vec4 fragColor, in vec2 fragCoord) {
   float ref = 700.0 / max(uScale, 0.05);
-  vec2 p = fragCoord / iResolution.y * ref;
+  vec2 p = fragCoord / uReferenceHeight * ref;
 
   float spd = 200.0 * uSpeed;
   float t = iTime;
@@ -190,7 +198,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
 
   float mGlow = 0.0;
   if (uMouseEnabled > 0.5) {
-    vec2 mp = iMouse / iResolution.y * ref;
+    vec2 mp = iMouse / uReferenceHeight * ref;
     float md = length(p - mp) / ref;
     float rr = max(uMouseRadius, 0.02);
     mGlow = exp(-md * md / (rr * rr)) * uMouseStrength;
@@ -211,7 +219,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
 
 void main() {
   vec4 color;
-  mainImage(color, vUv * iResolution.xy);
+  mainImage(color, vCoord);
   gl_FragColor = color;
 }
 `;
@@ -219,7 +227,7 @@ void main() {
 const FerrofluidBackdrop: React.FC<FerrofluidProps> = ({
   dpr,
   paused = false,
-  colors = ["#ffffff", "#ffffff", "#ffffff"],
+  colors = DEFAULT_COLORS,
   speed = 0.5,
   scale = 1.6,
   turbulence = 1,
@@ -238,7 +246,6 @@ const FerrofluidBackdrop: React.FC<FerrofluidProps> = ({
   onFirstFrame,
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const rafRef = useRef<number | null>(null);
   // 콜백 변경으로 WebGL 컨텍스트가 재생성되지 않도록 ref로 우회한다.
   const onFirstFrameRef = useRef(onFirstFrame);
   const firstFrameNotifiedRef = useRef(false);
@@ -246,44 +253,36 @@ const FerrofluidBackdrop: React.FC<FerrofluidProps> = ({
   useEffect(() => {
     onFirstFrameRef.current = onFirstFrame;
   }, [onFirstFrame]);
-  const programRef = useRef<Program | null>(null);
-  const meshRef = useRef<Mesh | null>(null);
-  const geometryRef = useRef<Triangle | null>(null);
-  const rendererRef = useRef<Renderer | null>(null);
-  const mouseTargetRef = useRef<[number, number]>([0, 0]);
-  const lastTimeRef = useRef(0);
-
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
-    // 유체 배경은 저주파 그라데이션이라 고해상도의 시각적 이득이 거의 없다.
-    // 레티나(dpr 2)에서 픽셀 연산량이 4배가 되는 것을 막기 위해 1.5로 캡한다.
+    let width = container.clientWidth;
+    let height = container.clientHeight;
+    let canvasWidth = width + CANVAS_MARGIN_PX;
+    let canvasHeight = height + CANVAS_MARGIN_PX;
+    let resizeAfter: number | null = null;
+    const pixelRatio = () => dpr ?? Math.min(window.devicePixelRatio || 1, 1.5);
+    let appliedRatio = pixelRatio();
+    // 화면을 채우는 삼각형 하나를 그리므로 깊이 버퍼와 멀티샘플링이 필요 없다.
     const renderer = new Renderer({
-      dpr:
-        dpr ??
-        Math.min(
-          typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1,
-          1.5,
-        ),
+      width: Math.max(1, Math.round(canvasWidth * appliedRatio)),
+      height: Math.max(1, Math.round(canvasHeight * appliedRatio)),
       alpha: true,
-      antialias: true,
+      depth: false,
+      autoClear: false,
     });
-    rendererRef.current = renderer;
     const gl = renderer.gl;
-    const canvas = gl.canvas as HTMLCanvasElement;
-    gl.clearColor(0, 0, 0, 0);
-    canvas.style.width = "100%";
-    canvas.style.height = "100%";
-    canvas.style.display = "block";
+    const canvas = gl.canvas;
+    canvas.style.width = `${canvasWidth}px`;
+    canvas.style.height = `${canvasHeight}px`;
     container.appendChild(canvas);
 
     const { arr, count, avg } = prepColors(colors);
 
     const uniforms = {
-      iResolution: {
-        value: [gl.drawingBufferWidth, gl.drawingBufferHeight, 1],
-      },
+      uCanvasSize: { value: [canvasWidth, canvasHeight] },
+      uReferenceHeight: { value: height },
       iMouse: { value: [0, 0] },
       iTime: { value: 0 },
       uColor0: { value: arr[0] },
@@ -311,37 +310,23 @@ const FerrofluidBackdrop: React.FC<FerrofluidProps> = ({
       uMouseRadius: { value: mouseRadius },
     };
 
-    const program = new Program(gl, { vertex, fragment, uniforms });
-    programRef.current = program;
-
+    const program = new Program(gl, {
+      vertex,
+      fragment,
+      uniforms,
+      depthTest: false,
+      depthWrite: false,
+    });
     const geometry = new Triangle(gl);
-    geometryRef.current = geometry;
     const mesh = new Mesh(gl, { geometry, program });
-    meshRef.current = mesh;
 
-    const resize = () => {
-      const rect = container.getBoundingClientRect();
-      renderer.setSize(rect.width, rect.height);
-      uniforms.iResolution.value = [
-        gl.drawingBufferWidth,
-        gl.drawingBufferHeight,
-        1,
-      ];
-    };
-
-    resize();
-    const ro = new ResizeObserver(resize);
-    ro.observe(container);
-
+    const mouseTarget = [0, 0];
+    let pendingPointer: PointerEvent | null = null;
+    let running = false;
+    let frameId: number | null = null;
+    let lastFrameTime: number | null = null;
     const onPointerMove = (e: PointerEvent) => {
-      const rect = canvas.getBoundingClientRect();
-      const sc = renderer.dpr || 1;
-      const x = (e.clientX - rect.left) * sc;
-      const y = (rect.height - (e.clientY - rect.top)) * sc;
-      mouseTargetRef.current = [x, y];
-      if (mouseDampening <= 0) {
-        uniforms.iMouse.value = [x, y];
-      }
+      if (running) pendingPointer = e;
     };
     // 캔버스를 감싸는 Backdrop에 pointer-events: none이 걸려 있어
     // 캔버스는 이벤트를 받지 못한다. window에서 수신하고 캔버스 좌표로 환산한다.
@@ -349,51 +334,101 @@ const FerrofluidBackdrop: React.FC<FerrofluidProps> = ({
       window.addEventListener("pointermove", onPointerMove);
     }
 
-    let running = false;
+    const sizeCanvas = (nextWidth: number, nextHeight: number, ratio: number) => {
+      if (
+        nextWidth === canvasWidth &&
+        nextHeight === canvasHeight &&
+        ratio === appliedRatio
+      ) {
+        return;
+      }
+      canvasWidth = nextWidth;
+      canvasHeight = nextHeight;
+      appliedRatio = ratio;
+      const pixelWidth = Math.max(1, Math.round(nextWidth * ratio));
+      const pixelHeight = Math.max(1, Math.round(nextHeight * ratio));
+      if (canvas.width !== pixelWidth || canvas.height !== pixelHeight) {
+        renderer.setSize(pixelWidth, pixelHeight);
+      }
+      canvas.style.width = `${nextWidth}px`;
+      canvas.style.height = `${nextHeight}px`;
+      uniforms.uCanvasSize.value[0] = nextWidth;
+      uniforms.uCanvasSize.value[1] = nextHeight;
+    };
+
+    const draw = () => {
+      if (!uniforms.uReferenceHeight.value) {
+        uniforms.uReferenceHeight.value = height;
+      }
+      try {
+        renderer.render({
+          scene: mesh,
+          update: false,
+          sort: false,
+          frustumCull: false,
+        });
+        if (!firstFrameNotifiedRef.current) {
+          firstFrameNotifiedRef.current = true;
+          onFirstFrameRef.current?.();
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    };
 
     const loop = (t: number) => {
       if (!running) return;
-      rafRef.current = requestAnimationFrame(loop);
-      uniforms.iTime.value = t * 0.001;
-      if (mouseDampening > 0) {
-        if (!lastTimeRef.current) lastTimeRef.current = t;
-        const dt = (t - lastTimeRef.current) / 1000;
-        lastTimeRef.current = t;
-        const tau = Math.max(1e-4, mouseDampening);
-        let factor = 1 - Math.exp(-dt / tau);
-        if (factor > 1) factor = 1;
-        const target = mouseTargetRef.current;
-        const cur = uniforms.iMouse.value as number[];
-        cur[0] += (target[0] - cur[0]) * factor;
-        cur[1] += (target[1] - cur[1]) * factor;
-      } else {
-        lastTimeRef.current = t;
+      frameId = requestAnimationFrame(loop);
+      const dt =
+        lastFrameTime === null
+          ? 0
+          : Math.min(t - lastFrameTime, MAX_FRAME_STEP_MS) / 1000;
+      lastFrameTime = t;
+      uniforms.iTime.value += dt;
+
+      if (pendingPointer) {
+        const rect = container.getBoundingClientRect();
+        mouseTarget[0] = pendingPointer.clientX - rect.left;
+        mouseTarget[1] =
+          uniforms.uReferenceHeight.value - (pendingPointer.clientY - rect.top);
+        pendingPointer = null;
       }
-      if (!paused && programRef.current && meshRef.current) {
-        try {
-          renderer.render({ scene: meshRef.current });
-          if (!firstFrameNotifiedRef.current) {
-            firstFrameNotifiedRef.current = true;
-            onFirstFrameRef.current?.();
-          }
-        } catch (e) {
-          console.error(e);
-        }
+      if (mouseInteraction) {
+        const factor =
+          mouseDampening > 0 ? 1 - Math.exp(-dt / mouseDampening) : 1;
+        const mouse = uniforms.iMouse.value;
+        mouse[0] += (mouseTarget[0] - mouse[0]) * factor;
+        mouse[1] += (mouseTarget[1] - mouse[1]) * factor;
       }
+
+      // 크기 조절이 끝나면 여유 영역을 줄여 가려진 픽셀을 반복해서 그리지 않는다.
+      if (resizeAfter !== null && t >= resizeAfter) {
+        resizeAfter = null;
+        sizeCanvas(
+          Math.ceil(width) + CANVAS_MARGIN_PX,
+          Math.ceil(height) + CANVAS_MARGIN_PX,
+          pixelRatio(),
+        );
+      } else if (resizeAfter === null) {
+        const ratio = pixelRatio();
+        if (ratio !== appliedRatio) sizeCanvas(canvasWidth, canvasHeight, ratio);
+      }
+
+      draw();
     };
 
     const startLoop = () => {
       if (running) return;
       running = true;
-      // 정지 중 흐른 시간으로 dt가 튀지 않도록 초기화한다.
-      lastTimeRef.current = 0;
-      rafRef.current = requestAnimationFrame(loop);
+      lastFrameTime = null;
+      frameId = requestAnimationFrame(loop);
     };
     const stopLoop = () => {
       running = false;
-      if (rafRef.current) {
-        cancelAnimationFrame(rafRef.current);
-        rafRef.current = null;
+      pendingPointer = null;
+      if (frameId !== null) {
+        cancelAnimationFrame(frameId);
+        frameId = null;
       }
     };
 
@@ -401,43 +436,54 @@ const FerrofluidBackdrop: React.FC<FerrofluidProps> = ({
     // 스크롤 합성과의 GPU 경쟁을 없앤다.
     let inView = true;
     const syncRunning = () => {
-      if (inView && !document.hidden) startLoop();
-      else stopLoop();
+      if (inView && !document.hidden && !paused && width > 0 && height > 0) {
+        startLoop();
+      } else {
+        stopLoop();
+      }
     };
+    const ro = new ResizeObserver(([entry]) => {
+      if (!entry) return;
+      const next = entry.contentRect;
+      if (width === next.width && height === next.height) return;
+      width = next.width;
+      height = next.height;
+      resizeAfter = performance.now() + RESIZE_SETTLE_MS;
+      syncRunning();
+      if (running && (width > canvasWidth || height > canvasHeight)) {
+        // 여유 영역을 넘겨 넓어지면 같은 시각의 프레임을 그려 빈 가장자리를 막는다.
+        sizeCanvas(
+          width > canvasWidth
+            ? Math.ceil(width) + CANVAS_GROWTH_PX
+            : canvasWidth,
+          height > canvasHeight
+            ? Math.ceil(height) + CANVAS_GROWTH_PX
+            : canvasHeight,
+          appliedRatio,
+        );
+        draw();
+      }
+    });
+    ro.observe(container);
     const io = new IntersectionObserver((entries) => {
       inView = entries[0]?.isIntersecting ?? true;
       syncRunning();
     });
     io.observe(container);
-    const onVisibilityChange = () => syncRunning();
-    document.addEventListener("visibilitychange", onVisibilityChange);
+    document.addEventListener("visibilitychange", syncRunning);
 
-    startLoop();
+    syncRunning();
 
     return () => {
       stopLoop();
       io.disconnect();
-      document.removeEventListener("visibilitychange", onVisibilityChange);
+      document.removeEventListener("visibilitychange", syncRunning);
       if (mouseInteraction)
         window.removeEventListener("pointermove", onPointerMove);
       ro.disconnect();
-      if (canvas.parentElement === container) {
-        container.removeChild(canvas);
-      }
-      const callIfFn = (obj: unknown, key: string) => {
-        const fn = obj && (obj as Record<string, unknown>)[key];
-        if (typeof fn === "function") {
-          (fn as () => void).call(obj);
-        }
-      };
-      callIfFn(programRef.current, "remove");
-      callIfFn(geometryRef.current, "remove");
-      callIfFn(meshRef.current, "remove");
-      callIfFn(rendererRef.current, "destroy");
-      programRef.current = null;
-      geometryRef.current = null;
-      meshRef.current = null;
-      rendererRef.current = null;
+      canvas.remove();
+      geometry.remove();
+      program.remove();
     };
   }, [
     dpr,

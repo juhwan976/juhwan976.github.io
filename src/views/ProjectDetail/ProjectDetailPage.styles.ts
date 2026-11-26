@@ -84,11 +84,12 @@ export const Eyebrow = styled.p`
 
 export const Title = styled.h1`
   margin-top: ${({ theme }) => theme.spacing.md};
+  max-inline-size: 18em;
   font-size: ${({ theme }) => theme.fontSizes.h1};
   font-weight: 700;
   line-height: 1.3;
   letter-spacing: -0.015em;
-  white-space: pre-line;
+  text-wrap: balance;
   color: ${({ theme }) => theme.colors.text};
 `;
 
@@ -97,6 +98,7 @@ export const Summary = styled.p`
   max-width: ${({ theme }) => theme.layout.proseWidth};
   font-size: ${({ theme }) => theme.fontSizes.body};
   line-height: 1.75;
+  text-wrap: pretty;
   color: ${({ theme }) => theme.colors.textDim};
 `;
 
@@ -247,7 +249,7 @@ export const BlockTitle = styled.h2`
   font-weight: 700;
   line-height: 1.3;
   letter-spacing: -0.015em;
-  white-space: pre-line;
+  text-wrap: balance;
   color: ${({ theme }) => theme.colors.text};
   margin-bottom: ${({ theme }) => theme.spacing.lg};
 `;
@@ -256,7 +258,7 @@ export const Paragraphs = styled.div`
   p {
     font-size: ${({ theme }) => theme.fontSizes.body};
     line-height: 1.85;
-    white-space: pre-line;
+    text-wrap: pretty;
     color: ${({ theme }) => theme.colors.textDim};
 
     & + p {
@@ -280,6 +282,7 @@ export const BulletList = styled.ul`
     padding-left: 16px;
     font-size: ${({ theme }) => theme.fontSizes.body};
     line-height: 1.85;
+    text-wrap: pretty;
     color: ${({ theme }) => theme.colors.textDim};
 
     &::before {
@@ -300,14 +303,14 @@ export const ResultCallout = styled.p`
   font-size: ${({ theme }) => theme.fontSizes.bodyLg};
   font-weight: 700;
   line-height: 1.6;
-  white-space: pre-line;
+  text-wrap: pretty;
   color: ${({ theme }) => theme.colors.text};
 `;
 
 /** 헤어라인 없는 2컬럼 스탯 그리드 — 라벨 위, 수치 아래 */
 export const StatTable = styled.dl`
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: ${({ theme }) => `${theme.spacing.xl} ${theme.spacing.lg}`};
 
   dt {
@@ -320,6 +323,7 @@ export const StatTable = styled.dl`
     font-size: ${({ theme }) => theme.fontSizes.h3};
     font-weight: 700;
     line-height: 1.3;
+    overflow-wrap: anywhere;
     color: ${({ theme }) => theme.colors.text};
 
     small {
@@ -332,7 +336,7 @@ export const StatTable = styled.dl`
   }
 
   ${({ theme }) => theme.media.mobile} {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 `;
 
